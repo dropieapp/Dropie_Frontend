@@ -8,6 +8,7 @@ export const userService = {
   register,
   company_info,
   getAllFleet,
+  verify_otp,
   //   getAll,
   //   getById,
   //   update,
@@ -91,7 +92,6 @@ function register(user) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(user),
   };
 
@@ -118,6 +118,25 @@ function company_info(info) {
       localStorage.setItem("onboard", JSON.stringify(onboard));
 
       return onboard;
+    });
+}
+function verify_otp(info) {
+  const requestOptions = {
+    method: "POST",
+    headers: { ...authHeader(), "Content-Type": "application/json" },
+    body: JSON.stringify(info),
+  };
+
+  return fetch(
+    `http://apibeta.dropie.ng/api/business/validate-otp`,
+    requestOptions
+  )
+    .then(handleResponse)
+    .then((verify_otp) => {
+      // store user details and jwt token in local storage to keep user logged in between page refreshes
+      localStorage.setItem("verify_otp", JSON.stringify(verify_otp));
+
+      return verify_otp;
     });
 }
 

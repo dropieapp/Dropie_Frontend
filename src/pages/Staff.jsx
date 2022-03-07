@@ -11,6 +11,7 @@ import DashboardCard10 from "../partials/dashboard/DashboardCard10";
 import DashboardCard100 from "../partials/dashboard/DashboardCard100";
 import DashboardCard16 from "../partials/dashboard/DashboardCard16";
 import { useSelector, useDispatch } from "react-redux";
+import InputField from "../components/InputField";
 // import {
 //   userSelector,
 //   fetchUserBytoken,
@@ -36,45 +37,68 @@ function beforeUpload(file) {
   return isJpgOrPng && isLt2M;
 }
 function Staff() {
-  const handleChange = useCallback((info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
+  // const handleChange = useCallback((info) => {
+  //   if (info.file.status === "uploading") {
+  //     setLoading(true);
+  //     return;
+  //   }
 
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (imageUrl) => {});
-    }
-  });
+  //   if (info.file.status === "done") {
+  //     // Get this url from response in real world.
+  //     getBase64(info.file.originFileObj, (imageUrl) => {});
+  //   }
+  // });
   // const { loading, imageUrl } = this.state;
 
   const [showModal, setShowModal] = useState(false);
-  const [imageUrl, setImageUrl] = useState();
-  const [loading, setLoading] = useState(false);
-  // const history = useHistory();
+  const [inputValue, setInputValue] = useState({
+    first_name: "",
+    last_name: "",
+    other_name: "",
+    lga: "",
+    id_card: "",
+    address: "",
+    land_mark: "",
+    utility_bill: "",
+    nok_full_name: "",
+    nok_relationship: "",
+    nok_phone_number: "",
+    nok_address: "",
+    nok_email: "",
+    phone_number: "",
+    transaction_pin: "",
+    defaukt_pick_location: "",
+    email: "",
+    price: "",
+  });
+  const {
+    first_name,
+    last_name,
+    other_name,
+    lga,
+    id_card,
+    address,
+    land_mark,
+    utility_bill,
+    nok_full_name,
+    nok_relationship,
+    nok_phone_number,
+    nok_address,
+    nok_email,
+    phone_number,
+    transaction_pin,
+    defaukt_pick_location,
+    email,
+  } = inputValue;
 
-  // const dispatch = useDispatch();
-  // const { isFetching, isError } = useSelector(userSelector);
-  // useEffect(() => {
-  //   dispatch(fetchUserBytoken({ token: localStorage.getItem("token") }));
-  // }, []);
-
-  // const { username, email } = useSelector(userSelector);
-
-  // useEffect(() => {
-  //   if (isError) {
-  //     dispatch(clearState());
-  //     history.push("/login");
-  //   }
-  // }, [isError]);
-
-  // const onLogOut = () => {
-  //   localStorage.removeItem("token");
-
-  //   history.push("/login");
-  // };
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    console.log(inputValue);
+  };
   return (
     <Layout>
       <div className="sm:flex sm:justify-between sm:items-center mb-8">
@@ -151,7 +175,7 @@ function Staff() {
                     {/*header*/}
                     <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                       <h3 class="text-lg font-normal text-center text-black lg:text-2xl">
-                        Create Order
+                        Add Agent
                       </h3>
                       <button
                         type="button"
@@ -177,20 +201,43 @@ function Staff() {
                     <div class="py-4 px-8 bg-white rounded-lg my-10">
                       <Row className="mt-5" gutter={16}>
                         <Col span={12}>
-                          <FormField
+                          <InputField
                             type="text"
-                            label="First Name"
-                            id="first_name"
+                            value={first_name}
                             placeholder="Makanbi"
+                            label="First Name"
                             name="first_name"
+                            onChange={handleChange}
                           />
                         </Col>
                         <Col span={12}>
+                          <InputField
+                            type="text"
+                            value={last_name}
+                            label="Last Name"
+                            placeholder="Josh AB"
+                            name="last_name"
+                            onChange={handleChange}
+                          />
+                        </Col>
+                      </Row>
+                      <Row className="mt-5" gutter={16}>
+                        <Col span={12}>
+                          <InputField
+                            type="text"
+                            value={other_name}
+                            name="other_name"
+                            label="Other Name"
+                            placeholder="Makanbi"
+                            onChange={handleChange}
+                          />
+                        </Col>
+                        <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
-                            label="Last Name"
+                            label="Local Government"
                             id="text"
-                            placeholder="Josh AB"
+                            placeholder="Ikeja"
                           />
                         </Col>
                       </Row>
@@ -207,59 +254,19 @@ function Staff() {
                         </Col>
                       </Row> */}
                       <Row className="mt-5" gutter={16}>
-                        <Col span={12} className="gutter-row">
-                          <FormField
-                            type="text"
-                            label="Local Government"
-                            id="text"
-                            placeholder="Ikeja"
-                          />
-                        </Col>
                         <Col span={12}>
-                          <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader w-full p-9"
-                            showUploadList={false}
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                          >
-                            {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt="avatar"
-                                style={{
-                                  width: "100%",
-                                }}
-                              />
-                            ) : (
-                              <div className="flex flex-col col-span-full sm:col-span-4 lg:col-span-3 xl:col-span-6 items-end">
-                                <div className="sm:w-48 md:w-full xl:w-full rounded-lg shadow-xl bg-gray-50">
-                                  <div className="m-4">
-                                    <div className="flex items-center justify-center w-full">
-                                      <div className="flex border-2 border-dashed border-gray-200 hover:bg-gray-100 hover:border-gray-300">
-                                        <div className="flex items-center justify-center p-7">
-                                          {loading ? (
-                                            <LoadingOutlined />
-                                          ) : (
-                                            <PlusOutlined />
-                                          )}
-                                          <p className="px-3 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                            Add your Id Card
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </Upload>
+                          <div class="text-gray-700">
+                            <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
+                              I.D Card
+                            </label>
+                            <input
+                              type="file"
+                              id="id_card"
+                              name="id_card"
+                              className="appearance-none block w-full px-8 py-2 border border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            />
+                          </div>
                         </Col>
-                      </Row>
-
-                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -268,6 +275,9 @@ function Staff() {
                             placeholder="Ebitu Ukiwe"
                           />
                         </Col>
+                      </Row>
+
+                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -276,51 +286,22 @@ function Staff() {
                             placeholder="NCDC"
                           />
                         </Col>
+                        <Col span={12}>
+                          <div class="text-gray-700">
+                            <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
+                              Utility Bill
+                            </label>
+                            <input
+                              type="file"
+                              id="utility_bill"
+                              name="utility_bill"
+                              className="appearance-none block w-full px-8 py-2 border border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            />
+                          </div>
+                        </Col>
                       </Row>
 
                       <Row className="mt-5" gutter={16}>
-                        <Col span={12}>
-                          <Upload
-                            name="avatar"
-                            listType="picture-card"
-                            className="avatar-uploader w-full p-9"
-                            showUploadList={false}
-                            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                            beforeUpload={beforeUpload}
-                            onChange={handleChange}
-                          >
-                            {imageUrl ? (
-                              <img
-                                src={imageUrl}
-                                alt="avatar"
-                                style={{
-                                  width: "100%",
-                                }}
-                              />
-                            ) : (
-                              <div className="flex flex-col col-span-full sm:col-span-4 lg:col-span-3 xl:col-span-6 items-end">
-                                <div className="sm:w-48 md:w-full xl:w-full rounded-lg shadow-xl bg-gray-50">
-                                  <div className="m-4">
-                                    <div className="flex items-center justify-center w-full">
-                                      <div className="flex border-2 border-dashed border-gray-200 hover:bg-gray-100 hover:border-gray-300">
-                                        <div className="flex items-center justify-center p-7">
-                                          {loading ? (
-                                            <LoadingOutlined />
-                                          ) : (
-                                            <PlusOutlined />
-                                          )}
-                                          <p className="px-3 text-sm tracking-wider text-gray-400 group-hover:text-gray-600">
-                                            Utility Bill
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </Upload>
-                        </Col>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -329,8 +310,6 @@ function Staff() {
                             placeholder="Mallam Sari"
                           />
                         </Col>
-                      </Row>
-                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -339,6 +318,8 @@ function Staff() {
                             placeholder="Uncle"
                           />
                         </Col>
+                      </Row>
+                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -347,8 +328,6 @@ function Staff() {
                             placeholder="08234567222"
                           />
                         </Col>
-                      </Row>
-                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -357,6 +336,8 @@ function Staff() {
                             placeholder="Lagos Street, Abuja"
                           />
                         </Col>
+                      </Row>
+                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -365,8 +346,6 @@ function Staff() {
                             placeholder="test@gmail.com"
                           />
                         </Col>
-                      </Row>
-                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -375,6 +354,8 @@ function Staff() {
                             placeholder="08112345678"
                           />
                         </Col>
+                      </Row>
+                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
@@ -383,22 +364,12 @@ function Staff() {
                             placeholder="3832"
                           />
                         </Col>
-                      </Row>
-                      <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
                           <FormField
                             type="text"
                             label="Default Pickup Location"
                             id="text"
                             placeholder="Nasarawa"
-                          />
-                        </Col>
-                        <Col span={12} className="gutter-row">
-                          <FormField
-                            type="text"
-                            label="Business id"
-                            id="text"
-                            placeholder="9cc377c6-2a1b-4b14-8724-50b4db30e712"
                           />
                         </Col>
                       </Row>

@@ -9,6 +9,7 @@ export const userActions = {
   register,
   upload_companyinfo,
   getAll,
+  verify_otp,
   getAllFleet,
   delete: _delete,
 };
@@ -157,6 +158,27 @@ function upload_companyinfo(info) {
   }
   function success(company_info) {
     return { type: userConstants.COMPANY_SUCCESS, company_info };
+  }
+  function failure(error) {
+    return { type: userConstants.COMPANY_FAILURE, error };
+  }
+}
+// Validate OTP
+function verify_otp(info) {
+  return (dispatch) => {
+    dispatch(request(info));
+
+    userService.verify_otp(info).then(
+      (user) => dispatch(success(user)),
+      (error) => dispatch(failure(error.toString()))
+    );
+  };
+
+  function request() {
+    return { type: userConstants.COMPANY_REQUEST };
+  }
+  function success(verify_otp) {
+    return { type: userConstants.COMPANY_SUCCESS, verify_otp };
   }
   function failure(error) {
     return { type: userConstants.COMPANY_FAILURE, error };

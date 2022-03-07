@@ -20,7 +20,6 @@ function UserMenu() {
   const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.authentication.user.data);
   const dispatch = useDispatch();
-  console.log(user);
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
@@ -83,9 +82,9 @@ function UserMenu() {
 
             <div className="flex items-center truncate">
               <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">
-                {user.manager_name}.
+                {user === null ? user.manager_name : null}.
                 <div className="text-xs text-slate-500 italic">
-                  {user.business.business_name}
+                  {user === null ? user.business.business_name : null}
                 </div>
               </span>
               <svg
@@ -113,10 +112,10 @@ function UserMenu() {
             >
               <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
                 <div className="font-medium text-slate-800">
-                  {user.manager_name}
+                  {user === null ? user.manager_name : null}.
                 </div>
                 <div className="text-xs text-slate-500 italic">
-                  {user.business.business_name}
+                  {user === null ? user.business.business_name : null}
                 </div>
               </div>
               <ul>

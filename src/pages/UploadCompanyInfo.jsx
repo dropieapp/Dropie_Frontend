@@ -29,7 +29,7 @@ function UploadCompanyInfo() {
   const pageStage = useSelector((state) => state.company_reducer.FormStage);
   const stateAll = useSelector((state) => state);
   // console.log(stateAll.company_reducer.FormInfo);
-  console.log(`output: ${JSON.stringify(stateAll, null, 2)}`); // output results to console.log
+  // console.log(`output: ${JSON.stringify(stateAll, null, 2)}`); // output results to console.log
 
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
@@ -58,12 +58,25 @@ function UploadCompanyInfo() {
 
     setIsSubmitted(true); // update form status to submitted
   };
+
   useEffect(() => {
     let verify_otp = JSON.parse(localStorage.getItem("verify_otp"));
+    // if (isSubmitted) {
+    //   console.log(formData);
+    //   dispatch(userActions.verify_otp(formData));
+    // } else if (!localStorage.getItem("verify_otp")) {
+    //   return;
+    // } else {
+    //   if (verify_otp.next === "dashboard") {
+    //     history.push("/login");
+    //   }
+    // }
     if (isSubmitted) {
       console.log(formData);
       dispatch(userActions.verify_otp(formData));
-    } else if (!localStorage.getItem("verify_otp")) {
+      window.location.reload();
+    }
+    if (!localStorage.getItem("verify_otp")) {
       return;
     } else {
       if (verify_otp.next === "dashboard") {
