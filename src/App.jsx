@@ -50,7 +50,8 @@ function App() {
           />{" "}
           <PrivateRoute path="/staffs" component={Staff} />
           <PrivateRoute path="/fleet-management" component={FleetManagement} />
-          <PrivateRoute path="/deliveries" component={Deliveries} />
+          <Route path="/deliveries" component={Deliveries} />
+          {/* <PrivateRoute path="/deliveries" component={Deliveries} /> */}
           <Route path="/login" component={Login} />
           <Route path="/register" component={SignUp} />
           <Redirect from="*" to="/" />

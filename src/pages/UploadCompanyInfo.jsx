@@ -61,16 +61,6 @@ function UploadCompanyInfo() {
 
   useEffect(() => {
     let verify_otp = JSON.parse(localStorage.getItem("verify_otp"));
-    // if (isSubmitted) {
-    //   console.log(formData);
-    //   dispatch(userActions.verify_otp(formData));
-    // } else if (!localStorage.getItem("verify_otp")) {
-    //   return;
-    // } else {
-    //   if (verify_otp.next === "dashboard") {
-    //     history.push("/login");
-    //   }
-    // }
     if (isSubmitted) {
       console.log(formData);
       dispatch(userActions.verify_otp(formData));

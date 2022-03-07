@@ -233,11 +233,13 @@ function Staff() {
                           />
                         </Col>
                         <Col span={12} className="gutter-row">
-                          <FormField
+                          <InputField
                             type="text"
-                            label="Local Government"
-                            id="text"
+                            value={lga}
+                            name="lga"
+                            label="Local Goverment"
                             placeholder="Ikeja"
+                            onChange={handleChange}
                           />
                         </Col>
                       </Row>
@@ -255,23 +257,21 @@ function Staff() {
                       </Row> */}
                       <Row className="mt-5" gutter={16}>
                         <Col span={12}>
-                          <div class="text-gray-700">
-                            <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
-                              I.D Card
-                            </label>
-                            <input
-                              type="file"
-                              id="id_card"
-                              name="id_card"
-                              className="appearance-none block w-full px-8 py-2 border border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
-                            />
-                          </div>
+                          <InputField
+                            type="flie"
+                            value={id_card}
+                            name="id_card"
+                            label="I.D Card"
+                            onChange={handleChange}
+                          />
                         </Col>
                         <Col span={12} className="gutter-row">
-                          <FormField
+                          <InputField
                             type="text"
+                            value={address}
+                            name="address"
+                            onChange={handleChange}
                             label="Address"
-                            id="text"
                             placeholder="Ebitu Ukiwe"
                           />
                         </Col>
@@ -279,6 +279,14 @@ function Staff() {
 
                       <Row className="mt-5" gutter={16}>
                         <Col span={12} className="gutter-row">
+                          <InputField
+                            type="text"
+                            value={other_name}
+                            name="other_name"
+                            label="Other Name"
+                            placeholder="Makanbi"
+                            onChange={handleChange}
+                          />
                           <FormField
                             type="text"
                             label="Land Mark"
