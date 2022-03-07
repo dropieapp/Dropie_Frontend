@@ -23,6 +23,7 @@ function UserMenu() {
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
+  // console.log(userCode);
 
   // close on click outside
   useEffect(() => {
@@ -82,9 +83,11 @@ function UserMenu() {
 
             <div className="flex items-center truncate">
               <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">
-                {user === null ? user.manager_name : null}.
+                {userCode.manager_name === null ? null : userCode.manager_name}.
                 <div className="text-xs text-slate-500 italic">
-                  {user === null ? user.business.business_name : null}
+                  {userCode.business && userCode.business.business_name
+                    ? userCode.business.business_name
+                    : null}
                 </div>
               </span>
               <svg
@@ -112,10 +115,15 @@ function UserMenu() {
             >
               <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
                 <div className="font-medium text-slate-800">
-                  {user === null ? user.manager_name : null}.
+                  {userCode.manager_name === null
+                    ? null
+                    : userCode.manager_name}
+                  .
                 </div>
                 <div className="text-xs text-slate-500 italic">
-                  {user === null ? user.business.business_name : null}
+                  {userCode.business && userCode.business.business_name
+                    ? userCode.business.business_name
+                    : null}
                 </div>
               </div>
               <ul>
@@ -131,7 +139,7 @@ function UserMenu() {
                 <li>
                   <Link
                     className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                    to="/"
+                    to="/login"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     Sign Out

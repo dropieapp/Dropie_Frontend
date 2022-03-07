@@ -64,7 +64,7 @@ function UploadCompanyInfo() {
     if (isSubmitted) {
       console.log(formData);
       dispatch(userActions.verify_otp(formData));
-      window.location.reload();
+      // window.location.reload();
     }
     if (!localStorage.getItem("verify_otp")) {
       return;

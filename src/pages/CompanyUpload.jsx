@@ -87,8 +87,9 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
       // );
       // check if form status submitted
       // //  setUpload(uploads);
+      console.log(info)
       dispatch(userActions.upload_companyinfo(info));
-      window.location.reload();
+      // window.location.reload();
     }
   }, [isSubmitted, stateOutput]);
 

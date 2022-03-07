@@ -107,10 +107,7 @@ function register(user) {
 function company_info(info) {
   const requestOptions = {
     method: "POST",
-
-    // headers: { ...authHeader(), "Content-Type": "multipart/form-data" },
     headers: { ...authHeader() },
-
     body: info,
   };
 
@@ -119,7 +116,7 @@ function company_info(info) {
     .then((onboard) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem("onboard", JSON.stringify(onboard));
-
+      window.location.reload();
       return onboard;
     });
 }
@@ -138,7 +135,7 @@ function verify_otp(info) {
     .then((verify_otp) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
       localStorage.setItem("verify_otp", JSON.stringify(verify_otp));
-
+window.location.reload();
       return verify_otp;
     });
 }
