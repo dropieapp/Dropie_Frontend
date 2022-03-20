@@ -23,7 +23,7 @@ function login(email, password) {
   };
 
   return fetch(
-    `http://apibeta.dropie.ng/api/business/auth/login`,
+    `https://apibeta.dropie.ng/api/business/auth/login`,
     requestOptions
   )
     .then(handleLoginResponse)
@@ -50,7 +50,7 @@ function getAll() {
   };
 
   return fetch(
-    `http://apibeta.dropie.ng/api/business/auth/register/users`,
+    `https://apibeta.dropie.ng/api/business/auth/register/users`,
     requestOptions
   )
     .then(handleResponse)
