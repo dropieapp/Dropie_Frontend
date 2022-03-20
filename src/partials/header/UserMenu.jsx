@@ -10,16 +10,16 @@ function UserMenu() {
   const location = useLocation();
   const { pathname } = location;
 
-  const [userCode, setUserCode] = useState("");
+  // const [userCode, setUserCode] = useState("");
 
-  useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    setUserCode(user.data);
-  }, []);
+  // useEffect(() => {
+  //   let user = JSON.parse(localStorage.getItem("user"));
+  //   setUserCode(user.data);
+  // }, []);
 
-  const users = useSelector((state) => state.users);
-  const user = useSelector((state) => state.authentication.user.data);
-  const dispatch = useDispatch();
+  // const users = useSelector((state) => state.users);
+  // const user = useSelector((state) => state.authentication.user.data);
+  // const dispatch = useDispatch();
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
@@ -52,7 +52,7 @@ function UserMenu() {
 
   return (
     <div>
-      {userCode.business_id === null ? (
+      {/* {userCode.business_id === null ? (
         <div className="relative inline-flex">
           <NavLink
             exact
@@ -149,7 +149,8 @@ function UserMenu() {
             </div>
           </Transition>
         </div>
-      )}
+      )} */}
+      <p>UserMenu</p>
     </div>
   );
 }

@@ -6,7 +6,7 @@ import toast, { Toaster } from "react-hot-toast";
 // import { store } from "./_helpers";
 import store from "./store";
 
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>

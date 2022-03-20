@@ -9,24 +9,24 @@ import { userActions } from "../_actions";
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [userCode, setUserCode] = useState("");
-  const [userVerify, setUserVerify] = useState("");
+  // const [userCode, setUserCode] = useState("");
+  // const [userVerify, setUserVerify] = useState("");
 
-  useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    let onboard = JSON.parse(localStorage.getItem("onboard"));
-    setUserCode(user.data);
-    if (!localStorage.getItem("onboard")) {
-      return;
-    } else {
-      setUserVerify(onboard.next);
-    }
-  }, []);
+  // useEffect(() => {
+  //   let user = JSON.parse(localStorage.getItem("user"));
+  //   let onboard = JSON.parse(localStorage.getItem("onboard"));
+  //   setUserCode(user.data);
+  //   if (!localStorage.getItem("onboard")) {
+  //     return;
+  //   } else {
+  //     setUserVerify(onboard.next);
+  //   }
+  // }, []);
 
-    const dispatch = useDispatch();
-    useEffect(() => {
-      dispatch(userActions.get_agents());
-    }, []);
+  //   const dispatch = useDispatch();
+  //   useEffect(() => {
+  //     dispatch(userActions.get_agents());
+  //   }, []);
 
   return (
     <React.Fragment>
@@ -40,16 +40,15 @@ const Layout = ({ children }) => {
           <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
           <main>
-            {userCode.business_id === null ? (
+            {/* {userCode.business_id === null ? (
               <p className="bg-orange-900 text-white m-6 p-4">
                 <Link to="/company-info">Verify account</Link>
               </p>
-            ) : null}
+            ) : null} */}
             <div
-              className={
-                "px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto" +
-                (userCode.business_id === null ? "bg-gray-200 opacity-10" : "")
-              }
+              className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto"
+              //   (userCode.business_id === null ? "bg-gray-200 opacity-10" : "")
+              // }
             >
               {children}
             </div>

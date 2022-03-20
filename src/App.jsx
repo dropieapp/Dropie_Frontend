@@ -28,16 +28,23 @@ import Deliveries from "./pages/Deliveries";
 import CreateInvoice from "./pages/CreateInvoice";
 import Invoice from "./pages/Invoice";
 import SendInvoice from "./pages/SendInvoice";
+import Dash from "./pages/Dash";
+import { clearMessage } from "./actions/message";
 
 function App() {
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   history.listen((location, action) => {
+  //     // clear alert on location change
+  //     dispatch(alertActions.clear());
+  //   });
+  // }, []);
   useEffect(() => {
-    history.listen((location, action) => {
-      // clear alert on location change
-      dispatch(alertActions.clear());
+    history.listen((location) => {
+      dispatch(clearMessage()); // clear message when changing location
     });
-  }, []);
+  }, [dispatch]);
   return (
     <div className="Dropie">
       <Router history={history}>
@@ -61,6 +68,7 @@ function App() {
           <Route path="/verify" component={VerifyNumber} />
           <Route path="/change-password" component={ChangePassword} />
           <Route path="/company-info" component={UploadCompanyInfo} />
+          {/* <Route exact path={["/", "/home"]} component={Dashboard} /> */}
           <PrivateRoute exact component={Dashboard} path="/" />
           <PrivateRoute
             exact

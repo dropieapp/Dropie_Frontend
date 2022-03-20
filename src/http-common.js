@@ -1,11 +1,42 @@
 import axios from "axios";
 
-export default axios.create({
-  baseURL: "http://127.0.0.1:8000/api",
+
+export function authHeader() {
+  // return authorization header with jwt token
+  let user = JSON.parse(localStorage.getItem("user"));
+
+  if (user && user.token) {
+    return { Authorization: "Bearer " + user.token };
+  } else {
+    return {};
+  }
+}
+
+const config = "https://apibeta.dropie.ng/api/";
+
+export const authenticationHeader = axios.create({
+  baseURL: `${config}`,
   headers: {
     "Content-type": "application/json",
-    'Authorization': 'Bearer ' + "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5NWMyZjg4My03MTNmLTQ1MTQtODY4My1mNmVlYzE0OWFlZGQiLCJqdGkiOiI5NzZmYjBmN2ZhOTg1MmExOGQ5ZTU3Y2JhMzkxMjQzYmVlOWU0Y2Q2ZjQxNmRkOGMwY2JmMGEzNGQ2ODIwNjU5MjY5OTcxZTg1YTVkYTFlOSIsImlhdCI6MTY0NjgzNTU1NS4zNjA2NjQsIm5iZiI6MTY0NjgzNTU1NS4zNjA2NjcsImV4cCI6MTY3ODM3MTU1NS4zNTMwMDEsInN1YiI6ImZlMjFmMDMzLWE0ZjMtNGUwMi1hM2RhLTNkZmM0YWQ4MWVjOCIsInNjb3BlcyI6W119.AK9NFT57wxt-29TPfZbkT6UKPqAgs9-K5AGigqLMtACklDgdqOtxhoogAL0ORXG0yshNVfLDUzcjNdxn_MCp_V82_7rdqQO9BGBJq4sReWWFHTL8TAGsTt7P_6f42g2KWNsKiI2mDxoxn5tok9DQHeK-z0rIDf-K_gPPG3bIn_fs5xyMi3afoYf0yPNceAqMmwtE2Xg23uu6sV5TjRS-t_zbiSuF4SCN_CW8CFDWJCW9zHGZ2vbhKXzA3kkg0TC7AmTCw4Tmh_x-Mt3XYefQ7PuUUuw6VLNkm206gSxaWLTNy5eIJKUktN04GFS6TciK1gCbojlMnCNfnayFmZM9OTF7pVyCqau-jr7ZnYTOVfRQDP66DSRh8fpy4hUMXemvOQD2nvTBo5skOJQJtRzoATTs8s4CE3ni5Mc2jmAXavMgpIS194kMbZ-CqGOjvoAE2QJrFzrNU9YsZHKLX3Ldqg--MdWJQVLeF7Wt8KyE1Y4s7aetQcupLjH9oeROalrabscdgRSLTjwPzyMgVxJot5J3pIi051cE4GhudsRG1Xpfi1NdGxHNC4N9ARsWIY-4FbzUDOnJXQ1x8Vn7Xe9M_jBYf_l3GK3peZlyvJ7Ap9cbrWP-YHjErrDClMPI0i8QmbKiqBT7HI1pg1tawv0t56V6TAwxxe26lfoL21nsPy0"
   }
 });
+
+export const normalHeader = axios.create({
+  
+  baseURL: `${config}`,
+  headers: {
+    "Content-type": "application/json",
+    ...authHeader(),
+  }
+});
+
+
+export const fileHeader = axios.create({
+  baseURL: `${config}`,
+  headers: {
+    ...authHeader(),
+  },
+});
+
 
 

@@ -3,34 +3,34 @@
   out delivery routes and Requests
 */
 
-import http from "../http-common";
+import { normalHeader } from "../http-common";
 
 const getAll = () => {
-  return http.get("/business/deliveries");
+  return normalHeader.get("/business/deliveries");
 };
 
-const get = id => {
-  return http.get(`/albums/${id}`);
+const get = (id) => {
+  return normalHeader.get(`/albums/${id}`);
 };
 
-const create = data => {
-  return http.post("/business/delivery", data);
+const create = (data) => {
+  return normalHeader.post("/business/delivery", data);
 };
 
 const update = (id, data) => {
-  return http.put(`/tutorials/${id}`, data);
+  return normalHeader.put(`/tutorials/${id}`, data);
 };
 
-const remove = id => {
-  return http.delete(`/tutorials/${id}`);
+const remove = (id) => {
+  return normalHeader.delete(`/tutorials/${id}`);
 };
 
 const removeAll = () => {
-  return http.delete(`/tutorials`);
+  return normalHeader.delete(`/tutorials`);
 };
 
-const findByTitle = title => {
-  return http.get(`/tutorials?title=${title}`);
+const findByTitle = (title) => {
+  return normalHeader.get(`/tutorials?title=${title}`);
 };
 
 const DeliveryService = {
@@ -40,7 +40,7 @@ const DeliveryService = {
   update,
   remove,
   removeAll,
-  findByTitle
+  findByTitle,
 };
 
 export default DeliveryService;
