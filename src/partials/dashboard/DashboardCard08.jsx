@@ -7,12 +7,12 @@ import { tailwindConfig } from "../../utils/Utils";
 function DashboardCard08(props) {
   const chartData = {
     labels: [
-      "12-01-2020",
-      "01-01-2021",
+      "01-01-2020",
       "02-01-2021",
       "03-01-2021",
       "04-01-2021",
       "05-01-2021",
+      "06-01-2021",
     ],
     datasets: [
       // Indigo line
@@ -30,7 +30,7 @@ function DashboardCard08(props) {
       // Blue line
       {
         label: "Previous",
-        data: [184, 86, 42, 378, 42, 243, 38],
+        data: [184, 86, 42, 378, 49, 243, 38],
         borderColor: "rgb(237, 214, 194)",
         fill: false,
         borderWidth: 2,
