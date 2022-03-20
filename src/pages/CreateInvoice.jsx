@@ -42,6 +42,7 @@ const CreateInvoice = (props) => {
   const handleSelectChange = useCallback(() => {
     setSelectedValue(selectedValue);
   });
+  console.log(selectedValue)
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState();
   const state = useRef({

@@ -56,7 +56,7 @@ function SignIn() {
 
           <form name="form" onSubmit={handleSubmit} className="space-y-6">
             {alert.message &&
-              (alert.type === "danger" ? (
+              (alert.type === "alert-danger" ? (
                 <div
                   className={`alert p-4 my-3 text-red-500 bg-red-200 ${alert.type}`}
                 >

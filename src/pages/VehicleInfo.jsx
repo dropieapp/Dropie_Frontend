@@ -7,6 +7,7 @@ import { Tabs } from "antd";
 import "../css/custom.css";
 import { Row, Col } from "antd";
 import CheckboxTable from "../components/CheckboxTable";
+import { Link } from "react-router-dom";
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -67,28 +68,30 @@ const VehicleInfo = (props) => {
         <div className="sm:flex sm:justify-between sm:items-center mb-8">
           <DashboardTitle title="Truck" subtitle="Vechicle ID: 224488" />
           <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-            <button
-              className="btn hover:text-yellow-500 text-gray border h-8 px-4 text-sm"
-              style={{
-                borderColor: "rgb(249, 123, 4, 0.2",
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+            <Link to="/fleet-management">
+              <button
+                className="btn hover:text-yellow-500 text-gray border h-8 px-4 text-sm"
+                style={{
+                  borderColor: "rgb(249, 123, 4, 0.2",
+                }}
               >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 17l-5-5m0 0l5-5m-5 5h12"
-                />
-              </svg>
-              <span className="hidden xs:block ml-2 mr-2">Back</span>
-            </button>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M11 17l-5-5m0 0l5-5m-5 5h12"
+                  />
+                </svg>
+                <span className="hidden xs:block ml-2 mr-2">Back</span>
+              </button>
+            </Link>
           </div>
         </div>
         <div

@@ -124,7 +124,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
           </button>
           {/* Logo */}
           <NavLink exact to="/" className="block mx-auto">
-            <img class="mx-auto h-12 w-full my-10" src={Logo} alt="Workflow" />
+            <img
+              className="mx-auto h-12 w-full my-10"
+              src={Logo}
+              alt="Workflow"
+            />
           </NavLink>
         </div>
 

@@ -28,6 +28,7 @@
     "react-otp-input": "^2.4.0",
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.0",
+    "react-simple-star-rating": "^4.0.5",
     "react-transition-group": "^4.4.1",
     "redux": "^4.1.2",
     "redux-devtools": "^3.7.0",

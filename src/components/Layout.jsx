@@ -3,6 +3,8 @@ import Sidebar from "./Sidebar";
 import Header from "../partials/Header";
 import Banner from "../partials/Banner";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { userActions } from "../_actions";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -20,6 +22,11 @@ const Layout = ({ children }) => {
       setUserVerify(onboard.next);
     }
   }, []);
+
+    const dispatch = useDispatch();
+    useEffect(() => {
+      dispatch(userActions.get_agents());
+    }, []);
 
   return (
     <React.Fragment>
