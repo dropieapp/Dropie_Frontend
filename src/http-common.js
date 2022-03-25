@@ -1,16 +1,18 @@
 import axios from "axios";
 
 
-export function authHeader() {
-  // return authorization header with jwt token
-  let user = JSON.parse(localStorage.getItem("user"));
+// export function authHeader() {
+//   // return authorization header with jwt token
+//   let user = JSON.parse(localStorage.getItem("user"));
 
-  if (user && user.token) {
-    return { Authorization: "Bearer " + user.token };
-  } else {
-    return {};
-  }
-}
+//   if (user && user.token) {
+//     return { Authorization: "Bearer " + user.token };
+//   } else {
+//     return {};
+//   }
+// }
+
+import { authHeader } from "./_helpers";
 
 const config = "https://apibeta.dropie.ng/api/";
 

@@ -5,7 +5,8 @@ import SidebarLinkGroup from "../partials/SidebarLinkGroup";
 import Logo from "../assets/icons/dropexpress-logo.svg";
 import verified from "../assets/gif/icons8-approval.gif";
 
-// import { useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../actions/authentication";
 // import { userSelector, clearState } from "../features/User/UserSlice";
 // import Loader from "../assets/gif/loading.gif";
 // import { useHistory } from "react-router-dom";
@@ -13,30 +14,16 @@ import verified from "../assets/gif/icons8-approval.gif";
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   // const history = useHistory();
 
-  // const dispatch = useDispatch();
-  // const { isFetching, isError } = useSelector(userSelector);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (isError) {
-  //     dispatch(clearState());
-  //     history.push("/login");
-  //   }
-  // }, [isError]);
-
-  // const onLogOut = () => {
-  //   localStorage.removeItem("token");
-
-  //   history.push("/login");
-  // };
-
+  const logOut = () => {
+    dispatch(logout());
+  };
   const [userCode, setUserCode] = useState("");
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem("user"));
-
-    console.log(user.data);
     setUserCode(user.data);
-    console.log(userCode);
   }, []);
 
   const location = useLocation();
@@ -540,6 +527,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                 <NavLink
                   exact
                   to="/login"
+                  onClick={logOut}
                   className={`block text-gray-500 hover:text-orange-600 truncate transition duration-150`}
                 >
                   <div className="flex items-center">

@@ -5,7 +5,6 @@
 //   LOGOUT,
 // } from "../actions/types";
 
-
 // let user = JSON.parse(localStorage.getItem("user"));
 // const initialState = user ? { loggedIn: true, user } : {};
 
@@ -29,7 +28,6 @@
 //       return state;
 //   }
 // }
-
 
 import {
   REGISTER_SUCCESS,
@@ -68,11 +66,13 @@ export default function (state = initialState, action) {
         user: null,
       };
     case LOGOUT:
-      return {
-        ...state,
-        isLoggedIn: false,
-        user: null,
-      };
+      // return {
+      //   ...state,
+      //   isLoggedIn: false,
+      //   user: null,
+      // };
+      return {};
+
     default:
       return state;
   }

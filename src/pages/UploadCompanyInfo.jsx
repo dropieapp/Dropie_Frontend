@@ -9,27 +9,24 @@ import { useDispatch, useSelector } from "react-redux";
 import LazyLoad from "react-lazyload"; // use lazyload for components and image
 import CompanyInfo from "./CompanyInfo";
 import CompanyUpload from "./CompanyUpload";
-import CompanyCompleted from "./ConfirmCompanyNo";
-import { userActions } from "../_actions";
+import { verifyOtp } from "../actions/onboard";
 
-function UploadCompanyInfo() {
+function UploadCompanyInfo(props) {
   const dispatch = useDispatch();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const alert = useSelector((state) => state.alert);
 
   const [value, setValue] = useState("");
   const handleChange = (value) => {
     setValue(value);
   };
-
   const [number, setNumber] = useState();
-  const [formData, setFormData] = useState();
+  // const [formData, setFormData] = useState();
+
+  const [phoneNumber, setPhoneNumber] = useState();
+  const [otp, setOtp] = useState();
 
   const pageStage = useSelector((state) => state.company_reducer.FormStage);
-  const stateAll = useSelector((state) => state);
-  // console.log(stateAll.company_reducer.FormInfo);
-  // console.log(`output: ${JSON.stringify(stateAll, null, 2)}`); // output results to console.log
 
   const [showModal, setShowModal] = React.useState(false);
   const [showModal2, setShowModal2] = React.useState(false);
@@ -51,10 +48,12 @@ function UploadCompanyInfo() {
   const [isSubmitted, setIsSubmitted] = useState(false); // state for form status
   const handleFormSubmit = (e) => {
     e.preventDefault(); // stop form submission
-    setFormData({
-      phone_number: number.business.phone_number,
-      otp: value,
-    });
+    // setFormData({
+    //   phone_number: number.business.phone_number,
+    //   otp: value,
+    // });
+    setPhoneNumber(number.business.phone_number);
+    setOtp(value);
 
     setIsSubmitted(true); // update form status to submitted
   };
@@ -62,8 +61,7 @@ function UploadCompanyInfo() {
   useEffect(() => {
     let verify_otp = JSON.parse(localStorage.getItem("verify_otp"));
     if (isSubmitted) {
-      console.log(formData);
-      dispatch(userActions.verify_otp(formData));
+      dispatch(verifyOtp(phoneNumber, otp));
       // window.location.reload();
     }
     if (!localStorage.getItem("verify_otp")) {
@@ -73,7 +71,7 @@ function UploadCompanyInfo() {
         history.push("/login");
       }
     }
-  }, [isSubmitted, stateAll]);
+  }, [isSubmitted, phoneNumber, otp]);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -89,13 +87,13 @@ function UploadCompanyInfo() {
           <div className="bg-white h-screen py-5 px-5">
             <div className="flex bg-white">
               <div className="w-full max-w-xl m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-12">
-                {alert.message && (
+                {/* {alert.message && (
                   <div
                     className={`alert p-4 my-3 text-red-500 font-semibold bg-red-200 ${alert.type}`}
                   >
                     {alert.message}
                   </div>
-                )}
+                )} */}
                 {pageStage === 1 && (
                   // Signup Page
                   <LazyLoad once>
@@ -111,30 +109,17 @@ function UploadCompanyInfo() {
 
                 {pageStage === 2 && (
                   // Privacy Page
-                  <LazyLoad once>
-                    <div className="wrap">
-                      <CompanyUpload
-                        pageTitle={"Privacy Form:"} // form page stage title
-                        submitButtonText={"Save"} // submit next button display text
-                        previousButton={true} // show/hide previous button
-                        // previousButton={true} // show/hide previous button
-                        // successMessage={"Please verify your account!"} // page success message
-                      />
-                    </div>
-                  </LazyLoad>
-                )}
-                {pageStage === 3 && (
-                  // Completion Page
-                  <LazyLoad once>
-                    <div className="wrap">
-                      <CompanyCompleted
-                        pageTitle={"Success!"} // form page stage title
-                        successMessage={
-                          "Please verify your email address, you should have recieved an email from us already!"
-                        } // page success message
-                      />
-                    </div>
-                  </LazyLoad>
+                  // <LazyLoad once>
+                  <div className="wrap">
+                    <CompanyUpload
+                      pageTitle={"Privacy Form:"} // form page stage title
+                      submitButtonText={"Save"} // submit next button display text
+                      previousButton={true} // show/hide previous button
+                      // previousButton={true} // show/hide previous button
+                      // successMessage={"Please verify your account!"} // page success message
+                    />
+                  </div>
+                  // </LazyLoad>
                 )}
               </div>
               {showModal ? (

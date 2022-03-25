@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import FlatButton from "./FlatButton";
 
@@ -14,7 +13,7 @@ export const tableConstants = (handleEdit) => {
       render: (rowData) => {
         return (
           <div className="text-gray-800">
-            {rowData.first_name} {rowData.last_name}
+            {rowData.first_name}  #{rowData.other_name}
           </div>
         );
       },
@@ -33,15 +32,7 @@ export const tableConstants = (handleEdit) => {
         return (
           <div>
             {rowData && rowData.fleet === null ? (
-              <Link
-                to={{
-                  pathname: `fleet-management`,
-                  state: { showModal },
-                }}
-              >
-                {" "}
-                <FlatButton text="Assign Fleet" />
-              </Link>
+              <p>Fleet Not Yet Assigned</p>
             ) : (
               <div>{rowData.fleet.name}</div>
             )}

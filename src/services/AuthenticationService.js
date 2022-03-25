@@ -51,6 +51,10 @@ const login = (email, password) => {
 };
 const logout = () => {
   localStorage.removeItem("user");
+  localStorage.removeItem("onboard");
+  localStorage.removeItem("get_agents");
+  localStorage.removeItem("add_agents");
+  localStorage.removeItem("verify_otp");
 };
 export default {
   register,
