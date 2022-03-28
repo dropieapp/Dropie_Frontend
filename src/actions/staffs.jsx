@@ -24,8 +24,10 @@ export const createAgent = (formAgents) => (dispatch) => {
       });
       dispatch({
         type: SET_MESSAGE,
-        payload: response.message,
+        payload: response.data.message,
       });
+      localStorage.setItem("add_agents", JSON.stringify(response.data));
+      console.log(response);
 
       return Promise.resolve();
     },
@@ -65,149 +67,92 @@ export const retrieveAgents = () => (dispatch) => {
     (res) => {
       dispatch({
         type: RETRIEVE_AGENTS,
-        payload: res.data,
+        payload: res,
       });
     },
     (error) => {
-      console.log(err.response.data);
+      console.log(error.response.data);
+    }
+  );
+};
+export const listManagers = () => (dispatch) => {
+  return AgentDataService.listManager().then(
+    (res) => {
+      dispatch({
+        type: LIST_MANAGERS,
+        payload: res,
+      });
+    },
+    (error) => {
+      console.log(error.response.data);
     }
   );
 };
 
-// export const retrieveAgents = () => async (dispatch) => {
-//   try {
-//     const res = await AgentDataService.getAll();
-
-//     dispatch({
-//       type: RETRIEVE_AGENTS,
-//       payload: res.data,
-//     });
-//     localStorage.setItem("get_agents", JSON.stringify(res.data));
-//   } catch (err) {
-//     console.log(err.response.data);
-//   }
-// };
-
-export const listManagers = () => async (dispatch) => {
-  try {
-    const res = await AgentDataService.listManager();
-
-    dispatch({
-      type: LIST_MANAGERS,
-      payload: res.data,
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const retrieveAgent = (id) => async (dispatch) => {
-  try {
-    const res = await AgentDataService.get(id);
-
-    dispatch({
-      type: RETRIEVE_AGENT,
-      payload: res.data,
-    });
-  } catch (err) {
-    console.log(err);
-  }
+  return AgentDataService.get(id).then(
+    (res) => {
+      dispatch({
+        type: RETRIEVE_AGENT,
+        payload: res,
+      });
+    },
+    (error) => {
+      console.log(error.response.data);
+    }
+  );
 };
 
 export const inviteManager = (data) => async (dispatch) => {
-  try {
-    const res = await AgentDataService.inviteManager(data);
-
-    dispatch({
-      type: INVITE_MANAGER,
-      payload: res.data,
-    });
-    dispatch({
-      type: SET_MESSAGE,
-      payload: res.data.message,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
+  return AgentDataService.inviteManager(data).then(
+    (res) => {
+      dispatch({
+        type: INVITE_MANAGER,
+        payload: res,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.message,
+      });
+    },
+    (error) => {
+      console.log(error.response.data);
+    }
+  );
 };
 
 export const updateAgentStatus = (id, data) => async (dispatch) => {
-  try {
-    const res = await AgentDataService.status(id, data);
-
-    dispatch({
-      type: UPDATE_AGENT_STATUS,
-      payload: data,
-    });
-    dispatch({
-      type: SET_MESSAGE,
-      payload: result,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
+  return AgentDataService.status(id, data).then(
+    (res) => {
+      dispatch({
+        type: UPDATE_AGENT_STATUS,
+        payload: res,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.message,
+      });
+    },
+    (error) => {
+      console.log(error.response.data);
+    }
+  );
 };
 
 export const verifyInviteManager = (id) => async (dispatch) => {
-  try {
-    const res = await AgentDataService.status(id);
-
-    dispatch({
-      type: VERIFY_MANAGER_INVITE,
-      payload: res.data,
-    });
-    dispatch({
-      type: SET_MESSAGE,
-      payload: res.data.message,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-};
-
-export const deleteDelivery = (id) => async (dispatch) => {
-  try {
-    await AgentDataService.remove(id);
-
-    dispatch({
-      type: DELETE_DELIVERY,
-      payload: { id },
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const deleteAllDeliveries = () => async (dispatch) => {
-  try {
-    const res = await AgentDataService.removeAll();
-
-    dispatch({
-      type: DELETE_ALL_DELIVERIES,
-      payload: res.data,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-};
-
-export const findDeliveriesByTitle = (title) => async (dispatch) => {
-  try {
-    const res = await AgentDataService.findByTitle(title);
-
-    dispatch({
-      type: RETRIEVE_DELIVERIES,
-      payload: res.data,
-    });
-  } catch (err) {
-    console.log(err);
-  }
+  return AgentDataService.verifyManager(id).then(
+    (res) => {
+      dispatch({
+        type: VERIFY_MANAGER_INVITE,
+        payload: res,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: res.message,
+      });
+    },
+    (error) => {
+      console.log(error.response.data);
+    }
+  );
 };

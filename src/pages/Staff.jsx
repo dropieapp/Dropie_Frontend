@@ -24,6 +24,10 @@ function Staff() {
   const { message } = useSelector((state) => state.message);
   const [successful, setSuccessful] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isSubmiited, setIsSubmitted] = useState(false);
+
+  const [selectedFile1, setSelectedFile1] = useState(null);
+  const [selectedFile2, setSelectedFile2] = useState(null);
 
   const [inputValue, setInputValue] = useState({
     first_name: "",
@@ -60,16 +64,12 @@ function Staff() {
     }));
   };
 
-  const [selectedFile1, setSelectedFile1] = useState(null);
-  const [selectedFile2, setSelectedFile2] = useState(null);
-
   const uploadIdCard = (e) => {
     setSelectedFile1(e.target.files[0]);
   };
   const uploadProfilePic = (e) => {
     setSelectedFile2(e.target.files[0]);
   };
-
   const [allInputs, setAllInputs] = useState();
 
   // onsubmit
@@ -79,19 +79,23 @@ function Staff() {
     let formData = new FormData(e.target);
     Object.entries(inputValue).forEach(([key, value]) => {
       formData.append(key, value);
-      console.log(key, value);
     });
-    formData.append("id_card", selectedFile1);
     formData.append("profile_photo", selectedFile2);
+    formData.append("id_card", selectedFile1);
     setAllInputs(formData);
+
     setLoading(true);
+    setIsSubmitted(true);
     setSuccessful(false);
-    // console.log(allInputs)
-    form.current.validateAll();
-    if (checkBtn.current.context._errors.length === 0) {
-      dispatch(createAgent(formData))
+    // form.current.validateAll();
+  };
+
+  useEffect(() => {
+    if (isSubmiited) {
+      dispatch(createAgent(allInputs))
         .then(() => {
           setSuccessful(true);
+          setLoading(false);
         })
         .catch(() => {
           setSuccessful(false);
@@ -103,7 +107,7 @@ function Staff() {
     } else {
       setLoading(false);
     }
-  };
+  }, [isSubmiited]);
 
   const [getAgents, setGetAgents] = useState([]);
 

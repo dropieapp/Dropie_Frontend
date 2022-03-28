@@ -1,5 +1,5 @@
 /*
-    String constant that 
+String constant that 
     indicates the type of action being performed.
 */
 // authentication
@@ -15,6 +15,15 @@ export const RETRIEVE_DELIVERIES = "RETRIEVE_DELIVERIES";
 export const UPDATE_DELIVERY = "UPDATE_DELIVERY";
 export const DELETE_DELIVERY = "DELETE_DELIVERY";
 
+// Staffs and Agent
+export const CREATE_FLEET = "CREATE_FLEET";
+export const CREATE_FLEET_FAIL = "CREATE_FLEET_FAIL";
+export const RETRIEVE_FLEETS = "RETRIEVE_FLEETS";
+export const UPDATE_FLEET = "UPDATE_FLEET";
+export const UPDATE_BANNER = "UPDATE_BANNER";
+export const UPDATE_STATUS = "UPDATE_STATUS";
+export const VEHILCLE_TYPE = "VEHILCLE_TYPE";
+
 // Message
 export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
@@ -28,7 +37,6 @@ export const STAGE_2 = "STAGE_2";
 export const VERIFY_OTP = "VERIFY_OTP";
 export const VERIFY_OTP_FAIL = "VERIFY_OTP_FAIL";
 
-
 // Staffs and Agent
 export const CREATE_AGENT = "CREATE_AGENT";
 export const CREATE_AGENT_FAIL = "CREATE_AGENT_FAIL";
@@ -38,4 +46,3 @@ export const UPDATE_AGENT_STATUS = "UPDATE_AGENT_STATUS";
 export const INVITE_MANAGER = "INVITE_MANAGER";
 export const VERIFY_MANAGER_INVITE = "VERIFY_MANAGER_INVITE";
 export const LIST_MANAGERS = "LIST_MANAGERS";
-

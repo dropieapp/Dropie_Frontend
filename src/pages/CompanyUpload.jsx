@@ -12,8 +12,7 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
 
   // get Redux store values for formupload
   const currentStage = useSelector((state) => state.company_reducer.FormStage); // for previous button
-
-  const infos = state.company_reducer.FormInfo;
+  const infos = useSelector((state) => state.company_reducer.FormInfo);
 
   const [info, setInfo] = useState();
   const { message } = useSelector((state) => state.message);
@@ -40,19 +39,6 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
   const uploadScreenshotFile5 = (event) => {
     setSelectedFile5(event.target.files[0]);
   };
-
-  const [formInfo, setFormInfo] = useState({
-    manager_name: infos.manager_name || "",
-    business_name: infos.business_name || "",
-    phone_number: infos.phone_number || "",
-    email: infos.email || "",
-    website: infos.website || "",
-    nipost: selectedFile1,
-    cac: selectedFile2,
-    tin: selectedFile3,
-    logo: selectedFile4,
-    address_proof: selectedFile5,
-  });
 
   // onsubmit
   const [isSubmitted, setIsSubmitted] = useState(false); // state for form status
@@ -97,7 +83,7 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
           setIsSubmitted(false);
         });
     }
-  }, [isSubmitted, stateOutput]);
+  }, [isSubmitted]);
 
   return (
     <div>
@@ -108,18 +94,7 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
         encType="multipart/form-data"
         onSubmit={(e) => handleSubmit(e)}
       >
-        <Link
-          onClick={(e) => {
-            e.preventDefault();
-            window.location.reload();
-          }}
-        >
-          <button
-            className={`relative w-full flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
-          >
-            Verify Otp
-          </button>
-        </Link>
+      
 
         {message && (
           <div className="form-group">

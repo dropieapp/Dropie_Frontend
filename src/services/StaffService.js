@@ -20,37 +20,70 @@ const getAll = () => {
       return response.data;
     });
 };
-
 const get = (id) => {
-  return normalHeader.get(`/business/staff/agent/${id}`);
+  return axios
+    .get(API_URL + "business/staff/agent/" + id, {
+      headers: { ...authHeader() },
+    })
+    .then((response) => {
+      console.log("response", response);
+      localStorage.setItem("get_agent", JSON.stringify(response.data));
+      return response.data;
+    });
 };
 
 const create = (data) => {
+  return axios.post(
+    API_URL + "business/staff/agent",
+    { ...data },
+    {
+      headers: { "Content-type": "multipart/form-data", ...authHeader() },
+    }
+  );
+};
+
+const status = (id, data) => {
   return axios({
     method: "post",
-    url: API_URL + "business/staff/agent",
+    url: API_URL + "business/staff/agent/status/" + id,
     data: data,
-    headers: { "Content-Type": "multipart/form-data", ...authHeader() },
+    headers: { "Content-type": "application/json", ...authHeader() },
   }).then((response) => {
-    localStorage.setItem("add_agents", JSON.stringify(response.data));
+    localStorage.setItem("agents_status", JSON.stringify(response.data));
+    return response.data;
+  });
+};
+const inviteManager = (data) => {
+  return axios({
+    method: "post",
+    url: API_URL + "business/staff/agent/invite",
+    data: data,
+    headers: { "Content-type": "application/json", ...authHeader() },
+  }).then((response) => {
+    localStorage.setItem("invite_manager", JSON.stringify(response.data));
     return response.data;
   });
 };
 
-const status = (id, data) => {
-  return normalHeader.post(`/business/staff/agent/status/${id}`, data);
-};
-
-const inviteManager = (data) => {
-  return normalHeader.post(`/business/staff/invite`, data);
-};
-
 const verifyManager = (id) => {
-  return fileHeader.get(`/business/staff/invite/${id}`);
+  return axios({
+    method: "get",
+    url: API_URL + "business/staff/agent/invite/" + id,
+    headers: { ...authHeader() },
+  }).then((response) => {
+    localStorage.setItem("verify_manager", JSON.stringify(response.data));
+    return response.data;
+  });
 };
-
 const listManager = () => {
-  return fileHeader.get(`/business/staff`);
+  return axios({
+    method: "get",
+    url: API_URL + "business/staff/",
+    headers: { ...authHeader() },
+  }).then((response) => {
+    localStorage.setItem("list_staff", JSON.stringify(response.data));
+    return response.data;
+  });
 };
 
 const StaffService = {

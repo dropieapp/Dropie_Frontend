@@ -10,6 +10,7 @@ import LazyLoad from "react-lazyload"; // use lazyload for components and image
 import CompanyInfo from "./CompanyInfo";
 import CompanyUpload from "./CompanyUpload";
 import { verifyOtp } from "../actions/onboard";
+import { logout } from "../actions/authentication";
 
 function UploadCompanyInfo(props) {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ function UploadCompanyInfo(props) {
     setValue(value);
   };
   const [number, setNumber] = useState();
+  const { message } = useSelector((state) => state.message);
+
   // const [formData, setFormData] = useState();
 
   const [phoneNumber, setPhoneNumber] = useState();
@@ -34,7 +37,6 @@ function UploadCompanyInfo(props) {
 
   useEffect(() => {
     let onboard = JSON.parse(localStorage.getItem("onboard"));
-    console.log(onboard);
     if (!localStorage.getItem("onboard")) {
       return;
     } else {
@@ -68,7 +70,7 @@ function UploadCompanyInfo(props) {
       return;
     } else {
       if (verify_otp.next === "dashboard") {
-        history.push("/login");
+        dispatch(logout());
       }
     }
   }, [isSubmitted, phoneNumber, otp]);
@@ -129,18 +131,16 @@ function UploadCompanyInfo(props) {
                       {/*content*/}
                       <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                         {/*header*/}
-                        {/* <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                      
-                      <button
-                        className="p-1 ml-auto red-700 border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-                        onClick={() => setShowModal(false)}
-                      >
-                        <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                          ×
-                        </span>
-                      </button>
-                    </div> */}
-                        {/*body*/}
+                        {message && (
+                          <div className="form-group">
+                            <div
+                              className="p-4 my-3 text-red-500 font-semibold bg-red-200"
+                              role="alert"
+                            >
+                              <ul className="mx-3 my-3">{message}</ul>
+                            </div>
+                          </div>
+                        )}
                         <div className="flex bg-white">
                           <div className="w-full max-w-lg m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-10">
                             <h2 className="mt-6 text-center text-2xl font-extrabold text-gray-900">

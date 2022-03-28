@@ -66,7 +66,7 @@ function App() {
           <Route path="/invite" component={InviteMember} />
           <Route path="/verify" component={VerifyNumber} />
           <Route path="/change-password" component={ChangePassword} />
-          <Route path="/company-info" component={UploadCompanyInfo} />
+          <PrivateRoute path="/company-info" component={UploadCompanyInfo} />
           {/* <Route exact path={["/", "/home"]} component={Dashboard} /> */}
           <PrivateRoute exact component={Dashboard} path="/" />
           <PrivateRoute

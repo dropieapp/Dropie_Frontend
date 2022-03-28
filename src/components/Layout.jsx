@@ -4,6 +4,7 @@ import Header from "../partials/Header";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveAgents } from "../actions/staffs";
+import { retrieveFleets } from "../actions/fleets";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -23,9 +24,10 @@ const Layout = ({ children }) => {
   }, []);
 
   const dispatch = useDispatch();
-    useEffect(() => {
-      dispatch(retrieveAgents());
-    }, []);
+  useEffect(() => {
+    dispatch(retrieveAgents());
+    dispatch(retrieveFleets());
+  }, []);
 
   return (
     <React.Fragment>

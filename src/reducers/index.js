@@ -5,6 +5,7 @@ import authentication from "./authentication";
 import message from "./message";
 import { company_reducer, companyOnboardReducer } from "./company_info";
 import staffReducer from "./staffs";
+import fleetReducer from "./fleets";
 
 export default combineReducers({
   deliveries,
@@ -13,5 +14,6 @@ export default combineReducers({
   message,
   company_reducer,
   staffReducer,
+  fleetReducer,
   companyOnboardReducer,
 });

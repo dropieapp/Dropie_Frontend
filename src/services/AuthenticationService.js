@@ -52,7 +52,10 @@ const login = (email, password) => {
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("onboard");
+  localStorage.removeItem("fleet");
+  localStorage.removeItem("getVehicleType");
   localStorage.removeItem("get_agents");
+  localStorage.removeItem("get_fleets");
   localStorage.removeItem("add_agents");
   localStorage.removeItem("verify_otp");
 };
