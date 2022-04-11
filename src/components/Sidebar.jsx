@@ -123,7 +123,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         <div className="space-y-8">
           {/* Pages group */}
           <div>
-            {userCode.business_id === null ? (
+            {/* {userCode.business_id === null ? (
               <ul className="mt-3">
                 <li
                   className={`px-3 py-2 rounded-sm mb-5 last:mb-0 ${
@@ -146,7 +146,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </NavLink>
                 </li>
               </ul>
-            ) : (
+            ) : ( */}
               <ul className="mt-3">
                 {/* Package Tracking */}
 
@@ -519,7 +519,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
                   </NavLink>
                 </li>
               </ul>
-            )}
+            {/* )} */}
 
             <ul className="mt-3">
               {/* Logout */}

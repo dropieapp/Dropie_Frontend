@@ -15,7 +15,7 @@ export const RETRIEVE_DELIVERIES = "RETRIEVE_DELIVERIES";
 export const UPDATE_DELIVERY = "UPDATE_DELIVERY";
 export const DELETE_DELIVERY = "DELETE_DELIVERY";
 
-// Staffs and Agent
+// Fleets
 export const CREATE_FLEET = "CREATE_FLEET";
 export const CREATE_FLEET_FAIL = "CREATE_FLEET_FAIL";
 export const RETRIEVE_FLEETS = "RETRIEVE_FLEETS";
@@ -23,6 +23,7 @@ export const UPDATE_FLEET = "UPDATE_FLEET";
 export const UPDATE_BANNER = "UPDATE_BANNER";
 export const UPDATE_STATUS = "UPDATE_STATUS";
 export const VEHILCLE_TYPE = "VEHILCLE_TYPE";
+export const UPDATE_FLEET_FAIL = "UPDATE_FLEET_FAIL";
 
 // Message
 export const SET_MESSAGE = "SET_MESSAGE";

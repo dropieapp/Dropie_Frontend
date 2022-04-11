@@ -18,7 +18,8 @@ const fleetReducer = (fleets = initialState, action) => {
 
   switch (type) {
     case CREATE_FLEET:
-      return [...fleets, payload];
+    return { ...fleets, ...payload };
+    // return [...fleets, payload];
 
 
     case RETRIEVE_FLEETS:
@@ -50,6 +51,7 @@ const fleetReducer = (fleets = initialState, action) => {
           return fleet;
         }
       });
+    
     case UPDATE_BANNER:
       return fleets.map((fleet) => {
         if (fleet.id === payload.id) {

@@ -32,15 +32,22 @@ const get = (id) => {
     });
 };
 
+// const create = (data) => {
+//   return axios.post(
+//     API_URL + "business/staff/agent",
+//     { ...data },
+//     {
+//       headers: { "Content-type": "multipart/form-data", ...authHeader() },
+//     }
+//   ).then((response) => {
+//      localStorage.setItem("add_agents", JSON.stringify(response.data));
+//     return response.data;
+//   } );
+// };
 const create = (data) => {
-  return axios.post(
-    API_URL + "business/staff/agent",
-    { ...data },
-    {
-      headers: { "Content-type": "multipart/form-data", ...authHeader() },
-    }
-  );
+  return fileHeader.post("/business/staff/agent", data);
 };
+
 
 const status = (id, data) => {
   return axios({

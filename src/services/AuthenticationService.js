@@ -52,12 +52,14 @@ const login = (email, password) => {
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("onboard");
-  localStorage.removeItem("fleet");
-  localStorage.removeItem("getVehicleType");
+  localStorage.removeItem("vehicle_type");
+  localStorage.removeItem("add_fleets");
   localStorage.removeItem("get_agents");
   localStorage.removeItem("get_fleets");
   localStorage.removeItem("add_agents");
   localStorage.removeItem("verify_otp");
+  localStorage.removeItem("add_agent");
+  localStorage.removeItem("update_fleets");
 };
 export default {
   register,

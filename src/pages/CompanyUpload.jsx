@@ -5,6 +5,7 @@ import { userActions } from "../_actions";
 import { authHeader } from "../_helpers";
 import { onboarding } from "../actions/onboard";
 import { Link } from "react-router-dom";
+import { clearMessage } from "../actions/message";
 
 function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
   // redux
@@ -67,6 +68,7 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
         address_proof: selectedFile5, // update form image status
       })
     );
+    dispatch(clearMessage());
     setIsSubmitted(true); // update form status to submitted
     setSuccessful(false);
   };
@@ -94,8 +96,6 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
         encType="multipart/form-data"
         onSubmit={(e) => handleSubmit(e)}
       >
-      
-
         {message && (
           <div className="form-group">
             <div

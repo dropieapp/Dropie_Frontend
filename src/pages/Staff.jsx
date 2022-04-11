@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { createAgent, retrieveAgents } from "../actions/staffs";
 import CheckButton from "react-validation/build/button";
 import FlatButton from "../components/FlatButton";
+import { clearMessage } from "../actions/message";
 
 function Staff() {
   const form = useRef();
@@ -75,39 +76,57 @@ function Staff() {
   // onsubmit
   const handleSubmit = (e) => {
     e.preventDefault(); // stop form submission
-    // setInfo(infos);
-    let formData = new FormData(e.target);
+    const formData = new FormData();
     Object.entries(inputValue).forEach(([key, value]) => {
       formData.append(key, value);
     });
     formData.append("profile_photo", selectedFile2);
     formData.append("id_card", selectedFile1);
+
     setAllInputs(formData);
 
     setLoading(true);
     setIsSubmitted(true);
     setSuccessful(false);
-    // form.current.validateAll();
+    dispatch(clearMessage()); // clear message when changing location
   };
 
   useEffect(() => {
     if (isSubmiited) {
+      localStorage.removeItem("add_agents");
       dispatch(createAgent(allInputs))
         .then(() => {
-          setSuccessful(true);
           setLoading(false);
+          setSuccessful(true);
+          setIsSubmitted(false);
+          setInputValue({
+            first_name: "",
+            last_name: "",
+            other_name: "",
+            lga: "",
+            address: "",
+            employment_date: "",
+            land_mark: "",
+            phone_number: "",
+            transaction_pin: "",
+            default_pick_location: "",
+            email: "",
+          });
+          setSelectedFile1(null);
+          setSelectedFile2(null);
         })
         .catch(() => {
-          setSuccessful(false);
           setLoading(false);
+          setSuccessful(false);
+          setIsSubmitted(false);
         });
-      localStorage.removeItem("add_agents");
+
       localStorage.removeItem("get_agents");
       dispatch(retrieveAgents());
     } else {
       setLoading(false);
     }
-  }, [isSubmiited]);
+  }, [isSubmiited, dispatch, allInputs]);
 
   const [getAgents, setGetAgents] = useState([]);
 
@@ -115,11 +134,6 @@ function Staff() {
     let get_agents = JSON.parse(localStorage.getItem("get_agents"));
     setGetAgents(get_agents.data);
   }, []);
-
-  const handleEdit = (item) => () => {
-    // write your logic
-    alert(JSON.stringify(item));
-  };
 
   return (
     <Layout>
@@ -220,10 +234,11 @@ function Staff() {
                       </button>
                     </div>
                     {/*body*/}
-                    <Form
-                      onSubmit={handleSubmit}
-                      ref={form}
-                      className="space-y-6 mt-6"
+                    <form
+                      name="form-signup"
+                      id="form-signup"
+                      encType="multipart/form-data"
+                      onSubmit={(e) => handleSubmit(e)}
                     >
                       {message && (
                         <div className="form-group">
@@ -436,8 +451,7 @@ function Staff() {
                           </div>
                         </div>
                       )}
-                      <CheckButton style={{ display: "none" }} ref={checkBtn} />
-                    </Form>
+                    </form>
                     {/* /body */}
                   </div>
                 </div>
@@ -496,7 +510,7 @@ function Staff() {
                       <td className="p-2 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="text-center">
-                            {item.first_name} {item.last_name}
+                            {item.first_name} {item.last_name} {item.other_name}
                           </div>
                         </div>
                       </td>

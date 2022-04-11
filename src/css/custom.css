@@ -490,3 +490,15 @@
     order: 1;
   }
 }
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.svg-active-class {
+  color: #D93804;
+}
+
+.svg-class {
+  color: #333333;
+}

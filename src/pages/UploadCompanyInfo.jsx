@@ -66,7 +66,7 @@ function UploadCompanyInfo(props) {
       dispatch(verifyOtp(phoneNumber, otp));
       // window.location.reload();
     }
-    if (!localStorage.getItem("verify_otp")) {
+    if (!verify_otp) {
       return;
     } else {
       if (verify_otp.next === "dashboard") {

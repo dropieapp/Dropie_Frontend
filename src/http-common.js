@@ -7,18 +7,16 @@ export const authenticationHeader = axios.create({
   baseURL: `${config}`,
   headers: {
     "Content-type": "application/json",
-  }
+  },
 });
 
 export const normalHeader = axios.create({
-  
   baseURL: `${config}`,
   headers: {
     "Content-type": "application/json",
     ...authHeader(),
-  }
+  },
 });
-
 
 export const fileHeader = axios.create({
   baseURL: `${config}`,
@@ -26,6 +24,3 @@ export const fileHeader = axios.create({
     ...authHeader(),
   },
 });
-
-
-
