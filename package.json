@@ -1,6 +1,8 @@
 {
   "name": "mosaic-light-react",
   "version": "0.1.0",
+  "private": true,
+  "homepage": ".",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
