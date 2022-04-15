@@ -85,10 +85,10 @@ export const updateFleet = (id, data) => async (dispatch) => {
       type: UPDATE_FLEET,
       payload: res,
     });
-     dispatch({
-       type: SET_MESSAGE,
-       payload: res.data.message,
-     });
+    dispatch({
+      type: SET_MESSAGE,
+      payload: res.data.message,
+    });
     localStorage.setItem("update_fleets", JSON.stringify(res.data));
 
     return Promise.resolve(res.data);
@@ -168,20 +168,26 @@ export const updateBanner = (id, data) => async (dispatch) => {
   }
 };
 
+export const updateStatus = (id, data) => async (dispatch) => {
+  try {
+    const res = await FleetDataService.fleetStatus(id, data);
+    console.log("res", res);
 
+    dispatch({
+      type: UPDATE_STATUS,
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MESSAGE,
+      payload: res.data.message,
+    });
+    localStorage.setItem("fleet_status", JSON.stringify(res.data));
 
-export const updateStatus = (id) => async (dispatch) => {
-  return FleetDataService.fleetstatus(id).then(
-    (res) => {
-      dispatch({
-        type: UPDATE_STATUS,
-        payload: res,
-      });
-    },
-    (error) => {
-      console.log(error.response.data);
-    }
-  );
+    return Promise.resolve(res.data);
+  } catch (error) {
+    console.log(error.response.data);
+    return Promise.reject(error.response.data);
+  }
 };
 
 export const vehicleType = () => async (dispatch) => {

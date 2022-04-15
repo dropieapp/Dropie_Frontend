@@ -58,6 +58,7 @@ const logout = () => {
   localStorage.removeItem("get_fleets");
   localStorage.removeItem("add_agents");
   localStorage.removeItem("verify_otp");
+  localStorage.removeItem("fleet_banner");
   localStorage.removeItem("add_agent");
   localStorage.removeItem("update_fleets");
 };

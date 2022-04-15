@@ -7,6 +7,8 @@ import { Row, Col } from "antd";
 import Form from "react-validation/build/form";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../components/InputField";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // import { retrieveAgents } from "../actions/staffs";
 // import { vehicleType, retrieveFleets, createFleets } from "../actions/fleets";
 import { Menu, Transition } from "@headlessui/react";
@@ -15,6 +17,7 @@ import {
   retrieveFleets,
   updateBanner,
   updateFleet,
+  updateStatus,
 } from "../actions/fleets";
 import { clearMessage } from "../actions/message";
 import Pagination from "../components/pagination";
@@ -63,6 +66,8 @@ function FleetManagement() {
   const [showModal2, setShowModal2] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
   const { message } = useSelector((state) => state.message);
+  const [banner, setBanner] = useState(null);
+  const [imageUpload, setImageUpload] = useState(false);
 
   const [selectedFile1, setSelectedFile1] = useState(null);
   const uploadBanner = (e) => {
@@ -89,6 +94,7 @@ function FleetManagement() {
   };
 
   const [successful, setSuccessful] = useState(false);
+  const [successful1, setSuccessful1] = useState(false);
   const [isFleetSubmitted, setIsFleetSubmitted] = useState(false); // state for form status
   const [allFleetInputs, setAllFeetInputs] = useState();
 
@@ -133,6 +139,7 @@ function FleetManagement() {
   }, [isFleetSubmitted]);
 
   const [status, setStatus] = useState();
+  // const [supsendStatus, setSuspendStatus] = useState();
   const [nextMaintenance, setNextMaintenance] = useState();
 
   const handleSelectChange = (e) => {
@@ -166,18 +173,131 @@ function FleetManagement() {
 
   const [isFleetUpdated2, setIsFleetUpdated2] = useState(false);
 
-  const updateBanner = (e) => {
-    if (selectedFile1) {
-      const formData = new FormData();
-      formData("banner", selectedFile1);
-      setIsFleetUpdated2(true);
-      setFleetBannerUpdate(formData);
-      // setFleetUpdateInput({
-      //   ...fleetUpdateInput,
-      //   banner: selectedFile1,
-      // });
-    }
+  const [isActive, setIsActive] = useState(false);
+
+  const activateStatus = (item) => () => {
+    setIsActive(true);
+    console.log("clicked");
+    setLoading(true);
+    // setStatus(item.status);
+    setFleetId(item.id);
+    setStatus("active");
   };
+
+  // console.log(status)
+
+  useEffect(() => {
+    if (isActive) {
+      const data = {
+        status: status,
+      };
+      dispatch(updateStatus(fleetId, data))
+        .then(() => {
+          setIsActive(false);
+          setStatus("");
+          toast("Fleet status updated successfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          setLoading(false);
+        })
+        .catch(() => {
+          setIsActive(false);
+          setStatus("");
+          console.log("There is an error");
+          toast("Fleet status update failed", {
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+          setLoading(false);
+        });
+      localStorage.removeItem("get_fleets");
+      dispatch(retrieveFleets());
+      // window.location.reload()
+    }
+  }, [isActive]);
+  const [isSuspended, setIsSuspended] = useState(false);
+
+  const suspendStatus = (item) => () => {
+    setIsSuspended(true);
+    console.log("clicked");
+    setLoading(true);
+    // setStatus(item.status);
+    setFleetId(item.id);
+    setStatus("supsended");
+    
+  };
+
+  useEffect(() => {
+    if (isSuspended) {
+      console.log(status);
+      const data = {
+        status: status,
+      };
+      console.log(data)
+      dispatch(updateStatus(fleetId, data))
+        .then(() => {
+          setIsSuspended(false);
+          setStatus("");
+          toast("Fleet status updated successfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+          });
+          setLoading(false);
+        })
+        .catch(() => {
+          setIsSuspended(false);
+          setStatus("");
+          toast("Fleet status update failed", {
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+          });
+          setLoading(false);
+        });
+      localStorage.removeItem("get_fleets");
+      dispatch(retrieveFleets());
+      // window.location.reload()
+    }
+  }, [isSuspended]);
+
+  // const updateBanner = (e) => {
+  //   // e.preventDefault();
+  //   // stop form submission
+  //   if (selectedFile1) {
+  //     dispatch(clearMessage());
+  //     const formData = new FormData();
+  //     formData.append("banner", selectedFile1);
+  //     setFleetBannerUpdate(formData);
+  //     setIsFleetUpdated2(true);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (imageUpload) {
+      const formData = new FormData();
+      formData.append("banner", banner);
+      setFleetBannerUpdate(formData);
+      setIsFleetUpdated2(true);
+    }
+  }, [imageUpload]);
 
   useEffect(() => {
     if (isFleetUpdated2) {
@@ -186,13 +306,18 @@ function FleetManagement() {
         .then(() => {
           setSuccessful(true);
           setLoading(false);
+          setTimeout(() => {
+            dispatch(clearMessage());
+            setImageUpload(false);
+            setSuccessful(false);
+          }, 5000);
         })
         .catch(() => {
           setSuccessful(false);
           setLoading(false);
         });
-      localStorage.removeItem("get_fleets");
-      dispatch(retrieveFleets());
+      // localStorage.removeItem("get_fleets");
+      // dispatch(retrieveFleets());
     }
   }, [isFleetUpdated2]);
 
@@ -207,7 +332,7 @@ function FleetManagement() {
       agent_id: agent_id,
       route: route,
       description: description,
-      status: status,
+      // status: status,
       next_maintenance: nextMaintenance,
     });
     setLoading(true);
@@ -289,7 +414,7 @@ function FleetManagement() {
             {showModal ? (
               <>
                 <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                  <div className="relative w-auto my-6 mx-auto w-6/12">
+                  <div className="relative h-full mx-auto w-auto w-96 md:w-96 lg:w-6/12">
                     {/*content*/}
                     <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                       {/*header*/}
@@ -502,12 +627,12 @@ function FleetManagement() {
                       {/*header*/}
                       <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
                         <h3 class="text-lg font-normal text-center text-black lg:text-2xl">
-                          Add Fleet
+                          Update Fleet
                         </h3>
 
                         <button
                           type="button"
-                          onClick={() => setShowModal(false)}
+                          onClick={() => setShowModal2(false)}
                           class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                           data-modal-toggle="defaultModal"
                         >
@@ -532,54 +657,6 @@ function FleetManagement() {
                         </small>
 
                         <form
-                          onSubmit={(e) => updateBanner(e)}
-                          className="space-y-6 mt-6"
-                        >
-                          <div class="text-gray-700">
-                            <img src="" alt="Banner Image" />
-                            <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
-                              Change Image
-                            </label>
-                            <input
-                              type="file"
-                              name="banner"
-                              onChange={uploadBanner}
-                              className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            />
-                            {selectedFile1 && (
-                              <button
-                                className={`relative w-full flex justify-center my-7 bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
-                              >
-                                {loading && (
-                                  // <span className="spinner-border spinner-border-sm mr-1"></span>
-                                  <svg
-                                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      class="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      stroke-width="4"
-                                    ></circle>
-                                    <path
-                                      class="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                  </svg>
-                                )}
-                                Upload to Server
-                              </button>
-                            )}
-                          </div>
-                        </form>
-
-                        <form
                           onSubmit={(e) => updatefleet(e)}
                           className="space-y-6 mt-6"
                         >
@@ -601,6 +678,46 @@ function FleetManagement() {
                           {/* alert */}
                           {!successful && (
                             <div>
+                              <div class="text-gray-700">
+                                <img src="" alt="Banner Image" />
+                                <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
+                                  Change Image
+                                </label>
+                                <input
+                                  type="file"
+                                  name="banner"
+                                  onChange={(e) => {
+                                    setImageUpload(true),
+                                      setBanner(e.target.files[0]);
+                                  }}
+                                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                />
+                                {imageUpload && (
+                                  <p>
+                                    <svg
+                                      class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                    >
+                                      <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                      ></circle>
+                                      <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      ></path>
+                                    </svg>
+                                    <span>Uploading</span>
+                                  </p>
+                                )}
+                              </div>
                               <Row className="mt-5" gutter={16}>
                                 <Col span={12} className="gutter-row">
                                   <label
@@ -695,7 +812,7 @@ function FleetManagement() {
                                 </Col>
                               </Row>
                               <Row className="mt-5" gutter={16}>
-                                <Col span={12} className="gutter-row">
+                                {/* <Col span={12} className="gutter-row">
                                   <label
                                     className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
                                     htmlFor={status}
@@ -713,7 +830,7 @@ function FleetManagement() {
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                   </select>
-                                </Col>
+                                </Col> */}
                                 <Col span={12}>
                                   <InputField
                                     type="text"
@@ -816,7 +933,9 @@ function FleetManagement() {
                       </td>
                       <td className="p-2 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="text-center">{item.agent_id}</div>
+                          <div className="text-center">
+                            {item.agent.first_name} {item.agent.last_name}
+                          </div>
                         </div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
@@ -826,7 +945,7 @@ function FleetManagement() {
                       </td>
                       <td className="p-2 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="text-center">{item.type_id}</div>
+                          <div className="text-center">{item.vehicle.type}</div>
                         </div>
                       </td>
                       <td className="p-2 whitespace-nowrap">
@@ -947,8 +1066,62 @@ function FleetManagement() {
                                     </span>
                                   </button>
                                 </div>
+                                <div className=" w-full hover:bg-orange-200 cursor-pointer hover:text-white">
+                                  <button
+                                    className="flex py-3 px-2"
+                                    onClick={activateStatus(item)}
+                                  >
+                                    {loading && loading ? (
+                                      // <span className="spinner-border spinner-border-sm mr-1"></span>
+                                      <svg
+                                        class="animate-spin -ml-1 mr-3 h-5 w-5"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <circle
+                                          class="opacity-25"
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                          stroke="currentColor"
+                                          stroke-width="4"
+                                        ></circle>
+                                        <path
+                                          class="opacity-75"
+                                          fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                        ></path>
+                                      </svg>
+                                    ) : (
+                                      <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M16.3392 15.6217C16.3392 16.3558 15.7425 16.975 15.0084 16.975H4.3592C3.62504 16.975 3.02837 16.3558 3.02837 15.6217V4.97251C3.02837 4.23834 3.62504 3.66334 4.3592 3.66334H10.5709V2.77667H4.3592C3.13587 2.77667 2.14087 3.75001 2.14087 4.97334V15.6217C2.14087 16.845 3.13587 17.8617 4.3592 17.8617H15.0075C16.2309 17.8617 17.2259 16.8442 17.2259 15.6217V9.43167H16.3384V15.6217H16.3392Z"
+                                          fill="#333333"
+                                        />
+                                        <path
+                                          d="M17.3391 2.64166C16.6691 1.97083 15.4999 1.97083 14.8291 2.64166L8.87656 8.59416C8.8199 8.65083 8.77906 8.72249 8.7599 8.79999L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15083C17.6741 4.81583 17.8591 4.36999 17.8591 3.89583C17.8591 3.42166 17.6749 2.97666 17.3391 2.64166ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13416L14.5157 4.20999L15.7707 5.46499L10.8466 10.3892ZM16.7116 4.52333L16.3982 4.83666L15.1432 3.58166L15.4566 3.26833C15.7916 2.93333 16.3766 2.93333 16.7116 3.26833C16.8791 3.43583 16.9716 3.65833 16.9716 3.89583C16.9716 4.13333 16.8791 4.35583 16.7116 4.52333Z"
+                                          fill="#333333"
+                                        />
+                                      </svg>
+                                    )}
+
+                                    <span className="hidden xs:block ml-2 mr-2 font-thin">
+                                      Activate Fleet
+                                    </span>
+                                  </button>
+                                </div>
                                 <div className=" w-full text-gray-300 hover:bg-orange-200 cursor-pointer hover:text-white">
-                                  <button className="flex py-3 px-2">
+                                  <button
+                                    className="flex py-3 px-2"
+                                    onClick={suspendStatus(item)}
+                                  >
                                     <svg
                                       width="19"
                                       height="19"
@@ -1001,6 +1174,7 @@ function FleetManagement() {
               </tfoot>
             </table>
           </div>
+          <ToastContainer />
         </div>
       </div>
     </Layout>

@@ -29,7 +29,6 @@ import CreateInvoice from "./pages/CreateInvoice";
 import Invoice from "./pages/Invoice";
 import SendInvoice from "./pages/SendInvoice";
 import { clearMessage } from "./actions/message";
-import Partners from "./kyp/Partners";
 
 function App() {
   const dispatch = useDispatch();
@@ -50,8 +49,6 @@ function App() {
       <Router history={history}>
         <Switch>
         
-        <Route exact path="/partners" component={Partners} />
-          
           <Route exact component={Login} path="/login" />
           <Route exact component={SignUp} path="/register" />
           <Route path="/reset-password" component={ResetPassword} />

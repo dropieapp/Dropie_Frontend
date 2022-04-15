@@ -1,14 +1,14 @@
 /*
-* THis file contains the reducers
-* the reducer updates the state corresponding to dispatched Redux actions. 
-*/
+ * THis file contains the reducers
+ * the reducer updates the state corresponding to dispatched Redux actions.
+ */
 import {
   CREATE_FLEET,
   RETRIEVE_FLEETS,
   UPDATE_BANNER,
   UPDATE_STATUS,
   UPDATE_FLEET,
-  VEHILCLE_TYPE
+  VEHILCLE_TYPE,
 } from "../actions/types";
 
 const initialState = [];
@@ -18,13 +18,12 @@ const fleetReducer = (fleets = initialState, action) => {
 
   switch (type) {
     case CREATE_FLEET:
-    return { ...fleets, ...payload };
+      return { ...fleets, ...payload };
     // return [...fleets, payload];
-
 
     case RETRIEVE_FLEETS:
       return payload;
-    
+
     case VEHILCLE_TYPE:
       return payload;
 
@@ -41,6 +40,7 @@ const fleetReducer = (fleets = initialState, action) => {
       });
 
     case UPDATE_STATUS:
+      // console.log("fleets Status", fleets);
       return fleets.map((fleet) => {
         if (fleet.id === payload.id) {
           return {
@@ -51,8 +51,9 @@ const fleetReducer = (fleets = initialState, action) => {
           return fleet;
         }
       });
-    
+
     case UPDATE_BANNER:
+      // console.log("fleets banner", fleets);
       return fleets.map((fleet) => {
         if (fleet.id === payload.id) {
           return {

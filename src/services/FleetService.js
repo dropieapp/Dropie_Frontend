@@ -29,22 +29,28 @@ const create = (data) => {
   return fileHeader.post("/business/fleet", data);
 };
 
+// return axios.post(API_URL + "business/fleet", data, {
+//   headers: { "Content-Type": "multipart/form-data", ...authHeader() },
+// });
 
-  // return axios.post(API_URL + "business/fleet", data, {
-  //   headers: { "Content-Type": "multipart/form-data", ...authHeader() },
-  // });
+// const fleetStatus = (id, data) => {
+//   return axios({
+//     method: "post",
+//     url: API_URL + "business/fleet/status/" + id,
+//     data: data,
+//     headers: { "Content-type": "application/json", ...authHeader() },
+//   }).then((response) => {
+//     localStorage.setItem("fleet_status", JSON.stringify(response.data));
+//     return response.data;
+//   });
+// };
 
 const fleetStatus = (id, data) => {
-  return axios({
-    method: "post",
-    url: API_URL + "business/fleet/status/" + id,
-    data: data,
-    headers: { "Content-type": "application/json", ...authHeader() },
-  }).then((response) => {
-    localStorage.setItem("fleet_status", JSON.stringify(response.data));
-    return response.data;
-  });
+  return normalHeader.post(`/business/fleet/status/${id}`, data);
 };
+
+console.log(fleetStatus);
+
 // const fleetBanner = (id, data) => {
 //   return axios({
 //     method: "post",
@@ -59,6 +65,7 @@ const fleetStatus = (id, data) => {
 const fleetBanner = (id, data) => {
   return fileHeader.post(`/business/fleet/banner/${id}`, data);
 };
+
 // const update = (id, data) => {
 //   return axios({
 //     method: "post",
@@ -79,7 +86,6 @@ const fleetBanner = (id, data) => {
 const update = (id, data) => {
   return normalHeader.post(`/business/fleet/update/${id}`, data);
 };
-  
 
 const vehicleType = () => {
   return axios

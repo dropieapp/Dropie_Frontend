@@ -24,7 +24,7 @@ const CreateInvoice = (props) => {
     },
   ];
   const [images, setImages] = React.useState([]);
-  // const maxNumber = 69;
+  const maxNumber = 69;
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
     console.log(imageList, addUpdateIndex);
@@ -69,28 +69,15 @@ const CreateInvoice = (props) => {
     date,
     // orders,
   } = invoiceInputValue;
+
   const handleInvoiceChange = (e) => {
     const { name, value } = e.target;
-    setInvoiceInputValue((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+     setInvoiceInputValue((prev) => ({
+       ...prev,
+       [name]: value,
+     }));
+  
   };
-
-  // const handleInvoiceChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setInvoiceInputValue({
-  //     ...invoiceInputValue,
-  //     [name]: value,
-  //   });
-
-  //   //  setInvoiceInputValue((prev) => ({
-  //   //    ...prev,
-  //   //    [name]: value,
-  //   //  }));
-
-  // };
-
 
   const [orders, setOrders] = useState([{}]);
 
@@ -217,16 +204,16 @@ const CreateInvoice = (props) => {
                   />
                   <InputField
                     // label="Email"
-                    value={email1}
                     onChange={handleInvoiceChange}
+                    value={email1}
                     name="email"
                     type="email"
                     placeholder="Enter your email"
                   />
-                  <FormField
+                  <InputField
                     // label="Phone Number"
-                    value={phone1}
                     onChange={handleInvoiceChange}
+                    value={phone1}
                     name="phone"
                     type="text"
                     placeholder="Enter your phone number"
@@ -234,8 +221,8 @@ const CreateInvoice = (props) => {
 
                   <InputField
                     // label="Company Website"
-                    value={website1}
                     onChange={handleInvoiceChange}
+                    value={website1}
                     name="website"
                     type="text"
                     placeholder="Enter your company website"
@@ -424,7 +411,7 @@ const CreateInvoice = (props) => {
                   <div>
                     <div className="container">
                       <div className="col-md-12 column">
-                        {/* <table
+                        <table
                           className="table table-bordered table-hover"
                           id="tab_logic"
                         >
@@ -482,7 +469,7 @@ const CreateInvoice = (props) => {
                               </td>
                             </tr>
                           </tfoot>
-                        </table> */}
+                        </table>
                       </div>
                     </div>
                   </div>

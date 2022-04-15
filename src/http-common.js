@@ -21,6 +21,7 @@ export const normalHeader = axios.create({
 export const fileHeader = axios.create({
   baseURL: `${config}`,
   headers: {
+    "Content-type": "multipart/form-data",
     ...authHeader(),
   },
 });

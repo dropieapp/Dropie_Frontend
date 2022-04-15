@@ -565,7 +565,7 @@ function Staff() {
         <DashboardCard10 />
         {/* Top 5 Performers agent */}
         <DashboardCard100 />
-        <DashboardCard16 />
+        {/* <DashboardCard16 /> */}
       </div>
     </Layout>
   );
