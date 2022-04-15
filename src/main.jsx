@@ -3,16 +3,21 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
+import { BrowserRouter as Router } from "react-router-dom";
 // import { store } from "./_helpers";
 import store from "./store";
 
 import reportWebVitals from "./reportWebVitals";
+import { ToastContainer } from "react-toastify";
 
 ReactDOM.render(
   <React.Fragment>
     <Provider store={store}>
-      <App />
-      <Toaster />
+      <Router>
+        <App />
+        {/* <Toaster /> */}
+        <ToastContainer />
+      </Router>
     </Provider>
   </React.Fragment>,
   document.getElementById("root")

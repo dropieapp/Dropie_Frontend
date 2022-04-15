@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 import CheckButton from "react-validation/build/button";
 import { login } from "../actions/authentication";
@@ -42,7 +42,7 @@ const SignIn = (props) => {
     }
   };
   if (isLoggedIn) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" />;
   }
   return (
     <div className="bg-white h-screen py-5 px-5  mb-6">

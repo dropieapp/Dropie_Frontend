@@ -1,18 +1,16 @@
-import { Col, Row, Form } from "antd";
-import React, { useState, useRef, useCallback } from "react";
-import { Upload, message } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import DashboardTitle from "../components/DashboardTitle";
-import FormField from "../components/FormField";
 import InputField from "../components/InputField";
 import Layout from "../components/Layout";
-import FormInvoiceSelectField from "../components/FormInvoiceSelectField";
 import FormInvoiceField from "../components/FormInvoiceField";
-import Table from "../components/Table";
 import { Link } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
+import { useDispatch, useSelector } from "react-redux";
+import { createInvoice, retrieveInvoices } from "../actions/finance";
+import { clearMessage } from "../actions/message";
 
 const CreateInvoice = (props) => {
+  const dispatch = useDispatch();
   const arrayOfData = [
     {
       id: "1 - Cash",
@@ -27,70 +25,109 @@ const CreateInvoice = (props) => {
   // const maxNumber = 69;
   const onChange = (imageList, addUpdateIndex) => {
     // data for submit
-    console.log(imageList, addUpdateIndex);
     setImages(imageList);
   };
 
-  const [invoiceInputValue, setInvoiceInputValue] = useState({
-    // from: {
-    name1: "",
-    email1: "",
-    phone1: "",
-    website1: "",
-    // },
-    // to: {
-    name2: "",
-    email2: "",
-    phone2: "",
-    address2: "",
-    // },
-    invoice_number: "",
-    pickup_location: "",
-    dropoff_location: "",
-    payment_method: "",
-    date: "",
-    // orders: [{}],
-  });
+  // const [invoiceInputValue, setInvoiceInputValue] = useState({
+  //   // from: {
+  //   name1: "",
+  //   email1: "",
+  //   phone1: "",
+  //   website1: "",
+  //   // },
+  //   // to: {
+  //   name2: "",
+  //   email2: "",
+  //   phone2: "",
+  //   address2: "",
+  //   // },
+  //   invoice_number: "",
+  //   pickup_location: "",
+  //   dropoff_location: "",
+  //   payment_method: "",
+  //   date: "",
+  //   // orders: [{}],
+  // });
 
-  const {
-    name1,
-    email1,
-    phone1,
-    website1,
-    name2,
-    email2,
-    phone2,
-    address2,
+  // const {
+  //   name1,
+  //   email1,
+  //   phone1,
+  //   website1,
+  //   name2,
+  //   email2,
+  //   phone2,
+  //   address2,
 
-    invoice_number,
-    pickup_location,
-    dropoff_location,
-    payment_method,
-    date,
-    // orders,
-  } = invoiceInputValue;
-  const handleInvoiceChange = (e) => {
-    const { name, value } = e.target;
-    setInvoiceInputValue((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  //   invoice_number,
+  //   pickup_location,
+  //   dropoff_location,
+  //   payment_method,
+  //   date,
+  //   // orders,
+  // } = invoiceInputValue;
 
   // const handleInvoiceChange = (e) => {
   //   const { name, value } = e.target;
-  //   setInvoiceInputValue({
-  //     ...invoiceInputValue,
+  //   setInvoiceInputValue((prev) => ({
+  //     ...prev,
   //     [name]: value,
-  //   });
-
-  //   //  setInvoiceInputValue((prev) => ({
-  //   //    ...prev,
-  //   //    [name]: value,
-  //   //  }));
-
+  //   }));
   // };
 
+  const [name1, setName1] = useState();
+  const [email1, setEmail1] = useState();
+  const [phone1, setPhone1] = useState();
+  const [website1, setWebsite1] = useState();
+  const [name2, setName2] = useState();
+  const [email2, setEmail2] = useState();
+  const [phone2, setPhone2] = useState();
+  const [address2, setAddress2] = useState();
+  const [invoiceNumber, setInvoiceNumber] = useState();
+  const [pickupLocation, setPickupLocation] = useState();
+  const [dropoffLocation, setDropoffLocation] = useState();
+  const [paymentMethod, setPaymentMethod] = useState();
+  const [date, setDate] = useState();
+
+  const handleName1Change = (e) => {
+    setName1(e.target.value);
+  };
+  const handleEmail1Change = (e) => {
+    setEmail1(e.target.value);
+  };
+  const handlePhone1Change = (e) => {
+    setPhone1(e.target.value);
+  };
+  const handleWebsite1Change = (e) => {
+    setWebsite1(e.target.value);
+  };
+  const handleName2Change = (e) => {
+    setName2(e.target.value);
+  };
+  const handleEmail2Change = (e) => {
+    setEmail2(e.target.value);
+  };
+  const handlePhone2Change = (e) => {
+    setPhone2(e.target.value);
+  };
+  const handleAddress2Change = (e) => {
+    setAddress2(e.target.value);
+  };
+  const handleInvoiceNumberChange = (e) => {
+    setInvoiceNumber(e.target.value);
+  };
+  const handlePickupLocationChange = (e) => {
+    setPickupLocation(e.target.value);
+  };
+  const handleDropoffLocationChange = (e) => {
+    setDropoffLocation(e.target.value);
+  };
+  const handlePaymentMethodChange = (e) => {
+    setPaymentMethod(e.target.value);
+  };
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+  };
 
   const [orders, setOrders] = useState([{}]);
 
@@ -111,7 +148,11 @@ const CreateInvoice = (props) => {
   };
 
   const [loading, setLoading] = useState(false);
+  const { message } = useSelector((state) => state.message);
+  const [successful, setSuccessful] = useState(false);
   const [imageUrl, setImageUrl] = useState();
+  const [store, setStore] = useState();
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const state = useRef({
     loading: false,
   });
@@ -123,25 +164,76 @@ const CreateInvoice = (props) => {
       span: 50,
     },
   };
+  // console.log(images[0])
 
   const submitInvoice = (e) => {
     e.preventDefault();
     console.log("Form submitted");
+    const from = {
+      name: name1,
+      email: email1,
+      phone: phone1,
+      website: website1,
+    };
+    const to = {
+      name: name2,
+      email: email2,
+      phone: phone2,
+      address: address2,
+    };
+    const fd = new FormData();
+    fd.append("from", JSON.stringify(from));
+    fd.append("to", JSON.stringify(to));
+    fd.append("invoice_number", invoiceNumber);
+    fd.append("pickup_location", pickupLocation);
+    fd.append("dropoff_location", dropoffLocation);
+    fd.append("payment_method", paymentMethod);
+    fd.append("date", date);
+    fd.append("orders", JSON.stringify(orders));
+    fd.append("logo", images[0].file);
+    // if (images[0]) {
+      // fd.append("logo", images[0].data_url);
+    // }
+    dispatch(clearMessage());
+    setStore(fd);
+    setLoading(true);
+    setIsSubmitted(true);
   };
 
-  // console.log(orders);
-  // const handleChange = useCallback((info) => {
-  //   if (info.file.status === "uploading") {
-  //     setLoading(true);
-  //     return;
-  //   }
-
-  //   if (info.file.status === "done") {
-  //     // Get this url from response in real world.
-  //     getBase64(info.file.originFileObj, (imageUrl) => {});
-  //   }
-  // });
-  // const { loading, imageUrl } = this.state;
+  useEffect(() => {
+    if (isSubmitted) {
+      dispatch(createInvoice(store))
+        .then(() => {
+          setLoading(false);
+          setSuccessful(true);
+          setIsSubmitted(false);
+          setStore(null);
+          setName1("");
+          setEmail1("");
+          setPhone1("");
+          setWebsite1("");
+          setName2("");
+          setEmail2("");
+          setPhone2("");
+          setAddress2("");
+          setInvoiceNumber("");
+          setPickupLocation("");
+          setDropoffLocation("");
+          setPaymentMethod("");
+          setDate("");
+          setOrders([{}]);
+          
+        })
+        .catch(() => {
+          setLoading(false);
+          setSuccessful(false);
+          setIsSubmitted(false);
+          setStore(null);
+        });
+      localStorage.removeItem("invoices");
+      dispatch(retrieveInvoices);
+    }
+  }, [isSubmitted]);
 
   return (
     <Layout>
@@ -176,6 +268,7 @@ const CreateInvoice = (props) => {
       <form
         className="sm:col-span-12 col-span-12"
         onSubmit={(e) => submitInvoice(e)}
+        enctype="multipart/form-data"
       >
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-full xl:col-span-8">
@@ -204,13 +297,27 @@ const CreateInvoice = (props) => {
                   </svg>
                 </button>
               </div>
+              {message && (
+                <div className="form-group">
+                  <div
+                    className={
+                      successful
+                        ? "p-4 my-3 text-black font-semibold bg-green-200"
+                        : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                    }
+                    role="alert"
+                  >
+                    <ul className="mx-3 my-3">{message}</ul>
+                  </div>
+                </div>
+              )}
               <div className="grid grid-cols-4 gap-6">
                 <div className="lg:col-span-2 col-span-4 p-5">
                   <p className="text-xl font-nunito font-normal py-3">From</p>
                   <InputField
                     // label="Name"
                     value={name1}
-                    onChange={handleInvoiceChange}
+                    onChange={handleName1Change}
                     name="name"
                     type="text"
                     placeholder="Enter your name"
@@ -218,15 +325,15 @@ const CreateInvoice = (props) => {
                   <InputField
                     // label="Email"
                     value={email1}
-                    onChange={handleInvoiceChange}
+                    onChange={handleEmail1Change}
                     name="email"
                     type="email"
                     placeholder="Enter your email"
                   />
-                  <FormField
+                  <InputField
                     // label="Phone Number"
                     value={phone1}
-                    onChange={handleInvoiceChange}
+                    onChange={handlePhone1Change}
                     name="phone"
                     type="text"
                     placeholder="Enter your phone number"
@@ -235,7 +342,7 @@ const CreateInvoice = (props) => {
                   <InputField
                     // label="Company Website"
                     value={website1}
-                    onChange={handleInvoiceChange}
+                    onChange={handleWebsite1Change}
                     name="website"
                     type="text"
                     placeholder="Enter your company website"
@@ -323,7 +430,7 @@ const CreateInvoice = (props) => {
                     type="text"
                     placeholder="Name"
                     value={name2}
-                    onChange={handleInvoiceChange}
+                    onChange={handleName2Change}
                   />
 
                   <InputField
@@ -331,7 +438,7 @@ const CreateInvoice = (props) => {
                     type="text"
                     placeholder="Address"
                     value={address2}
-                    onChange={handleInvoiceChange}
+                    onChange={handleAddress2Change}
                   />
 
                   <InputField
@@ -339,7 +446,7 @@ const CreateInvoice = (props) => {
                     type="text"
                     placeholder="Enter your Phone Number"
                     value={phone2}
-                    onChange={handleInvoiceChange}
+                    onChange={handlePhone2Change}
                   />
 
                   <InputField
@@ -347,13 +454,14 @@ const CreateInvoice = (props) => {
                     type="email"
                     placeholder="Enter your Email Address"
                     value={email2}
-                    onChange={handleInvoiceChange}
+                    onChange={handleEmail2Change}
                   />
                 </div>
                 <div className="lg:col-span-2 col-span-4 p-5">
                   <FormInvoiceField
                     label="Invoice Number"
-                    value={invoice_number}
+                    value={invoiceNumber}
+                    onChange={handleInvoiceNumberChange}
                     type="text"
                     id="invoiceNo"
                     name="invoice_number"
@@ -361,7 +469,8 @@ const CreateInvoice = (props) => {
                   />
                   <FormInvoiceField
                     label="Pickup Location"
-                    value={pickup_location}
+                    value={pickupLocation}
+                    onChange={handlePickupLocationChange}
                     type="text"
                     id="pickupLoc"
                     name="pickup_location"
@@ -369,7 +478,8 @@ const CreateInvoice = (props) => {
                   />
                   <FormInvoiceField
                     label="Drop up Location"
-                    value={dropoff_location}
+                    value={dropoffLocation}
+                    onChange={handleDropoffLocationChange}
                     type="text"
                     id="dropupLoc"
                     name="dropoff_location"
@@ -391,8 +501,8 @@ const CreateInvoice = (props) => {
                     <div class="relative inline-block md:w-2/3 md:flex-grow text-gray-700">
                       <select
                         name="payment_method"
-                        onChange={handleInvoiceChange}
-                        value={payment_method}
+                        value={paymentMethod}
+                        onChange={handlePaymentMethodChange}
                         allowClear
                         className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                         placeholder="Select Payment Method"
@@ -406,6 +516,7 @@ const CreateInvoice = (props) => {
                   <FormInvoiceField
                     label="Date"
                     value={date}
+                    onChange={handleDateChange}
                     type="date"
                     name="date"
                     id="date"
@@ -421,70 +532,150 @@ const CreateInvoice = (props) => {
               <div className="grid grid-cols-4 gap-6">
                 <div className="lg:col-span-4 col-span-4 p-5">
                   {/* <Table setInvoiceInputValue={orders} /> */}
-                  <div>
-                    <div className="container">
-                      <div className="col-md-12 column">
-                        {/* <table
-                          className="table table-bordered table-hover"
-                          id="tab_logic"
-                        >
-                          <thead>
-                            <tr>
-                              <th className="text-center"> # </th>
-                              <th className="text-center"> Name </th>
-                              <th className="text-center"> Mobile </th>
-                              <th />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {orders.map((row, i) => (
-                              <tr key={i}>
-                                <td>{i + 1}</td>
-                                <td>
-                                  <input
-                                    type="text"
+                  <div className="md:px-10 pt-4 md:pt-7 pb-5 overflow-x-auto">
+                    <table className="table-auto w-full rounded-lg">
+                      <thead className="vj font-semibold uppercase table_header text-white border-t-2 border-b-2 border-gray-100">
+                        <tr>
+                          <th className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-semibold text-left">
+                              Item Description
+                            </div>
+                          </th>
+                          <th className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-semibold text-center">
+                              Price
+                            </div>
+                          </th>
+                          <th className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-semibold text-center">Qty</div>
+                          </th>
+                          <th className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-semibold text-left">
+                              Amount
+                            </div>
+                          </th>
+                          <th className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-semibold text-left">...</div>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-md t_ lh">
+                        {orders.map((order, i) => (
+                          <tr key={i}>
+                            <td className="yl yd px-2 py-3 whitespace-nowrap">
+                              <div className="text-left bg-gray-200 p-2 rounded-lg">
+                                <p className="px-5">Item Name</p>
+                                <p className=" text-gray-400">
+                                  <InputField
+                                    style="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     name="name"
-                                    placeholder="Name"
-                                    value={row.name}
+                                    value={order.name}
                                     onChange={(e) => handleOrderChange(i, e)}
-                                  />
-                                </td>
-                                <td>
-                                  <input
                                     type="text"
-                                    name="mobile"
-                                    placeholder="Mobile"
-                                    value={row.mobile}
-                                    onChange={(e) => handleOrderChange(i, e)}
+                                    placeholder="Enter Product Name"
                                   />
-                                </td>
-                                <td>
-                                  <button
-                                    className="btn btn-danger"
-                                    onClick={() => handleDelete(i)}
-                                  >
-                                    Delete
-                                  </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-
-                          <tfoot>
-                            <tr>
-                              <td colSpan="4">
+                                </p>
+                              </div>
+                            </td>
+                            <td className="yl yd px-2 py-3 whitespace-nowrap">
+                              <div className="font-medium text-left bg-gray-200 p-2 rounded-lg">
+                                <p>Price</p>
+                                <p className="text-gray-400">
+                                  <InputField
+                                    style="appearance-none block w-36 bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    name="price"
+                                    value={order.price}
+                                    onChange={(e) => handleOrderChange(i, e)}
+                                    type="number"
+                                    placeholder=" ₦20,000"
+                                  />
+                                </p>
+                              </div>
+                            </td>
+                            <td className="yl yd px-2 py-3 whitespace-nowrap">
+                              <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
+                                <p>Qty</p>
+                                <p className="text-gray-400">
+                                  <InputField
+                                    style="appearance-none block w-20 bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    name="qty"
+                                    value={order.qty}
+                                    onChange={(e) => handleOrderChange(i, e)}
+                                    type="number"
+                                    placeholder="1"
+                                  />
+                                </p>
+                              </div>
+                            </td>
+                            <td className="yl yd px-2 py-3 whitespace-nowrap">
+                              <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
+                                <p className="text-gray-400">
+                                  ₦{" "}
+                                  {isNaN(order.price * order.qty)
+                                    ? 0
+                                    : order.price * order.qty}
+                                </p>
+                              </div>
+                            </td>
+                            <td>
+                              {i === 0 ? (
+                                <div className="flex justify-center">...</div>
+                              ) : (
                                 <button
-                                  className="btn btn-primary"
-                                  onClick={addRow}
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
+                                  onClick={() => handleDelete(i)}
                                 >
-                                  Add Row
+                                  Remove
                                 </button>
-                              </td>
-                            </tr>
-                          </tfoot>
-                        </table> */}
-                      </div>
-                    </div>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                        {/* {this.renderRows()} */}
+                      </tbody>
+
+                      {/* <button
+                        className="btn my-6 text-white bg-blue-500"
+                        onClick={this.handleClick.bind(this)}
+                      >
+                        Add Line
+                      </button> */}
+
+                      <tfoot>
+                        <tr>
+                          <td colSpan="4">
+                            <button
+                              className="btn my-6 text-white bg-green-500"
+                              onClick={addRow}
+                            >
+                              Add Row
+                            </button>
+                          </td>
+                        </tr>
+                        {/* <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td
+                            colspan="5"
+                            className="yl yd px-8 py-3 whitespace-nowrap"
+                          >
+                            Sub Total
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr>
+                        <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td className="yl yd px-8 py-3 whitespace-nowrap">
+                            Sales Tax (10%)
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr>
+                        <hr />
+                        <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td className="yl yd px-8 py-3 whitespace-nowrap">
+                            Amount Due
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr> */}
+                      </tfoot>
+                    </table>
                   </div>
                 </div>
               </div>
@@ -602,32 +793,58 @@ const CreateInvoice = (props) => {
 
                 <span className=" ml-2 mr-2">Print Invoice</span>
               </button>
-              <button className="btn invoice-btn w-48 h-11 mb-10 rounded-lg text-white">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <mask id="path-1-inside-1_843_2370" fill="white">
-                    <path d="M16.339 15.6216C16.339 16.3558 15.7423 16.9749 15.0081 16.9749H4.35896C3.62479 16.9749 3.02813 16.3558 3.02813 15.6216V4.97245C3.02813 4.23828 3.62479 3.66328 4.35896 3.66328H10.5706V2.77661H4.35896C3.13563 2.77661 2.14062 3.74994 2.14062 4.97328V15.6216C2.14062 16.8449 3.13563 17.8616 4.35896 17.8616H15.0073C16.2306 17.8616 17.2256 16.8441 17.2256 15.6216V9.43161H16.3381V15.6216H16.339Z" />
-                  </mask>
-                  <path
-                    d="M16.339 15.6216C16.339 16.3558 15.7423 16.9749 15.0081 16.9749H4.35896C3.62479 16.9749 3.02813 16.3558 3.02813 15.6216V4.97245C3.02813 4.23828 3.62479 3.66328 4.35896 3.66328H10.5706V2.77661H4.35896C3.13563 2.77661 2.14062 3.74994 2.14062 4.97328V15.6216C2.14062 16.8449 3.13563 17.8616 4.35896 17.8616H15.0073C16.2306 17.8616 17.2256 16.8441 17.2256 15.6216V9.43161H16.3381V15.6216H16.339Z"
-                    fill="white"
-                  />
-                  <path
-                    d="M16.339 15.6216H23.339V8.62161H16.339V15.6216ZM10.5706 3.66328V10.6633H17.5706V3.66328H10.5706ZM10.5706 2.77661H17.5706V-4.22339H10.5706V2.77661ZM17.2256 9.43161H24.2256V2.43161H17.2256V9.43161ZM16.3381 9.43161V2.43161H9.33813V9.43161H16.3381ZM16.3381 15.6216H9.33813V22.6216H16.3381V15.6216ZM9.33896 15.6216C9.33896 12.643 11.7249 9.97495 15.0081 9.97495V23.9749C19.7597 23.9749 23.339 20.0686 23.339 15.6216H9.33896ZM15.0081 9.97495H4.35896V23.9749H15.0081V9.97495ZM4.35896 9.97495C7.64219 9.97495 10.0281 12.643 10.0281 15.6216H-3.97187C-3.97187 20.0686 -0.392611 23.9749 4.35896 23.9749V9.97495ZM10.0281 15.6216V4.97245H-3.97187V15.6216H10.0281ZM10.0281 4.97245C10.0281 8.25347 7.33989 10.6633 4.35896 10.6633V-3.33672C-0.0903015 -3.33672 -3.97187 0.223091 -3.97187 4.97245H10.0281ZM4.35896 10.6633H10.5706V-3.33672H4.35896V10.6633ZM17.5706 3.66328V2.77661H3.57063V3.66328H17.5706ZM10.5706 -4.22339H4.35896V9.77661H10.5706V-4.22339ZM4.35896 -4.22339C-0.640462 -4.22339 -4.85938 -0.205346 -4.85938 4.97328H9.14062C9.14062 7.70524 6.91171 9.77661 4.35896 9.77661V-4.22339ZM-4.85938 4.97328V15.6216H9.14062V4.97328H-4.85938ZM-4.85938 15.6216C-4.85938 20.6222 -0.81847 24.8616 4.35896 24.8616V10.8616C7.08972 10.8616 9.14062 13.0676 9.14062 15.6216H-4.85938ZM4.35896 24.8616H15.0073V10.8616H4.35896V24.8616ZM15.0073 24.8616C20.1864 24.8616 24.2256 20.6197 24.2256 15.6216H10.2256C10.2256 13.0685 12.2749 10.8616 15.0073 10.8616V24.8616ZM24.2256 15.6216V9.43161H10.2256V15.6216H24.2256ZM17.2256 2.43161H16.3381V16.4316H17.2256V2.43161ZM9.33813 9.43161V15.6216H23.3381V9.43161H9.33813ZM16.3381 22.6216H16.339V8.62161H16.3381V22.6216Z"
-                    fill="white"
-                    mask="url(#path-1-inside-1_843_2370)"
-                  />
-                  <path
-                    d="M17.3391 2.64167C16.6691 1.97084 15.4999 1.97084 14.8291 2.64167L8.87656 8.59417C8.8199 8.65084 8.77906 8.72251 8.7599 8.80001L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15084C17.6741 4.81584 17.8591 4.37001 17.8591 3.89584C17.8591 3.42167 17.6749 2.97667 17.3391 2.64167ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13418L14.5157 4.21001L15.7707 5.46501L10.8466 10.3892ZM16.7116 4.52334L16.3982 4.83667L15.1432 3.58167L15.4566 3.26834C15.7916 2.93334 16.3766 2.93334 16.7116 3.26834C16.8791 3.43584 16.9716 3.65834 16.9716 3.89584C16.9716 4.13334 16.8791 4.35584 16.7116 4.52334Z"
-                    fill="white"
-                  />
-                </svg>
-
+              <button
+                type="submit"
+                className="btn invoice-btn w-48 h-11 mb-10 rounded-lg text-white"
+              >
+                {loading && loading ? (
+                  // <span className="spinner-border spinner-border-sm mr-1"></span>
+                  <svg
+                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                ) : (
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <mask id="path-1-inside-1_843_2370" fill="white">
+                      <path d="M16.339 15.6216C16.339 16.3558 15.7423 16.9749 15.0081 16.9749H4.35896C3.62479 16.9749 3.02813 16.3558 3.02813 15.6216V4.97245C3.02813 4.23828 3.62479 3.66328 4.35896 3.66328H10.5706V2.77661H4.35896C3.13563 2.77661 2.14062 3.74994 2.14062 4.97328V15.6216C2.14062 16.8449 3.13563 17.8616 4.35896 17.8616H15.0073C16.2306 17.8616 17.2256 16.8441 17.2256 15.6216V9.43161H16.3381V15.6216H16.339Z" />
+                    </mask>
+                    <path
+                      d="M16.339 15.6216C16.339 16.3558 15.7423 16.9749 15.0081 16.9749H4.35896C3.62479 16.9749 3.02813 16.3558 3.02813 15.6216V4.97245C3.02813 4.23828 3.62479 3.66328 4.35896 3.66328H10.5706V2.77661H4.35896C3.13563 2.77661 2.14062 3.74994 2.14062 4.97328V15.6216C2.14062 16.8449 3.13563 17.8616 4.35896 17.8616H15.0073C16.2306 17.8616 17.2256 16.8441 17.2256 15.6216V9.43161H16.3381V15.6216H16.339Z"
+                      fill="white"
+                    />
+                    <path
+                      d="M16.339 15.6216H23.339V8.62161H16.339V15.6216ZM10.5706 3.66328V10.6633H17.5706V3.66328H10.5706ZM10.5706 2.77661H17.5706V-4.22339H10.5706V2.77661ZM17.2256 9.43161H24.2256V2.43161H17.2256V9.43161ZM16.3381 9.43161V2.43161H9.33813V9.43161H16.3381ZM16.3381 15.6216H9.33813V22.6216H16.3381V15.6216ZM9.33896 15.6216C9.33896 12.643 11.7249 9.97495 15.0081 9.97495V23.9749C19.7597 23.9749 23.339 20.0686 23.339 15.6216H9.33896ZM15.0081 9.97495H4.35896V23.9749H15.0081V9.97495ZM4.35896 9.97495C7.64219 9.97495 10.0281 12.643 10.0281 15.6216H-3.97187C-3.97187 20.0686 -0.392611 23.9749 4.35896 23.9749V9.97495ZM10.0281 15.6216V4.97245H-3.97187V15.6216H10.0281ZM10.0281 4.97245C10.0281 8.25347 7.33989 10.6633 4.35896 10.6633V-3.33672C-0.0903015 -3.33672 -3.97187 0.223091 -3.97187 4.97245H10.0281ZM4.35896 10.6633H10.5706V-3.33672H4.35896V10.6633ZM17.5706 3.66328V2.77661H3.57063V3.66328H17.5706ZM10.5706 -4.22339H4.35896V9.77661H10.5706V-4.22339ZM4.35896 -4.22339C-0.640462 -4.22339 -4.85938 -0.205346 -4.85938 4.97328H9.14062C9.14062 7.70524 6.91171 9.77661 4.35896 9.77661V-4.22339ZM-4.85938 4.97328V15.6216H9.14062V4.97328H-4.85938ZM-4.85938 15.6216C-4.85938 20.6222 -0.81847 24.8616 4.35896 24.8616V10.8616C7.08972 10.8616 9.14062 13.0676 9.14062 15.6216H-4.85938ZM4.35896 24.8616H15.0073V10.8616H4.35896V24.8616ZM15.0073 24.8616C20.1864 24.8616 24.2256 20.6197 24.2256 15.6216H10.2256C10.2256 13.0685 12.2749 10.8616 15.0073 10.8616V24.8616ZM24.2256 15.6216V9.43161H10.2256V15.6216H24.2256ZM17.2256 2.43161H16.3381V16.4316H17.2256V2.43161ZM9.33813 9.43161V15.6216H23.3381V9.43161H9.33813ZM16.3381 22.6216H16.339V8.62161H16.3381V22.6216Z"
+                      fill="white"
+                      mask="url(#path-1-inside-1_843_2370)"
+                    />
+                    <path
+                      d="M17.3391 2.64167C16.6691 1.97084 15.4999 1.97084 14.8291 2.64167L8.87656 8.59417C8.8199 8.65084 8.77906 8.72251 8.7599 8.80001L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15084C17.6741 4.81584 17.8591 4.37001 17.8591 3.89584C17.8591 3.42167 17.6749 2.97667 17.3391 2.64167ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13418L14.5157 4.21001L15.7707 5.46501L10.8466 10.3892ZM16.7116 4.52334L16.3982 4.83667L15.1432 3.58167L15.4566 3.26834C15.7916 2.93334 16.3766 2.93334 16.7116 3.26834C16.8791 3.43584 16.9716 3.65834 16.9716 3.89584C16.9716 4.13334 16.8791 4.35584 16.7116 4.52334Z"
+                      fill="white"
+                    />
+                  </svg>
+                )}
                 <span className=" ml-2 mr-2">Create Invoice</span>
               </button>
               <button className="btn bg-gray-300 text-gray-400 rounded-lg w-48 h-11 mb-10">

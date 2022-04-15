@@ -6,15 +6,19 @@ import message from "./message";
 import { company_reducer, companyOnboardReducer } from "./company_info";
 import agentReducer  from "./agents";
 import fleetReducer from "./fleets";
+import invoiceReducer from "./finance";
 
 export default combineReducers({
   deliveries,
   authentication,
   // registration,
   message,
+  invoiceReducer,
   company_reducer,
   // agents,
   agentReducer,
   fleetReducer,
   companyOnboardReducer,
+
+
 });

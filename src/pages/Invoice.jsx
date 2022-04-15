@@ -7,6 +7,7 @@ import Logo from "../assets/icons/dropexpress-logo.svg";
 import FormInvoiceSelectField from "../components/FormInvoiceSelectField";
 import FormInvoiceField from "../components/FormInvoiceField";
 import Table from "../components/Table";
+import { Link, useLocation } from "react-router-dom";
 
 function getBase64(img, callback) {
   const reader = new FileReader();
@@ -66,6 +67,13 @@ const Invoice = (props) => {
       getBase64(info.file.originFileObj, (imageUrl) => {});
     }
   });
+  const location = useLocation();
+
+  const data = JSON.parse(location.state);
+  const orders = JSON.parse(data.orders);
+  console.log(orders);
+
+  console.log("location", location);
   // const { loading, imageUrl } = this.state;
 
   return (
@@ -73,26 +81,28 @@ const Invoice = (props) => {
       <div className="sm:flex sm:justify-between sm:items-center flex justify-between items-center mb-6">
         <DashboardTitle title="Invoice" />
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-          <button
-            className="btn hover:text-yellow-500 text-gray-600 border h-8 px-4 text-sm"
-            style={{ borderColor: "rgb(249, 123, 4, 0.2" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <Link to="/finance">
+            <button
+              className="btn hover:text-yellow-500 text-gray-600 border h-8 px-4 text-sm"
+              style={{ borderColor: "rgb(249, 123, 4, 0.2" }}
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 17l-5-5m0 0l5-5m-5 5h12"
-              />
-            </svg>
-            <span className="hidden xs:block ml-2 mr-2">Back</span>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 17l-5-5m0 0l5-5m-5 5h12"
+                />
+              </svg>
+              <span className="hidden xs:block ml-2 mr-2">Back</span>
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -127,16 +137,28 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal py-3">From</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Amakiri Emeka
+                  {JSON.stringify(JSON.parse(data.from).name).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Ikeja Flat 33
+                  {JSON.stringify(JSON.parse(data.from).email).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  09032411710
+                  {JSON.stringify(JSON.parse(data.from).phone).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  www.Dropie.com
+                  {JSON.stringify(JSON.parse(data.from).website).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
               </div>
               <div className="p-5 lg:col-span-2 col-span-4 lg:my-10 -my-10 mx-auto">
@@ -149,16 +171,28 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal mb-4">To</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  John Maxwell
+                  {JSON.stringify(JSON.parse(data.to).name).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Yaba Estate 24
+                  {JSON.stringify(JSON.parse(data.to).email).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  09032411710
+                  {JSON.stringify(JSON.parse(data.to).phone).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  john99@gmail.com
+                  {JSON.stringify(JSON.parse(data.to).address).replace(
+                    /['"]+/g,
+                    ""
+                  )}
                 </p>
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
@@ -169,7 +203,7 @@ const Invoice = (props) => {
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      INV 10
+                      {data.invoice_number}
                     </p>
                   </div>
                 </div>
@@ -180,7 +214,7 @@ const Invoice = (props) => {
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      Yaba Estate 10
+                      {data.pickup_location}
                     </p>
                   </div>
                 </div>
@@ -191,7 +225,7 @@ const Invoice = (props) => {
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      Ikeja Head office
+                      {data.dropoff_location}
                     </p>
                   </div>
                 </div>
@@ -202,7 +236,7 @@ const Invoice = (props) => {
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      Cash
+                      {data.payment_method}
                     </p>
                   </div>
                 </div>
@@ -215,7 +249,94 @@ const Invoice = (props) => {
           >
             <div className="grid grid-cols-4 gap-6">
               <div className="lg:col-span-4 col-span-4 p-5">
-                <Table />
+                <div className="md:px-10 pt-4 md:pt-7 pb-5 overflow-x-auto">
+                  <table className="table-auto w-full rounded-lg">
+                    <thead className="vj font-semibold uppercase table_header text-white border-t-2 border-b-2 border-gray-100">
+                      <tr>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">
+                            Item Description
+                          </div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-center">Price</div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-center">Qty</div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Amount</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-md t_ lh">
+                      {orders.map((order, i) => (
+                        <tr key={i}>
+                          <td className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="text-left bg-gray-200 p-2 rounded-lg">
+                              <p className="px-5">Item Name</p>
+                              <p className=" text-gray-400">{order.name}</p>
+                            </div>
+                          </td>
+                          <td className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-medium text-left bg-gray-200 p-2 rounded-lg">
+                              <p>Price</p>
+                              <p className="text-gray-400">{order.price}</p>
+                            </div>
+                          </td>
+                          <td className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
+                              <p>Qty</p>
+                              <p className="text-gray-400">{order.qty}</p>
+                            </div>
+                          </td>
+                          <td className="yl yd px-2 py-3 whitespace-nowrap">
+                            <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
+                              <p className="text-gray-400">
+                                ₦{" "}
+                                {isNaN(order.price * order.qty)
+                                  ? 0
+                                  : order.price * order.qty}
+                              </p>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {/* {data.orders} */}
+                      {/* {this.renderRows()} */}
+                    </tbody>
+
+                    {/* <button
+                        className="btn my-6 text-white bg-blue-500"
+                        onClick={this.handleClick.bind(this)}
+                      >
+                        Add Line
+                      </button> */}
+
+                    {/* <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td
+                            colspan="5"
+                            className="yl yd px-8 py-3 whitespace-nowrap"
+                          >
+                            Sub Total
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr>
+                        <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td className="yl yd px-8 py-3 whitespace-nowrap">
+                            Sales Tax (10%)
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr>
+                        <hr />
+                        <tr class="flex text-right items-end justify-end text-black font-semibold">
+                          <td className="yl yd px-8 py-3 whitespace-nowrap">
+                            Amount Due
+                          </td>
+                          <td className=" px-8 py-3">₦20,000</td>
+                        </tr> */}
+                  </table>
+                </div>
               </div>
             </div>
           </div>

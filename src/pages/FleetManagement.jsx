@@ -235,7 +235,6 @@ function FleetManagement() {
     // setStatus(item.status);
     setFleetId(item.id);
     setStatus("supsended");
-    
   };
 
   useEffect(() => {
@@ -244,7 +243,7 @@ function FleetManagement() {
       const data = {
         status: status,
       };
-      console.log(data)
+      console.log(data);
       dispatch(updateStatus(fleetId, data))
         .then(() => {
           setIsSuspended(false);

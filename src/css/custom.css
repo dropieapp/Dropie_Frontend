@@ -502,3 +502,12 @@
 .svg-class {
   color: #333333;
 }
+
+.inv-btn:hover {
+  background-color: #C51104;
+  color: #fff;
+}
+
+svg.svg-inv-btn:hover {
+  fill: #fff;
+}

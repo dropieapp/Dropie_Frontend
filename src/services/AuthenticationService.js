@@ -60,6 +60,8 @@ const logout = () => {
   localStorage.removeItem("verify_otp");
   localStorage.removeItem("fleet_banner");
   localStorage.removeItem("add_agent");
+  localStorage.removeItem("fleet_status");
+  localStorage.removeItem("invoices");
   localStorage.removeItem("update_fleets");
 };
 export default {

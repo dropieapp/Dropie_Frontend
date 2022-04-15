@@ -44,7 +44,6 @@ function App() {
     });
   }, [dispatch]);
   return (
-    <div className="Dropie">
       {/* <Router history={history}>
         <Switch>
         
@@ -89,63 +88,65 @@ function App() {
           <Route path="*" component={NotFound} />
         </Switch>
       </Router> */}
-      <Routes>
-        <Route exact element={<Login />} path="/login" />
-        <Route exact element={<SignUp />} path="/register" />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/invite" element={<InviteMember />} />
-        <Route path="/verify" element={<VerifyNumber />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/company-info" element={<PrivateRoute />}>
-          <Route path="/company-info" element={<UploadCompanyInfo />} />
-        </Route>
-        {/* Dashboard */}
-        <Route exact path="/" element={<PrivateRoute />}>
-          <Route exact path="/" element={<Dashboard />} />
-        </Route>
-        {/* Package Tracking */}
-        <Route path="/package-tracking" element={<PrivateRoute />}>
-          <Route path="/package-tracking" element={<PackageTracking />} />
-        </Route>
-        {/* Fleet Management */}
-        <Route path="/fleet-management" element={<PrivateRoute />}>
-          <Route path="/fleet-management" element={<FleetManagement />} />
-        </Route>
-        {/* Vehicle Info */}
-        <Route path="/fleet-management/vehicle-info" element={<PrivateRoute />}>
+      <Fragment>
+        <Routes>
+          <Route exact element={<Login />} path="/login" />
+          <Route exact element={<SignUp />} path="/register" />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/invite" element={<InviteMember />} />
+          <Route path="/verify" element={<VerifyNumber />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <PrivateRoute path="/company-info" element={<UploadCompanyInfo />} />
+          {/* Dashboard */}
+          <Route exact path="/" element={<PrivateRoute />}>
+            <Route exact path="/" element={<Dashboard />} />
+          </Route>
+          {/* Package Tracking */}
+          <Route path="/package-tracking" element={<PrivateRoute />}>
+            <Route path="/package-tracking" element={<PackageTracking />} />
+          </Route>
+          {/* Fleet Management */}
+          <Route path="/fleet-management" element={<PrivateRoute />}>
+            <Route path="/fleet-management" element={<FleetManagement />} />
+          </Route>
+          {/* Vehicle Info */}
           <Route
             path="/fleet-management/vehicle-info"
-            element={<VehicleInfo />}
-          />
-        </Route>
+            element={<PrivateRoute />}
+          >
+            <Route
+              path="/fleet-management/vehicle-info"
+              element={<VehicleInfo />}
+            />
+          </Route>
 
-        {/* Staff */}
-        <Route path="/staffs" element={<PrivateRoute />}>
-          <Route path="/staffs" element={<Staff />} />
-        </Route>
-        {/* Finance */}
-        <Route path="/finance" element={<PrivateRoute />}>
-          <Route path="/finance" element={<Finance />} />
-        </Route>
-        {/* Deliveries */}
-        <Route path="/deliveries" element={<PrivateRoute />}>
-          <Route path="/deliveries" element={<Deliveries />} />
-        </Route>
-        {/* Create Invoice */}
-        <Route path="/finance/create-invoice" element={<PrivateRoute />}>
-          <Route path="/finance/create-invoice" element={<CreateInvoice />} />
-        </Route>
-        {/* Send Invoice */}
-        <Route path="/finance/send-invoice" element={<PrivateRoute />}>
-          <Route path="/finance/send-invoice" element={<SendInvoice />} />
-        </Route>
-        {/* Invoice */}
-        <Route path="/finance/invoice" element={<PrivateRoute />}>
-          <Route path="/finance/invoice" element={<Invoice />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+          {/* Staff */}
+          <Route path="/staffs" element={<PrivateRoute />}>
+            <Route path="/staffs" element={<Staff />} />
+          </Route>
+          {/* Finance */}
+          <Route path="/finance" element={<PrivateRoute />}>
+            <Route path="/finance" element={<Finance />} />
+          </Route>
+          {/* Deliveries */}
+          <Route path="/deliveries" element={<PrivateRoute />}>
+            <Route path="/deliveries" element={<Deliveries />} />
+          </Route>
+          {/* Create Invoice */}
+          <Route path="/finance/create-invoice" element={<PrivateRoute />}>
+            <Route path="/finance/create-invoice" element={<CreateInvoice />} />
+          </Route>
+          {/* Send Invoice */}
+          <Route path="/finance/send-invoice" element={<PrivateRoute />}>
+            <Route path="/finance/send-invoice" element={<SendInvoice />} />
+          </Route>
+          {/* Invoice */}
+          <Route path="/finance/invoice" element={<PrivateRoute />}>
+            <Route path="/finance/invoice" element={<Invoice />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Fragment>
   );
 }
 

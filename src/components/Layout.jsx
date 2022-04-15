@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveAgents } from "../actions/staffs";
 import { retrieveFleets, vehicleType } from "../actions/fleets";
+import { retrieveInvoices } from "../actions/finance";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -28,6 +29,7 @@ const Layout = ({ children }) => {
     dispatch(retrieveAgents());
     dispatch(retrieveFleets());
     dispatch(vehicleType());
+    dispatch(retrieveInvoices());
   }, []);
 
   return (

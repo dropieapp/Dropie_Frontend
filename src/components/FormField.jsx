@@ -10,6 +10,7 @@ const FormField = (props) => {
         {props.label}
       </label>
       <input
+        
         type={props.type}
         placeholder={props.placeholder}
         id={props.id}
@@ -21,5 +22,6 @@ const FormField = (props) => {
     </div>
   );
 };
+
 
 export default FormField;
