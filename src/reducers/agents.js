@@ -38,7 +38,8 @@ const AgentReducer = (agents = [], action) => {
       });
 
     case UPDATE_AGENT_STATUS:
-      return agents.map((agent) => {
+
+      return agents.data.map((agent) => {
         if (agent.id === payload.id) {
           return payload;
         }

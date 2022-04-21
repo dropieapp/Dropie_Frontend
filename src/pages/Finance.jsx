@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import DashboardTitle from "../components/DashboardTitle";
 import Layout from "../components/Layout";
 import DashboardCard08 from "../partials/dashboard/DashboardCard08";
@@ -12,21 +12,24 @@ function Finance() {
   const dispatch = useDispatch();
 
   const history = useNavigate();
-  const [getInvoice, setGetInvoice] = useState();
+  const location = useLocation();
+  // const [getInvoice, setGetInvoice] = useState();
+  const getInvoice = useSelector((state) => state.invoiceReducer.data);
 
-  useEffect(() => {
-    const get_inovices = JSON.parse(localStorage.getItem("invoices"));
-    setGetInvoice(get_inovices.data);
-    if (get_inovices.data.length > 0) {
-      toast("Invoice Data Fetched", {
-        type: "success",
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   const get_inovices = JSON.parse(localStorage.getItem("invoices"));
+  //   console.log(get_inovices);
+  //   setGetInvoice(get_inovices);
+  //   if (get_inovices && get_inovices.data.length > 0) {
+  //     toast("Invoice Data Fetched", {
+  //       type: "success",
+  //       position: "top-right",
+  //       autoClose: 2000,
+  //       hideProgressBar: false,
+  //       closeOnClick: true,
+  //     });
+  //   }
+  // }, []);
 
   const [singleInvoice, setSingleInvoice] = useState();
   const [successful, setSuccessful] = useState(false);
@@ -38,8 +41,8 @@ function Finance() {
   };
 
   useEffect(() => {
-    if (successful) {
-      history("/finance/invoice/", {
+    if (successful && singleInvoice) {
+      history("/finance/invoice", {
         state: singleInvoice,
       });
     }

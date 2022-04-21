@@ -27,18 +27,18 @@ function FleetManagement() {
   const dispatch = useDispatch();
   const [show, setShow] = useState(null);
 
-  const [fleets, setFleets] = useState([]);
-  useEffect(() => {
-    let get_fleets = JSON.parse(localStorage.getItem("get_fleets"));
-    setFleets(get_fleets.data);
-  }, []);
+  // const [fleets, setFleets] = useState([]);
+  // useEffect(() => {
+  //   let get_fleets = JSON.parse(localStorage.getItem("get_fleets"));
+  //   setFleets(get_fleets.data);
+  // }, []);
 
-  const [getAgents, setGetAgents] = useState([]);
+  // const [getAgents, setGetAgents] = useState([]);
 
-  useEffect(() => {
-    let get_agents = JSON.parse(localStorage.getItem("get_agents"));
-    setGetAgents(get_agents.data);
-  }, []);
+  // useEffect(() => {
+  //   let get_agents = JSON.parse(localStorage.getItem("get_agents"));
+  //   setGetAgents(get_agents.data);
+  // }, []);
 
   const [vehiclesType, setVehiclesType] = useState([]);
 
@@ -46,6 +46,9 @@ function FleetManagement() {
     let vehicle_type = JSON.parse(localStorage.getItem("vehicle_type"));
     setVehiclesType(vehicle_type.data);
   }, []);
+
+  const fleets = useSelector((state) => state.fleetReducer.data);
+  const getAgents = useSelector((state) => state.agentReducer.data);
 
   let PageSize = 10;
   const [currentPage, setCurrentPage] = useState(1);
@@ -209,7 +212,6 @@ function FleetManagement() {
         .catch(() => {
           setIsActive(false);
           setStatus("");
-          console.log("There is an error");
           toast("Fleet status update failed", {
             type: "error",
             position: "top-right",
@@ -234,7 +236,7 @@ function FleetManagement() {
     setLoading(true);
     // setStatus(item.status);
     setFleetId(item.id);
-    setStatus("supsended");
+    setStatus("suspended");
   };
 
   useEffect(() => {

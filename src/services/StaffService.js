@@ -32,66 +32,28 @@ const get = (id) => {
     });
 };
 
-// const create = (data) => {
-//   return axios.post(
-//     API_URL + "business/staff/agent",
-//     { ...data },
-//     {
-//       headers: { "Content-type": "multipart/form-data", ...authHeader() },
-//     }
-//   ).then((response) => {
-//      localStorage.setItem("add_agents", JSON.stringify(response.data));
-//     return response.data;
-//   } );
-// };
 const create = (data) => {
   return fileHeader.post("/business/staff/agent", data);
 };
 
 
 const status = (id, data) => {
-  return axios({
-    method: "post",
-    url: API_URL + "business/staff/agent/status/" + id,
-    data: data,
-    headers: { "Content-type": "application/json", ...authHeader() },
-  }).then((response) => {
-    localStorage.setItem("agents_status", JSON.stringify(response.data));
-    return response.data;
-  });
+  return normalHeader.post(API_URL + "business/staff/agent/status/" + id, data);
 };
+
 const inviteManager = (data) => {
-  return axios({
-    method: "post",
-    url: API_URL + "business/staff/agent/invite",
-    data: data,
-    headers: { "Content-type": "application/json", ...authHeader() },
-  }).then((response) => {
-    localStorage.setItem("invite_manager", JSON.stringify(response.data));
-    return response.data;
-  });
+  return normalHeader.post(API_URL + "business/staff/agent/invite", data);
 };
 
 const verifyManager = (id) => {
-  return axios({
-    method: "get",
-    url: API_URL + "business/staff/agent/invite/" + id,
-    headers: { ...authHeader() },
-  }).then((response) => {
-    localStorage.setItem("verify_manager", JSON.stringify(response.data));
-    return response.data;
-  });
+  return normalHeader.post(API_URL + "business/staff/verify/" + id);
 };
+
 const listManager = () => {
-  return axios({
-    method: "get",
-    url: API_URL + "business/staff/",
-    headers: { ...authHeader() },
-  }).then((response) => {
-    localStorage.setItem("list_staff", JSON.stringify(response.data));
-    return response.data;
-  });
+  return normalHeader.get(API_URL + "business/staff");
 };
+
+
 
 const StaffService = {
   getAll,

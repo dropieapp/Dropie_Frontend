@@ -146,56 +146,139 @@ export const retrieveAgent = (id) => async (dispatch) => {
   );
 };
 
-export const inviteManager = (data) => async (dispatch) => {
-  return AgentDataService.inviteManager(data).then(
-    (res) => {
+export const inviteManager = (id, data) => async (dispatch) => {
+  try {
+    const res = await AgentDataService.inviteManager(id, data);
+
+    dispatch({
+      type: INVITE_MANAGER,
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MESSAGE,
+      payload: res.data.message,
+    });
+    localStorage.setItem("invite_manager", JSON.stringify(res.data));
+
+    return Promise.resolve(res.data);
+  } catch (err) {
+    const errors = err.response.data && err.response.data.errors;
+    if (typeof errors === "object") {
+      const result = Object.keys(errors).map((key) =>
+        errors[key].map((item) => <li>{item}</li>)
+      );
       dispatch({
         type: INVITE_MANAGER,
-        payload: res,
       });
       dispatch({
         type: SET_MESSAGE,
-        payload: res.message,
+        payload: result,
       });
-    },
-    (error) => {
-      console.log(error.response.data);
+      console.log(result);
+      return Promise.reject();
+    } else {
+      const result = err.response.data && err.response.data.message;
+      dispatch({
+        type: INVITE_MANAGER,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: result,
+      });
+      console.log(result);
+      return Promise.reject();
     }
-  );
+  }
 };
 
 export const updateAgentStatus = (id, data) => async (dispatch) => {
-  return AgentDataService.status(id, data).then(
-    (res) => {
+  try {
+    const res = await AgentDataService.status(id, data);
+
+    dispatch({
+      type: UPDATE_AGENT_STATUS,
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MESSAGE,
+      payload: res.data.message,
+    });
+    // console.log(res);
+    localStorage.setItem("update_agent_status", JSON.stringify(res.data));
+
+    return Promise.resolve(res.data);
+  } catch (err) {
+    const errors = err.response.data && err.response.data.errors;
+    if (typeof errors === "object") {
+      const result = Object.keys(errors).map((key) =>
+        errors[key].map((item) => <li>{item}</li>)
+      );
       dispatch({
         type: UPDATE_AGENT_STATUS,
-        payload: res,
       });
       dispatch({
         type: SET_MESSAGE,
-        payload: res.message,
+        payload: result,
       });
-    },
-    (error) => {
-      console.log(error.response.data);
+      console.log(result);
+      return Promise.reject();
+    } else {
+      const result = err.response.data && err.response.data.message;
+      dispatch({
+        type: UPDATE_AGENT_STATUS,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: result,
+      });
+      console.log(result);
+      return Promise.reject();
     }
-  );
+  }
 };
 
 export const verifyInviteManager = (id) => async (dispatch) => {
-  return AgentDataService.verifyManager(id).then(
-    (res) => {
+  try {
+    const res = await AgentDataService.verifyManager(id);
+
+    dispatch({
+      type: VERIFY_MANAGER_INVITE,
+      payload: res.data,
+    });
+    dispatch({
+      type: SET_MESSAGE,
+      payload: res.data.message,
+    });
+    localStorage.setItem("verify_invite_manager", JSON.stringify(res.data));
+
+    return Promise.resolve(res.data);
+  } catch (err) {
+    const errors = err.response.data && err.response.data.errors;
+    if (typeof errors === "object") {
+      const result = Object.keys(errors).map((key) =>
+        errors[key].map((item) => <li>{item}</li>)
+      );
       dispatch({
         type: VERIFY_MANAGER_INVITE,
-        payload: res,
       });
       dispatch({
         type: SET_MESSAGE,
-        payload: res.message,
+        payload: result,
       });
-    },
-    (error) => {
-      console.log(error.response.data);
+      console.log(result);
+      return Promise.reject();
+    } else {
+      const result = err.response.data && err.response.data.message;
+      dispatch({
+        type: VERIFY_MANAGER_INVITE,
+      });
+      dispatch({
+        type: SET_MESSAGE,
+        payload: result,
+      });
+      console.log(result);
+      return Promise.reject();
     }
-  );
+  }
 };
+

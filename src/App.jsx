@@ -1,8 +1,8 @@
 import React, { useEffect, Fragment } from "react";
 // import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { history } from "./_helpers";
+// import { history } from "./_helpers";
 import { PrivateRoute } from "./_components";
 
 import Login from "./pages/SignIn";
@@ -28,21 +28,27 @@ import CreateInvoice from "./pages/CreateInvoice";
 import Invoice from "./pages/Invoice";
 import SendInvoice from "./pages/SendInvoice";
 import { clearMessage } from "./actions/message";
+import SingleAgent from "./pages/SingleAgent";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
 
-  // useEffect(() => {
-  //   history.listen((location, action) => {
-  //     // clear alert on location change
-  //     dispatch(alertActions.clear());
-  //   });
-  // }, []);
   useEffect(() => {
-    history.listen((location) => {
-      dispatch(clearMessage()); // clear message when changing location
-    });
-  }, [dispatch]);
+    document.querySelector("html").style.scrollBehavior = "auto";
+    window.scroll({ top: 0 });
+    document.querySelector("html").style.scrollBehavior = "";
+  }, [location.pathname]); // triggered on route change
+// console.log(location);
+
+  useEffect(() => {
+    // history.listen((location, action) => {
+    //   // clear alert on location change
+    //   dispatch(clearMessage());
+    // });
+    location.pathname && dispatch(clearMessage());
+  }, [location.pathname]);
+ 
   return (
     <div className="Dropie">
       {/* <Router history={history}>
@@ -122,6 +128,9 @@ function App() {
         {/* Staff */}
         <Route path="/staffs" element={<PrivateRoute />}>
           <Route path="/staffs" element={<Staff />} />
+        </Route>
+        <Route path="/staffs/:id/edit-agent" element={<PrivateRoute />}>
+          <Route path="/staffs/:id/edit-agent" element={<SingleAgent />} />
         </Route>
         {/* Finance */}
         <Route path="/finance" element={<PrivateRoute />}>

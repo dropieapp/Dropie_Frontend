@@ -7,7 +7,7 @@ import EditMenu from "../EditMenu";
 // Import utilities
 import { tailwindConfig, hexToRGB } from "../../utils/Utils";
 
-function DashboardCard01() {
+function DashboardCard15(props) {
   const chartData = {
     labels: [
       "12-01-2020",
@@ -74,17 +74,17 @@ function DashboardCard01() {
   };
 
   return (
-    <div className="flex flex-col sm:col-span-6 xl:col-span-3 bg-white shadow-lg rounded-sm border border-gray-200">
+    <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-3 bg-white shadow-lg rounded-sm border border-slate-200">
       <div className="px-5 pt-5">
         <header className="flex justify-between items-start mb-2">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">
-            Total Active Agent
+          <h2 className="text-lg font-semibold text-slate-800 mb-2">
+            {props.title}
           </h2>
           {/* Menu button */}
           <EditMenu className="relative inline-flex">
             <li>
               <Link
-                className="font-medium text-sm text-gray-600 hover:text-gray-800 flex py-1 px-3"
+                className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
                 to="#0"
               >
                 Option 1
@@ -92,7 +92,7 @@ function DashboardCard01() {
             </li>
             <li>
               <Link
-                className="font-medium text-sm text-gray-600 hover:text-gray-800 flex py-1 px-3"
+                className="font-medium text-sm text-slate-600 hover:text-slate-800 flex py-1 px-3"
                 to="#0"
               >
                 Option 2
@@ -100,7 +100,7 @@ function DashboardCard01() {
             </li>
             <li>
               <Link
-                className="font-medium text-sm text-red-500 hover:text-red-600 flex py-1 px-3"
+                className="font-medium text-sm text-rose-500 hover:text-rose-600 flex py-1 px-3"
                 to="#0"
               >
                 Remove
@@ -108,21 +108,23 @@ function DashboardCard01() {
             </li>
           </EditMenu>
         </header>
-
         <div className="flex items-start">
-          <div className="text-xl font-bold text-gray-800 mr-2">50</div>
+          <div className="text-3xl font-bold text-slate-800 mr-2">
+            {props.figure}
+          </div>
         </div>
-        <div className="text-xs text-gray-400 mb-1">
-          <span>50%</span> than last week
+        <div className="text-xs font-semibold text-gray-400 px-1.5 rounded-full">
+          <span style={{ color: "#D93804" }}>{props.percent}</span>{" "}
+          {props.subtext}
         </div>
       </div>
       {/* Chart built with Chart.js 3 */}
       <div className="grow">
         {/* Change the height attribute to adjust the chart height */}
-        <LineChart data={chartData} width={289} height={98} />
+        <LineChart data={chartData} width={389} height={128} />
       </div>
     </div>
   );
 }
 
-export default DashboardCard01;
+export default DashboardCard15;

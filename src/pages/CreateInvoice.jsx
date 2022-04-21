@@ -8,6 +8,7 @@ import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
 import { createInvoice, retrieveInvoices } from "../actions/finance";
 import { clearMessage } from "../actions/message";
+import { toast } from "react-toastify";
 
 const CreateInvoice = (props) => {
   const dispatch = useDispatch();
@@ -27,53 +28,6 @@ const CreateInvoice = (props) => {
     // data for submit
     setImages(imageList);
   };
-
-  // const [invoiceInputValue, setInvoiceInputValue] = useState({
-  //   // from: {
-  //   name1: "",
-  //   email1: "",
-  //   phone1: "",
-  //   website1: "",
-  //   // },
-  //   // to: {
-  //   name2: "",
-  //   email2: "",
-  //   phone2: "",
-  //   address2: "",
-  //   // },
-  //   invoice_number: "",
-  //   pickup_location: "",
-  //   dropoff_location: "",
-  //   payment_method: "",
-  //   date: "",
-  //   // orders: [{}],
-  // });
-
-  // const {
-  //   name1,
-  //   email1,
-  //   phone1,
-  //   website1,
-  //   name2,
-  //   email2,
-  //   phone2,
-  //   address2,
-
-  //   invoice_number,
-  //   pickup_location,
-  //   dropoff_location,
-  //   payment_method,
-  //   date,
-  //   // orders,
-  // } = invoiceInputValue;
-
-  // const handleInvoiceChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setInvoiceInputValue((prev) => ({
-  //     ...prev,
-  //     [name]: value,
-  //   }));
-  // };
 
   const [name1, setName1] = useState();
   const [email1, setEmail1] = useState();
@@ -131,7 +85,8 @@ const CreateInvoice = (props) => {
 
   const [orders, setOrders] = useState([{}]);
 
-  const addRow = () => {
+  const addRow = (e) => {
+    e.preventDefault();
     setOrders([...orders, {}]);
   };
 
@@ -141,7 +96,8 @@ const CreateInvoice = (props) => {
     setOrders(newRows);
   };
 
-  const handleDelete = (i) => {
+  const handleDelete = (e, i) => {
+    e.preventDefault();
     const newRows = [...orders];
     newRows.splice(i, 1);
     setOrders(newRows);
@@ -150,7 +106,6 @@ const CreateInvoice = (props) => {
   const [loading, setLoading] = useState(false);
   const { message } = useSelector((state) => state.message);
   const [successful, setSuccessful] = useState(false);
-  const [imageUrl, setImageUrl] = useState();
   const [store, setStore] = useState();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const state = useRef({
@@ -164,11 +119,11 @@ const CreateInvoice = (props) => {
       span: 50,
     },
   };
-  // console.log(images[0])
 
   const submitInvoice = (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    // console.log("Form submitted");
+    dispatch(clearMessage());
     const from = {
       name: name1,
       email: email1,
@@ -181,23 +136,25 @@ const CreateInvoice = (props) => {
       phone: phone2,
       address: address2,
     };
-    const fd = new FormData();
-    fd.append("from", JSON.stringify(from));
-    fd.append("to", JSON.stringify(to));
-    fd.append("invoice_number", invoiceNumber);
-    fd.append("pickup_location", pickupLocation);
-    fd.append("dropoff_location", dropoffLocation);
-    fd.append("payment_method", paymentMethod);
-    fd.append("date", date);
-    fd.append("orders", JSON.stringify(orders));
-    fd.append("logo", images[0].file);
-    // if (images[0]) {
-      // fd.append("logo", images[0].data_url);
-    // }
-    dispatch(clearMessage());
-    setStore(fd);
-    setLoading(true);
-    setIsSubmitted(true);
+    if (from && to && invoiceNumber && pickupLocation && dropoffLocation && paymentMethod && date && images[0]) {
+      console.log("Form submitted");
+      const fd = new FormData();
+      fd.append("from", JSON.stringify(from));
+      fd.append("to", JSON.stringify(to));
+      fd.append("invoice_number", invoiceNumber);
+      fd.append("pickup_location", pickupLocation);
+      fd.append("dropoff_location", dropoffLocation);
+      fd.append("payment_method", paymentMethod);
+      fd.append("date", date);
+      fd.append("orders", JSON.stringify(orders));
+      fd.append("logo", images[0].file);
+      // if (images[0]) {
+      //   fd.append("logo", images[0].file);
+      // }
+      setStore(fd);
+      setLoading(true);
+      setIsSubmitted(true);
+    }
   };
 
   useEffect(() => {
@@ -222,13 +179,26 @@ const CreateInvoice = (props) => {
           setPaymentMethod("");
           setDate("");
           setOrders([{}]);
-          
+          toast("Invoice Created Succesfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
         })
         .catch(() => {
           setLoading(false);
           setSuccessful(false);
           setIsSubmitted(false);
           setStore(null);
+          toast("Invoice Creation Failed", {
+            type: "error",
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
         });
       localStorage.removeItem("invoices");
       dispatch(retrieveInvoices);
@@ -597,7 +567,7 @@ const CreateInvoice = (props) => {
                                 <p>Qty</p>
                                 <p className="text-gray-400">
                                   <InputField
-                                    style="appearance-none block w-20 bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                    style="appearance-none block w-24 bg-gray-200 text-gray-700 border border-gray-200 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     name="qty"
                                     value={order.qty}
                                     onChange={(e) => handleOrderChange(i, e)}
@@ -623,7 +593,7 @@ const CreateInvoice = (props) => {
                               ) : (
                                 <button
                                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full"
-                                  onClick={() => handleDelete(i)}
+                                  onClick={(e) => handleDelete(e, i)}
                                 >
                                   Remove
                                 </button>
@@ -646,7 +616,7 @@ const CreateInvoice = (props) => {
                           <td colSpan="4">
                             <button
                               className="btn my-6 text-white bg-green-500"
-                              onClick={addRow}
+                              onClick={(e) => addRow(e)}
                             >
                               Add Row
                             </button>

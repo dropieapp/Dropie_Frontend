@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { message } from "antd";
 import DashboardTitle from "../components/DashboardTitle";
 import FormField from "../components/FormField";
@@ -7,26 +7,7 @@ import Logo from "../assets/icons/dropexpress-logo.svg";
 import FormInvoiceSelectField from "../components/FormInvoiceSelectField";
 import FormInvoiceField from "../components/FormInvoiceField";
 import Table from "../components/Table";
-import { Link, useLocation } from "react-router-dom";
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(fgvile) {
-  gnv;
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-}
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Invoice = (props) => {
   const arrayOfData = [
@@ -56,24 +37,39 @@ const Invoice = (props) => {
       span: 50,
     },
   };
-  const handleChange = useCallback((info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
 
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (imageUrl) => {});
-    }
-  });
   const location = useLocation();
+  const navigate = useNavigate();
+  const [data, setData] = useState();
+  const [orders, setOrders] = useState();
 
-  const data = JSON.parse(location.state);
-  const orders = JSON.parse(data.orders);
-  console.log(orders);
+  const states = JSON.parse(location.state);
+  useEffect(() => {
+    if (typeof states !== "undefined" && typeof states === "object") {
+      setData(states);
+      setOrders(states.orders);
+    }
+  }, []);
 
-  console.log("location", location);
+  console.log(data)
+
+  // const data = JSON.parse(location.state);
+  // console.log(data.orders);
+  // // console.log(JSON.parse(data.orders));
+  // const orders = JSON.parse(data.orders);
+  // console.log(orders);
+
+  // const history = useNavigate();
+  // console.log("history", history);
+  // useEffect(() => {
+  //   if (history.location.state && history.location.state.transaction) {
+  //     let state = { ...history.location.state };
+  //     delete state.transaction;
+  //     history.replace({ ...history.location, state });
+  //   }
+  //   // reload and pass empty object to clear state
+  //   // we can also use replace option: ..., {replace: true}
+  // }, []);
   // const { loading, imageUrl } = this.state;
 
   return (
@@ -137,25 +133,25 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal py-3">From</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.from).name).replace(
+                  {data && JSON.stringify(JSON.parse(data.from).name).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.from).email).replace(
+                  {data && JSON.stringify(JSON.parse(data.from).email).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.from).phone).replace(
+                  {data && JSON.stringify(JSON.parse(data.from).phone).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.from).website).replace(
+                  {data && JSON.stringify(JSON.parse(data.from).website).replace(
                     /['"]+/g,
                     ""
                   )}
@@ -171,25 +167,25 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal mb-4">To</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.to).name).replace(
+                  {data && JSON.stringify(JSON.parse(data.to).name).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.to).email).replace(
+                  {data && JSON.stringify(JSON.parse(data.to).email).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.to).phone).replace(
+                  {data && JSON.stringify(JSON.parse(data.to).phone).replace(
                     /['"]+/g,
                     ""
                   )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {JSON.stringify(JSON.parse(data.to).address).replace(
+                  {data && JSON.stringify(JSON.parse(data.to).address).replace(
                     /['"]+/g,
                     ""
                   )}
@@ -197,46 +193,46 @@ const Invoice = (props) => {
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
                 <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Invoice Number</span>
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Invoice Number: </span>
                   </div>
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      {data.invoice_number}
+                      {data && data.invoice_number}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-gray-700 md:flex md:items-center mb-4">
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Pickup Location: </span>
+                  </div>
+
+                  <div class="md:w-2/3 md:flex-grow">
+                    <p className="text-md font-nunito py-3 text-gray-400">
+                      {data && data.pickup_location}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-gray-700 md:flex md:items-center mb-4">
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Dropup Location: </span>
+                  </div>
+
+                  <div class="md:w-2/3 md:flex-grow">
+                    <p className="text-md font-nunito py-3 text-gray-400">
+                      {data && data.dropoff_location}
                     </p>
                   </div>
                 </div>
                 <div class="text-gray-700 md:flex md:items-center mb-4">
                   <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Pickup Location</span>
+                    <span>Payment Method: </span>
                   </div>
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      {data.pickup_location}
-                    </p>
-                  </div>
-                </div>
-                <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Dropup Location</span>
-                  </div>
-
-                  <div class="md:w-2/3 md:flex-grow">
-                    <p className="text-md font-nunito py-3 text-gray-400">
-                      {data.dropoff_location}
-                    </p>
-                  </div>
-                </div>
-                <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Payment Method</span>
-                  </div>
-
-                  <div class="md:w-2/3 md:flex-grow">
-                    <p className="text-md font-nunito py-3 text-gray-400">
-                      {data.payment_method}
+                      {data && data.payment_method}
                     </p>
                   </div>
                 </div>
@@ -270,71 +266,74 @@ const Invoice = (props) => {
                       </tr>
                     </thead>
                     <tbody className="text-md t_ lh">
-                      {orders.map((order, i) => (
-                        <tr key={i}>
-                          <td className="yl yd px-2 py-3 whitespace-nowrap">
-                            <div className="text-left bg-gray-200 p-2 rounded-lg">
-                              <p className="px-5">Item Name</p>
-                              <p className=" text-gray-400">{order.name}</p>
-                            </div>
-                          </td>
-                          <td className="yl yd px-2 py-3 whitespace-nowrap">
-                            <div className="font-medium text-left bg-gray-200 p-2 rounded-lg">
-                              <p>Price</p>
-                              <p className="text-gray-400">{order.price}</p>
-                            </div>
-                          </td>
-                          <td className="yl yd px-2 py-3 whitespace-nowrap">
-                            <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
-                              <p>Qty</p>
-                              <p className="text-gray-400">{order.qty}</p>
-                            </div>
-                          </td>
-                          <td className="yl yd px-2 py-3 whitespace-nowrap">
-                            <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
-                              <p className="text-gray-400">
-                                ₦{" "}
-                                {isNaN(order.price * order.qty)
-                                  ? 0
-                                  : order.price * order.qty}
-                              </p>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
+                      {orders &&
+                        JSON.parse(orders).map((order, index) => (
+                          <tr key={index}>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-left">
+                                {order.name}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-center">
+                                {order.price}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-center">
+                                {order.qty}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-left">
+                                <p className="text-gray-400">
+                                   ₦{" "}
+                                   {isNaN(order.price * order.qty)
+                                     ? 0
+                                     : order.price * order.qty}
+                                 </p>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                        // orders.map((order, i) => (
+                        //   <tr key={i}>
+                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        //       <div className="text-left bg-gray-200 p-2 rounded-lg">
+                        //         <p className="px-5">Item Name</p>
+                        //         <p className=" text-gray-400">{order.name}</p>
+                        //       </div>
+                        //     </td>
+                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        //       <div className="font-medium text-left bg-gray-200 p-2 rounded-lg">
+                        //         <p>Price</p>
+                        //         <p className="text-gray-400">{order.price}</p>
+                        //       </div>
+                        //     </td>
+                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        //       <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
+                        //         <p>Qty</p>
+                        //         <p className="text-gray-400">{order.qty}</p>
+                        //       </div>
+                        //     </td>
+                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        //       <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
+                        //         <p className="text-gray-400">
+                        //           ₦{" "}
+                        //           {isNaN(order.price * order.qty)
+                        //             ? 0
+                        //             : order.price * order.qty}
+                        //         </p>
+                        //       </div>
+                        //     </td>
+                        //   </tr>
+                        // ))
+                      }
                       {/* {data.orders} */}
                       {/* {this.renderRows()} */}
                     </tbody>
 
-                    {/* <button
-                        className="btn my-6 text-white bg-blue-500"
-                        onClick={this.handleClick.bind(this)}
-                      >
-                        Add Line
-                      </button> */}
-
-                    {/* <tr class="flex text-right items-end justify-end text-black font-semibold">
-                          <td
-                            colspan="5"
-                            className="yl yd px-8 py-3 whitespace-nowrap"
-                          >
-                            Sub Total
-                          </td>
-                          <td className=" px-8 py-3">₦20,000</td>
-                        </tr>
-                        <tr class="flex text-right items-end justify-end text-black font-semibold">
-                          <td className="yl yd px-8 py-3 whitespace-nowrap">
-                            Sales Tax (10%)
-                          </td>
-                          <td className=" px-8 py-3">₦20,000</td>
-                        </tr>
-                        <hr />
-                        <tr class="flex text-right items-end justify-end text-black font-semibold">
-                          <td className="yl yd px-8 py-3 whitespace-nowrap">
-                            Amount Due
-                          </td>
-                          <td className=" px-8 py-3">₦20,000</td>
-                        </tr> */}
+                   
                   </table>
                 </div>
               </div>
