@@ -7,8 +7,7 @@ import { Row, Col } from "antd";
 import Form from "react-validation/build/form";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../components/InputField";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 // import { retrieveAgents } from "../actions/staffs";
 // import { vehicleType, retrieveFleets, createFleets } from "../actions/fleets";
 import { Menu, Transition } from "@headlessui/react";
@@ -131,6 +130,15 @@ function FleetManagement() {
         .then(() => {
           setSuccessful(true);
           setLoading(false);
+          toast("Fleet Created Successfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          })
         })
         .catch(() => {
           setSuccessful(false);
@@ -175,19 +183,22 @@ function FleetManagement() {
   const [fleetBannerUpdate, setFleetBannerUpdate] = useState();
 
   const [isFleetUpdated2, setIsFleetUpdated2] = useState(false);
-
   const [isActive, setIsActive] = useState(false);
 
+  //handle activate status
+
   const activateStatus = (item) => () => {
-    setIsActive(true);
-    console.log("clicked");
-    setLoading(true);
-    // setStatus(item.status);
     setFleetId(item.id);
     setStatus("active");
+    setIsActive(true);
+    setLoading(true);
   };
 
-  // console.log(status)
+  const suspendStatus = (item) => () => {
+    setFleetId(item.id);
+    setStatus("suspended");
+    setIsActive(true);
+  };
 
   useEffect(() => {
     if (isActive) {
@@ -197,87 +208,34 @@ function FleetManagement() {
       dispatch(updateStatus(fleetId, data))
         .then(() => {
           setIsActive(false);
+          setLoading(false);
           setStatus("");
-          toast("Fleet status updated successfully", {
+          setShow(null);
+          toast("Fleet status Updated", {
             type: "success",
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
           });
-          setLoading(false);
+          localStorage.removeItem("get_fleets");
+          dispatch(retrieveFleets());
         })
         .catch(() => {
           setIsActive(false);
+          setShow(null);
+          setLoading(false);
           setStatus("");
-          toast("Fleet status update failed", {
+          toast("Error updating fleet status", {
             type: "error",
             position: "top-right",
-            autoClose: 5000,
+            autoClose: 2000,
             hideProgressBar: false,
             closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
           });
-          setLoading(false);
         });
-      localStorage.removeItem("get_fleets");
-      dispatch(retrieveFleets());
-      // window.location.reload()
     }
   }, [isActive]);
-  const [isSuspended, setIsSuspended] = useState(false);
-
-  const suspendStatus = (item) => () => {
-    setIsSuspended(true);
-    console.log("clicked");
-    setLoading(true);
-    // setStatus(item.status);
-    setFleetId(item.id);
-    setStatus("suspended");
-  };
-
-  useEffect(() => {
-    if (isSuspended) {
-      console.log(status);
-      const data = {
-        status: status,
-      };
-      console.log(data);
-      dispatch(updateStatus(fleetId, data))
-        .then(() => {
-          setIsSuspended(false);
-          setStatus("");
-          toast("Fleet status updated successfully", {
-            type: "success",
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-          });
-          setLoading(false);
-        })
-        .catch(() => {
-          setIsSuspended(false);
-          setStatus("");
-          toast("Fleet status update failed", {
-            type: "error",
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-          });
-          setLoading(false);
-        });
-      localStorage.removeItem("get_fleets");
-      dispatch(retrieveFleets());
-      // window.location.reload()
-    }
-  }, [isSuspended]);
 
   // const updateBanner = (e) => {
   //   // e.preventDefault();
@@ -1175,7 +1133,7 @@ function FleetManagement() {
               </tfoot>
             </table>
           </div>
-          <ToastContainer />
+          {/* <ToastContainer /> */}
         </div>
       </div>
     </Layout>

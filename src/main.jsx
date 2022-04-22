@@ -7,7 +7,9 @@ import { BrowserRouter as Router } from "react-router-dom";
 import store from "./store";
 
 import reportWebVitals from "./reportWebVitals";
+
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.render(
   <React.Fragment>

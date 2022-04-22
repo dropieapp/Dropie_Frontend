@@ -46,10 +46,12 @@ const create = (data) => {
 // };
 
 const fleetStatus = (id, data) => {
-  return normalHeader.post(`/business/fleet/status/${id}`, data);
+    return normalHeader.post(
+      API_URL + "business/fleet/status/" + id,
+      data
+    );
 };
 
-console.log(fleetStatus);
 
 // const fleetBanner = (id, data) => {
 //   return axios({

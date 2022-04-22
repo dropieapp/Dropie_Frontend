@@ -22,7 +22,7 @@ export const createAgent = (formInfo) => async (dispatch) => {
 
     dispatch({
       type: CREATE_AGENT,
-      payload: res.data,
+      // payload: res.data,
     });
     dispatch({
       type: SET_MESSAGE,
@@ -32,7 +32,7 @@ export const createAgent = (formInfo) => async (dispatch) => {
 
     return Promise.resolve(res.data);
   } catch (err) {
-    console.log(err);
+    console.log(err.response.data);
     const errors = err.response.data && err.response.data.errors;
     if (typeof errors === "object") {
       const result = Object.keys(errors).map((key) =>

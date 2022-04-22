@@ -69,13 +69,13 @@
   out delivery routes and Requests
 */
 
-import { fileHeader } from "../http-common";
+import { fileHeader, normalHeader } from "../http-common";
 
 const onboard = (data) => {
   return fileHeader.post("/business/onboard", data);
 };
 const verify_otp = (data) => {
-  return fileHeader.post("/business/validate-otp", data);
+  return normalHeader.post("/business/validate-otp", data);
 };
 
 

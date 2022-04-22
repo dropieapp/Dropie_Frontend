@@ -54,6 +54,7 @@ function UploadCompanyInfo(props) {
     //   phone_number: number.business.phone_number,
     //   otp: value,
     // });
+    
     setPhoneNumber(number.business.phone_number);
     setOtp(value);
 

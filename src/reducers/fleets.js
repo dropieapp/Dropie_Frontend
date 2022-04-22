@@ -18,10 +18,12 @@ const fleetReducer = (fleets = initialState, action) => {
 
   switch (type) {
     case CREATE_FLEET:
-      return { ...fleets, ...payload };
+      // return { ...fleets, ...payload };
+      return { ...fleets };
     // return [...fleets, payload];
 
     case RETRIEVE_FLEETS:
+      // console.log("payload", payload);
       return payload;
 
     case VEHILCLE_TYPE:
@@ -40,8 +42,8 @@ const fleetReducer = (fleets = initialState, action) => {
       });
 
     case UPDATE_STATUS:
-      // console.log("fleets Status", fleets);
-      return fleets.map((fleet) => {
+      console.log("fleets Status", fleets);
+      return fleets.data.map((fleet) => {
         if (fleet.id === payload.id) {
           return {
             ...fleet,

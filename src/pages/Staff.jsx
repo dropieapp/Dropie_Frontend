@@ -16,7 +16,7 @@ import {
 } from "../actions/staffs";
 import FlatButton from "../components/FlatButton";
 import { clearMessage } from "../actions/message";
-import toast from "react-hot-toast";
+import { toast } from "react-toastify";
 
 function Staff() {
   const [show, setShow] = useState(null);
@@ -114,20 +114,44 @@ function Staff() {
             default_pick_location: "",
             email: "",
           });
+          toast("Agent added successfully", {
+            type: "success",
+            autoClose: 3000,
+            position: "top-right",
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
           setSelectedFile1(null);
           setSelectedFile2(null);
+         
         })
         .catch(() => {
           setLoading(false);
           setSuccessful(false);
           setIsSubmitted(false);
+          toast("Error adding agent", {
+            type: "error",
+            autoClose: 3000,
+            position: "top-right",
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
         });
-
+      } else {
+        setLoading(false);
+      }
       localStorage.removeItem("get_agents");
       dispatch(retrieveAgents());
-    } else {
-      setLoading(false);
-    }
+    return () => {
+      // dispatch(clearMessage());
+      setInputValue({});
+      setSelectedFile1(null);
+      setSelectedFile2(null);
+    };
   }, [isSubmiited, dispatch, allInputs]);
 
   // const [getAgents, setGetAgents] = useState([]);
@@ -270,7 +294,10 @@ function Staff() {
               color: "white",
               borderColor: "rgb(249, 123, 4, 0.2",
             }}
-            onClick={() => setShowModal(true)}
+            onClick={() => {
+              setShowModal(true);
+              dispatch(clearMessage());
+            }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -340,7 +367,7 @@ function Staff() {
                           {successful ? (
                             <Link
                               to={{
-                                pathname: `fleet-management`,
+                                pathname: "/fleet-management",
                                 state: { showModal },
                               }}
                             >
@@ -568,9 +595,7 @@ function Staff() {
           <header className="px-5 py-4 border-b border-gray-100">
             <h2 className="font-semibold text-gray-800">Agent List</h2>
           </header>
-          <div
-            className="p-3"
-          >
+          <div className="p-3">
             <div className="md:px-10 pt-4 md:pt-7 pb-5 overflow-x-auto">
               <table className="table-auto w-full">
                 {/* Table header */}
@@ -601,7 +626,7 @@ function Staff() {
                 </thead>
                 {/* Table body */}
                 <tbody className="text-sm divide-y divide-gray-100">
-                  {getAgents &&
+                  {getAgents && getAgents.length > 0 ? (
                     getAgents.map((item, index) => (
                       <tr key={index}>
                         <td className="p-2 whitespace-nowrap">
@@ -867,7 +892,14 @@ function Staff() {
                           </div>
                         </td>
                       </tr>
-                    ))}
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        No data found
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

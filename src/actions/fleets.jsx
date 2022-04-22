@@ -21,7 +21,7 @@ export const createFleets = (formFleets) => async (dispatch) => {
     const res = await FleetDataService.create(formFleets);
     dispatch({
       type: CREATE_FLEET,
-      payload: res.data,
+      // payload: res.data,
     });
     dispatch({
       type: SET_MESSAGE,

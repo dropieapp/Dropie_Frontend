@@ -18,7 +18,7 @@ function UserMenu() {
   // }, []);
 
   // const users = useSelector((state) => state.users);
-  // const user = useSelector((state) => state.authentication.user.data);
+  const user = useSelector((state) => state.authentication.user.data);
   // const dispatch = useDispatch();
 
   const trigger = useRef(null);
@@ -52,7 +52,7 @@ function UserMenu() {
 
   return (
     <div>
-      {/* {userCode.business_id === null ? (
+      {user.business_id === null ? (
         <div className="relative inline-flex">
           <NavLink
             exact
@@ -83,11 +83,9 @@ function UserMenu() {
 
             <div className="flex items-center truncate">
               <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">
-                {userCode.manager_name === null ? null : userCode.manager_name}.
+                {user.manager_name}.
                 <div className="text-xs text-slate-500 italic">
-                  {userCode.business && userCode.business.business_name
-                    ? userCode.business.business_name
-                    : null}
+                  {user.business && user.business.business_name}
                 </div>
               </span>
               <svg
@@ -115,15 +113,10 @@ function UserMenu() {
             >
               <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
                 <div className="font-medium text-slate-800">
-                  {userCode.manager_name === null
-                    ? null
-                    : userCode.manager_name}
-                  .
+                  {user.manager_name}.
                 </div>
                 <div className="text-xs text-slate-500 italic">
-                  {userCode.business && userCode.business.business_name
-                    ? userCode.business.business_name
-                    : null}
+                  {user.business && user.business.business_name}
                 </div>
               </div>
               <ul>
@@ -149,8 +142,7 @@ function UserMenu() {
             </div>
           </Transition>
         </div>
-      )} */}
-      <p>UserMenu</p>
+      )}
     </div>
   );
 }

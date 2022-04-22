@@ -19,7 +19,8 @@ const AgentReducer = (agents = [], action) => {
   
   switch (type) {
     case CREATE_AGENT:
-      return { ...agents, ...payload };
+      // return { ...agents, ...payload };
+      return { ...agents };
     // return 
 
     case RETRIEVE_AGENTS:
