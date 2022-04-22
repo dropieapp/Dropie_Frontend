@@ -9,29 +9,15 @@ const getAll = () => {
   return normalHeader.get("/business/deliveries");
 };
 
-const get = (id) => {
-  return normalHeader.get(`/albums/${id}`);
-};
-
 const create = (data) => {
   return normalHeader.post("/business/delivery", data);
 };
 
-const update = (id, data) => {
-  return normalHeader.put(`/tutorials/${id}`, data);
+const filtersByStatus = () => {
+  return normalHeader.get("/business/delivery/filter/pending");
 };
 
-const remove = (id) => {
-  return normalHeader.delete(`/tutorials/${id}`);
-};
 
-const removeAll = () => {
-  return normalHeader.delete(`/tutorials`);
-};
-
-const findByTitle = (title) => {
-  return normalHeader.get(`/tutorials?title=${title}`);
-};
 
 const DeliveryService = {
   getAll,

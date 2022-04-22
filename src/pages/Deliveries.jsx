@@ -22,25 +22,24 @@ import {
 } from "../actions/deliveries";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { Modal, Button } from 'antd';
-import { Upload, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-
+import { Modal, Button } from "antd";
+import { Upload, message } from "antd";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 
 function getBase64(img, callback) {
   const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
+  reader.addEventListener("load", () => callback(reader.result));
   reader.readAsDataURL(img);
 }
 
 function beforeUpload(file) {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
   if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
+    message.error("You can only upload JPG/PNG file!");
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
+    message.error("Image must smaller than 2MB!");
   }
   return isJpgOrPng && isLt2M;
 }
@@ -105,96 +104,7 @@ function Deliveries() {
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
   });
-  const arrayOfData = [
-    {
-      id: "1 - Cash",
-      name: "Cash",
-    },
-    {
-      id: "2 - Card",
-      name: "Card",
-    },
-  ];
-  const arrayOfData2 = [
-    {
-      id: "1 - On Time",
-      name: "On Time",
-    },
-    {
-      id: "2 - Late",
-      name: "Late",
-    },
-  ];
-  const arrayOfData3 = [
-    {
-      id: "1 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "2 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "3 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "4 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "5 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "6 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "7 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-    {
-      id: "8 - Amadi Chika",
-      name: "Amadi Chika",
-    },
-  ];
-  const arrayOfData4 = [
-    {
-      id: "1 - Successful",
-      name: "Successful",
-    },
-    {
-      id: "2 - Returned",
-      name: "Returned",
-    },
-    {
-      id: "3 - In Transit",
-      name: "In Transit",
-    },
-    {
-      id: "4 - Failed",
-      name: "Failed",
-    },
-  ];
-  const arrayOfData5 = [
-    {
-      id: "1 - Motorcycle",
-      name: "Motorcycle",
-    },
-    {
-      id: "2 - Bus",
-      name: "Bus",
-    },
-    {
-      id: "3 - Car",
-      name: "Car",
-    },
-    {
-      id: "4 - Truck",
-      name: "Truck",
-    },
-  ];
+
   const [selectedValue, setSelectedValue] = useState("Nothing selected");
   const handleSelectChange = useCallback(() => {
     setSelectedValue(selectedValue);
@@ -359,30 +269,7 @@ function Deliveries() {
                 />
               </svg>
             </button>
-            <button
-              className="btn hover:text-white text-gray border h-8 px-4 text-sm"
-              style={{
-                backgroundColor: "#F97B04",
-                color: "white",
-                borderColor: "rgb(249, 123, 4, 0.2",
-              }}
-              onClick={() => setShowModal(true)}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-            </button>
+
             <button
               className="btn hover:text-white text-gray border h-8 px-4 text-sm"
               style={{
@@ -408,400 +295,26 @@ function Deliveries() {
               </svg>
             </button>
 
-            
-
-
-                      <Modal
-        title="Create Order"
-        centered
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        width={1000}
-        footer={[
-          
-        ]}
-      >
-        <div class="py-4 px-8 bg-white rounded-lg my-3">
-                        <div>
-                          <Row className="mt-1" gutter={10}>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="delivery_type"
-                                >
-                                  delivery type
-                                </label>
-                                {/* <input
-                              type="text"
-                               className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                              id="delivery_type"
-                              required
-                              value={tutorial.delivery_type}
-                              onChange={handleInputChange}
-                              name="delivery_type"
-                            /> */}
-                                <select
-                                  id="delivery_type"
-                                  value={tutorial.delivery_type}
-                                  onChange={handleInputChange}
-                                  name="delivery_type"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="grapefruit">Grapefruit</option>
-                                  <option value="lime">Lime</option>
-                                  <option value="coconut">Coconut</option>
-                                  <option value="mango">Mango</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="delivery_address"
-                                >
-                                  delivery address
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="delivery_address"
-                                  required
-                                  value={tutorial.delivery_address}
-                                  onChange={handleInputChange}
-                                  name="delivery_address"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="frequency"
-                                >
-                                  Plan
-                                </label>
-                                {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="frequency"
-                                  required
-                                  value={tutorial.frequency}
-                                  onChange={handleInputChange}
-                                  name="frequency"
-                                /> */}
-                                <select
-                                  id="frequency"
-                                  value={tutorial.frequency}
-                                  onChange={handleInputChange}
-                                  name="frequency"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="ontime">On Time</option>
-                                  <option value="lime">Lime</option>
-                                  <option value="coconut">Coconut</option>
-                                  <option value="mango">Mango</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="assigned_to"
-                                >
-                                  assigned to
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="assigned_to"
-                                  required
-                                  value={tutorial.assigned_to}
-                                  onChange={handleInputChange}
-                                  name="assigned_to"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="pickup_address"
-                                >
-                                  pickup address
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="pickup_address"
-                                  required
-                                  value={tutorial.pickup_address}
-                                  onChange={handleInputChange}
-                                  name="pickup_address"
-                                />
-                              </div>
-                            </Col>
-
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="pickup_address"
-                                >
-                                  pickup contact name
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="pickup_address"
-                                  required
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  package category
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_category"
-                                  required
-                                  value={tutorial.package_category}
-                                  onChange={handleInputChange}
-                                  name="package_category"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="status"
-                                >
-                                  status
-                                </label>
-                                <select
-                                  id="status"
-                                  value={tutorial.status}
-                                  onChange={handleInputChange}
-                                  name="status"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="pending">Pending</option>
-                                  <option value="success">success</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="vehicle_type"
-                                >
-                                  vehicle type
-                                </label>
-                                {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="vehicle_type"
-                                  required
-                                  value={tutorial.vehicle_type}
-                                  onChange={handleInputChange}
-                                  name="vehicle_type"
-                                /> */}
-                                <select
-                                  id="vehicle_type"
-                                  value={tutorial.vehicle_type}
-                                  onChange={handleInputChange}
-                                  name="vehicle_type"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="Car">Car</option>
-                                  <option value="Truck">Truck</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  package weight
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_weight"
-                                  required
-                                  name="package_weight"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  insurance
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_weight"
-                                  required
-                                  name="package_weight"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  number of items
-                                </label>
-                                <select
-                                  id="number_of_item"
-                                  name="vehicle_type"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="Above 6">Above 6</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  additional address
-                                </label>
-                                <textarea
-                                className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="w3review"
-                                  name="w3review"
-                                  rows="4"
-                                  cols="50"
-                                >
-                                </textarea>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  description
-                                </label>
-                                <textarea
-                                className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="w3review"
-                                  name="w3review"
-                                  rows="4"
-                                  cols="50"
-                                >
-                                </textarea>
-                              </div>
-                            </Col>
-
-                            <Col span={8} className="gutter-row"></Col>
-                            <Col span={8} className="gutter-row">
-                              <button
-                                onClick={saveTutorial}
-                                className="btn btn-success w-full"
-                                style={{
-                                  backgroundColor: "#B60008",
-                                  color: "white",
-                                  borderColor: "rgb(249, 123, 4, 0.2",
-                                }}
-                              >
-                                Create Order
-                              </button>
-                            </Col>
-                            <Col span={8} className="gutter-row"></Col>
-                          </Row>
-                        </div>
-                      </div>
-      </Modal>
-
-            {showModal ? (
-              <>
-                <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                  <div className="relative my-6 mx-auto w-auto w-96 md:w-96 lg:w-6/12">
-                    {/*content*/}
-                    <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                      {/*header*/}
-                      <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
-                        <h3 class="text-lg font-normal text-center text-black lg:text-2xl ">
-                          Create Order
-                        </h3>
-                        <button
-                          type="button"
-                          class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                          data-modal-toggle="defaultModal"
-                          onClick={() => setShowModal(false)}
+            <Modal
+              title="Create Order"
+              centered
+              visible={visible}
+              onOk={() => setVisible(false)}
+              onCancel={() => setVisible(false)}
+              width={1000}
+            >
+              <div class="py-4 px-8 bg-white rounded-lg my-3">
+                <div>
+                  <Row className="mt-1" gutter={10}>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="delivery_type"
                         >
-                          <svg
-                            class="w-5 h-5"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                              clip-rule="evenodd"
-                            ></path>
-                          </svg>
-                        </button>
-                      </div>
-                      {/*body*/}
-                      <div class="py-4 px-8 bg-white rounded-lg my-10">
-                        <div>
-                          <Row className="mt-5" gutter={16}>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="delivery_type"
-                                >
-                                  delivery type
-                                </label>
-                                {/* <input
+                          delivery type
+                        </label>
+                        {/* <input
                               type="text"
                                className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                               id="delivery_type"
@@ -810,328 +323,319 @@ function Deliveries() {
                               onChange={handleInputChange}
                               name="delivery_type"
                             /> */}
-                                <select
-                                  id="delivery_type"
-                                  value={tutorial.delivery_type}
-                                  onChange={handleInputChange}
-                                  name="delivery_type"
-                                  className={`w-full px-8 py-2 text-primary 
+                        <select
+                          id="delivery_type"
+                          value={tutorial.delivery_type}
+                          onChange={handleInputChange}
+                          name="delivery_type"
+                          className={`w-full px-8 py-2 text-primary 
                                   border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="grapefruit">Grapefruit</option>
-                                  <option value="lime">Lime</option>
-                                  <option value="coconut">Coconut</option>
-                                  <option value="mango">Mango</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="delivery_address"
-                                >
-                                  delivery address
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="delivery_address"
-                                  required
-                                  value={tutorial.delivery_address}
-                                  onChange={handleInputChange}
-                                  name="delivery_address"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="frequency"
-                                >
-                                  Plan
-                                </label>
-                                {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="frequency"
-                                  required
-                                  value={tutorial.frequency}
-                                  onChange={handleInputChange}
-                                  name="frequency"
-                                /> */}
-                                <select
-                                  id="frequency"
-                                  value={tutorial.frequency}
-                                  onChange={handleInputChange}
-                                  name="frequency"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="ontime">On Time</option>
-                                  <option value="lime">Lime</option>
-                                  <option value="coconut">Coconut</option>
-                                  <option value="mango">Mango</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="assigned_to"
-                                >
-                                  assigned to
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="assigned_to"
-                                  required
-                                  value={tutorial.assigned_to}
-                                  onChange={handleInputChange}
-                                  name="assigned_to"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="pickup_address"
-                                >
-                                  pickup address
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="pickup_address"
-                                  required
-                                  value={tutorial.pickup_address}
-                                  onChange={handleInputChange}
-                                  name="pickup_address"
-                                />
-                              </div>
-                            </Col>
-
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="pickup_address"
-                                >
-                                  pickup contact name
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="pickup_address"
-                                  required
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  package category
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_category"
-                                  required
-                                  value={tutorial.package_category}
-                                  onChange={handleInputChange}
-                                  name="package_category"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="status"
-                                >
-                                  status
-                                </label>
-                                <select
-                                  id="status"
-                                  value={tutorial.status}
-                                  onChange={handleInputChange}
-                                  name="status"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="pending">Pending</option>
-                                  <option value="success">success</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="vehicle_type"
-                                >
-                                  vehicle type
-                                </label>
-                                {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="vehicle_type"
-                                  required
-                                  value={tutorial.vehicle_type}
-                                  onChange={handleInputChange}
-                                  name="vehicle_type"
-                                /> */}
-                                <select
-                                  id="vehicle_type"
-                                  value={tutorial.vehicle_type}
-                                  onChange={handleInputChange}
-                                  name="vehicle_type"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="Car">Car</option>
-                                  <option value="Truck">Truck</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  package weight
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_weight"
-                                  required
-                                  name="package_weight"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  insurance
-                                </label>
-                                <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="package_weight"
-                                  required
-                                  name="package_weight"
-                                />
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  number of items
-                                </label>
-                                <select
-                                  id="number_of_item"
-                                  name="vehicle_type"
-                                  className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                >
-                                  {" "}
-                                  <option value="">{""}</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="Above 6">Above 6</option>
-                                </select>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  additional address
-                                </label>
-                                <textarea
-                                className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="w3review"
-                                  name="w3review"
-                                  rows="4"
-                                  cols="50"
-                                >
-                                </textarea>
-                              </div>
-                            </Col>
-                            <Col span={12} className="gutter-row">
-                              <div className="form-group">
-                                <label
-                                  className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                  htmlFor="package_category"
-                                >
-                                  description
-                                </label>
-                                <textarea
-                                className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="w3review"
-                                  name="w3review"
-                                  rows="4"
-                                  cols="50"
-                                >
-                                </textarea>
-                              </div>
-                            </Col>
-
-                            <Col span={8} className="gutter-row"></Col>
-                            <Col span={8} className="gutter-row">
-                              <button
-                                onClick={saveTutorial}
-                                className="btn btn-success w-full"
-                                style={{
-                                  backgroundColor: "#B60008",
-                                  color: "white",
-                                  borderColor: "rgb(249, 123, 4, 0.2",
-                                }}
-                              >
-                                Create Order
-                              </button>
-                            </Col>
-                            <Col span={8} className="gutter-row"></Col>
-                          </Row>
-                        </div>
+                        >
+                          {" "}
+                          <option value="">{""}</option>
+                          <option value="grapefruit">Grapefruit</option>
+                          <option value="lime">Lime</option>
+                          <option value="coconut">Coconut</option>
+                          <option value="mango">Mango</option>
+                        </select>
                       </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="delivery_address"
+                        >
+                          delivery address
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="delivery_address"
+                          required
+                          value={tutorial.delivery_address}
+                          onChange={handleInputChange}
+                          name="delivery_address"
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="frequency"
+                        >
+                          Plan
+                        </label>
+                        {/* <input
+                                  type="text"
+                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                  id="frequency"
+                                  required
+                                  value={tutorial.frequency}
+                                  onChange={handleInputChange}
+                                  name="frequency"
+                                /> */}
+                        <select
+                          id="frequency"
+                          value={tutorial.frequency}
+                          onChange={handleInputChange}
+                          name="frequency"
+                          className={`w-full px-8 py-2 text-primary 
+                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                        >
+                          {" "}
+                          <option value="">{""}</option>
+                          <option value="ontime">On Time</option>
+                          <option value="lime">Lime</option>
+                          <option value="coconut">Coconut</option>
+                          <option value="mango">Mango</option>
+                        </select>
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="assigned_to"
+                        >
+                          assigned to
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="assigned_to"
+                          required
+                          value={tutorial.assigned_to}
+                          onChange={handleInputChange}
+                          name="assigned_to"
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="pickup_address"
+                        >
+                          pickup address
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="pickup_address"
+                          required
+                          value={tutorial.pickup_address}
+                          onChange={handleInputChange}
+                          name="pickup_address"
+                        />
+                      </div>
+                    </Col>
 
-                      {/* /body */}
-                    </div>
-                  </div>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="pickup_address"
+                        >
+                          pickup contact name
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="pickup_address"
+                          required
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          package category
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="package_category"
+                          required
+                          value={tutorial.package_category}
+                          onChange={handleInputChange}
+                          name="package_category"
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="status"
+                        >
+                          status
+                        </label>
+                        <select
+                          id="status"
+                          value={tutorial.status}
+                          onChange={handleInputChange}
+                          name="status"
+                          className={`w-full px-8 py-2 text-primary 
+                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                        >
+                          {" "}
+                          <option value="">{""}</option>
+                          <option value="pending">Pending</option>
+                          <option value="success">success</option>
+                        </select>
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="vehicle_type"
+                        >
+                          vehicle type
+                        </label>
+                        {/* <input
+                                  type="text"
+                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                                  id="vehicle_type"
+                                  required
+                                  value={tutorial.vehicle_type}
+                                  onChange={handleInputChange}
+                                  name="vehicle_type"
+                                /> */}
+                        <select
+                          id="vehicle_type"
+                          value={tutorial.vehicle_type}
+                          onChange={handleInputChange}
+                          name="vehicle_type"
+                          className={`w-full px-8 py-2 text-primary 
+                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                        >
+                          {" "}
+                          <option value="">{""}</option>
+                          <option value="Car">Car</option>
+                          <option value="Truck">Truck</option>
+                        </select>
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          package weight
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="package_weight"
+                          required
+                          name="package_weight"
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          insurance
+                        </label>
+                        <input
+                          type="text"
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="package_weight"
+                          required
+                          name="package_weight"
+                        />
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          number of items
+                        </label>
+                        <select
+                          id="number_of_item"
+                          name="vehicle_type"
+                          className={`w-full px-8 py-2 text-primary 
+                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                        >
+                          {" "}
+                          <option value="">{""}</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="Above 6">Above 6</option>
+                        </select>
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          additional address
+                        </label>
+                        <textarea
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="w3review"
+                          name="w3review"
+                          rows="4"
+                          cols="50"
+                        ></textarea>
+                      </div>
+                    </Col>
+                    <Col span={12} className="gutter-row">
+                      <div className="form-group">
+                        <label
+                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                          htmlFor="package_category"
+                        >
+                          description
+                        </label>
+                        <textarea
+                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id="w3review"
+                          name="w3review"
+                          rows="4"
+                          cols="50"
+                        ></textarea>
+                      </div>
+                    </Col>
+
+                    <Col span={8} className="gutter-row"></Col>
+                    <Col span={8} className="gutter-row">
+                      <button
+                        onClick={saveTutorial}
+                        className="btn btn-success w-full"
+                        style={{
+                          backgroundColor: "#B60008",
+                          color: "white",
+                          borderColor: "rgb(249, 123, 4, 0.2",
+                        }}
+                      >
+                        Create Order
+                      </button>
+                    </Col>
+                    <Col span={8} className="gutter-row"></Col>
+                  </Row>
                 </div>
-                <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-              </>
-            ) : null}
+              </div>
+            </Modal>
           </div>
         </div>
         {/* <DashboardCard08 title="Completed Deliveries" /> */}

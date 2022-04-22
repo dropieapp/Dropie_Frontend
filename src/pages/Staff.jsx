@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
 import DashboardTitle from "../components/DashboardTitle";
 import Layout from "../components/Layout";
-import { Col, Row } from "antd";
+import { Col, Modal, Row } from "antd";
 import DashboardCard15 from "../partials/dashboard/DashboardCard15";
 import DashboardCard10 from "../partials/dashboard/DashboardCard10";
 import DashboardCard100 from "../partials/dashboard/DashboardCard100";
@@ -28,6 +28,8 @@ function Staff() {
   const [activeloading, setActiveLoading] = useState(false);
   const [deactiveloading, setDeactiveLoading] = useState(false);
   const [isSubmiited, setIsSubmitted] = useState(false);
+    const [visible, setVisible] = useState(false);
+
 
   const [selectedFile1, setSelectedFile1] = useState(null);
   const [selectedFile2, setSelectedFile2] = useState(null);
@@ -295,7 +297,7 @@ function Staff() {
               borderColor: "rgb(249, 123, 4, 0.2",
             }}
             onClick={() => {
-              setShowModal(true);
+              setVisible(true);
               dispatch(clearMessage());
             }}
           >
@@ -314,263 +316,238 @@ function Staff() {
               />
             </svg>
           </button>
-          {showModal ? (
-            <>
-              <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-                <div className="relative h-full mx-auto w-auto w-96 md:w-96 lg:w-6/12">
-                  {/*content*/}
-                  <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
-                    {/*header*/}
-                    <div class="flex justify-between items-start p-5 rounded-t border-b dark:border-gray-600">
-                      <h3 class="text-lg font-normal text-center text-black lg:text-2xl">
-                        Add Agent
-                      </h3>
-                      <button
-                        type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="defaultModal"
-                        onClick={() => setShowModal(false)}
+          <Modal
+            title="Add Agent"
+            centered
+            visible={visible}
+            // onOk={() => setVisible(false)}
+            onCancel={() => setVisible(false)}
+            width={1000}
+          >
+            <div class="px-8 bg-white rounded-lg">
+              <div>
+                <form
+                  name="form-signup"
+                  id="form-signup"
+                  encType="multipart/form-data"
+                  onSubmit={(e) => handleSubmit(e)}
+                >
+                  {message && (
+                    <div className="form-group">
+                      <div
+                        className={
+                          successful
+                            ? "p-4 my-3 text-black font-semibold bg-green-200"
+                            : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                        }
+                        role="alert"
                       >
-                        <svg
-                          class="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                          xmlns="http://www.w3.org/2000/svg"
+                        <ul className="mx-3 my-3">{message}</ul>
+                      </div>
+                      {successful ? (
+                        <Link
+                          to={{
+                            pathname: "/fleet-management",
+                            state: { showModal },
+                          }}
                         >
-                          <path
-                            fill-rule="evenodd"
-                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                            clip-rule="evenodd"
-                          ></path>
-                        </svg>
-                      </button>
+                          {" "}
+                          <FlatButton text="Assign Fleet" />
+                        </Link>
+                      ) : null}
                     </div>
-                    {/*body*/}
-                    <form
-                      name="form-signup"
-                      id="form-signup"
-                      encType="multipart/form-data"
-                      onSubmit={(e) => handleSubmit(e)}
-                    >
-                      {message && (
-                        <div className="form-group">
-                          <div
-                            className={
-                              successful
-                                ? "p-4 my-3 text-black font-semibold bg-green-200"
-                                : "p-4 my-3 text-red-500 font-semibold bg-red-200"
-                            }
-                            role="alert"
-                          >
-                            <ul className="mx-3 my-3">{message}</ul>
-                          </div>
-                          {successful ? (
-                            <Link
-                              to={{
-                                pathname: "/fleet-management",
-                                state: { showModal },
-                              }}
-                            >
-                              {" "}
-                              <FlatButton text="Assign Fleet" />
-                            </Link>
-                          ) : null}
-                        </div>
-                      )}
-                      {!successful && (
-                        <div>
-                          <div class="py-4 px-8 bg-white rounded-lg my-10">
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12}>
-                                <InputField
-                                  type="text"
-                                  value={first_name}
-                                  placeholder="Makanbi"
-                                  label="First Name"
-                                  name="first_name"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                              <Col span={12}>
-                                <InputField
-                                  type="text"
-                                  value={last_name}
-                                  label="Last Name"
-                                  placeholder="Josh AB"
-                                  name="last_name"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                            </Row>
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12}>
-                                <InputField
-                                  type="text"
-                                  value={other_name}
-                                  name="other_name"
-                                  label="Other Name"
-                                  placeholder="Makanbi"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={phone_number}
-                                  name="phone_number"
-                                  label="Phone Number"
-                                  placeholder="08112345678"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                            </Row>
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={lga}
-                                  name="lga"
-                                  label="Local Goverment"
-                                  placeholder="Ikeja"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={address}
-                                  name="address"
-                                  onChange={handleChange}
-                                  label="Address"
-                                  placeholder="Ebitu Ukiwe"
-                                />
-                              </Col>
-                            </Row>
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={email}
-                                  name="email"
-                                  label="Email"
-                                  placeholder="josh@email.com"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="date"
-                                  value={employment_date}
-                                  name="employment_date"
-                                  label="Employment Date"
-                                  placeholder="Employment Date"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                            </Row>
+                  )}
+                  {!successful && (
+                    <div>
+                      <div class="py-4 px-8 bg-white rounded-lg my-10">
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12}>
+                            <InputField
+                              type="text"
+                              value={first_name}
+                              placeholder="Makanbi"
+                              label="First Name"
+                              name="first_name"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <InputField
+                              type="text"
+                              value={last_name}
+                              label="Last Name"
+                              placeholder="Josh AB"
+                              name="last_name"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12}>
+                            <InputField
+                              type="text"
+                              value={other_name}
+                              name="other_name"
+                              label="Other Name"
+                              placeholder="Makanbi"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={phone_number}
+                              name="phone_number"
+                              label="Phone Number"
+                              placeholder="08112345678"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={lga}
+                              name="lga"
+                              label="Local Goverment"
+                              placeholder="Ikeja"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={address}
+                              name="address"
+                              onChange={handleChange}
+                              label="Address"
+                              placeholder="Ebitu Ukiwe"
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={email}
+                              name="email"
+                              label="Email"
+                              placeholder="josh@email.com"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="date"
+                              value={employment_date}
+                              name="employment_date"
+                              label="Employment Date"
+                              placeholder="Employment Date"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Row>
 
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12}>
-                                <div class="text-gray-700">
-                                  <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
-                                    I.D Card
-                                  </label>
-                                  <input
-                                    type="file"
-                                    name="id_card"
-                                    onChange={uploadIdCard}
-                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                  />
-                                </div>
-                              </Col>
-                              <Col span={12}>
-                                <div class="text-gray-700">
-                                  <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
-                                    Profile Picture
-                                  </label>
-                                  <input
-                                    type="file"
-                                    name="profile_photo"
-                                    onChange={uploadProfilePic}
-                                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                  />
-                                </div>
-                              </Col>
-                            </Row>
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={land_mark}
-                                  name="land_mark"
-                                  label="Land Mark"
-                                  placeholder="NCDC"
-                                  onChange={handleChange}
-                                />
-                              </Col>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12}>
+                            <div class="text-gray-700">
+                              <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
+                                I.D Card
+                              </label>
+                              <input
+                                type="file"
+                                name="id_card"
+                                onChange={uploadIdCard}
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              />
+                            </div>
+                          </Col>
+                          <Col span={12}>
+                            <div class="text-gray-700">
+                              <label className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2 ">
+                                Profile Picture
+                              </label>
+                              <input
+                                type="file"
+                                name="profile_photo"
+                                onChange={uploadProfilePic}
+                                className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                              />
+                            </div>
+                          </Col>
+                        </Row>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={land_mark}
+                              name="land_mark"
+                              label="Land Mark"
+                              placeholder="NCDC"
+                              onChange={handleChange}
+                            />
+                          </Col>
 
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={default_pick_location}
-                                  name="default_pick_location"
-                                  label="Default Pickup Location"
-                                  placeholder="Nasarawa"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                            </Row>
-                            <Row className="mt-5" gutter={16}>
-                              <Col span={12} className="gutter-row">
-                                <InputField
-                                  type="text"
-                                  value={transaction_pin}
-                                  name="transaction_pin"
-                                  label="Transaction Pin"
-                                  placeholder="3832"
-                                  onChange={handleChange}
-                                />
-                              </Col>
-                            </Row>
-                            <button
-                              className={`relative w-full flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={default_pick_location}
+                              name="default_pick_location"
+                              label="Default Pickup Location"
+                              placeholder="Nasarawa"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Row>
+                        <Row className="mt-5" gutter={16}>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              value={transaction_pin}
+                              name="transaction_pin"
+                              label="Transaction Pin"
+                              placeholder="3832"
+                              onChange={handleChange}
+                            />
+                          </Col>
+                        </Row>
+                        <button
+                          className={`relative w-full flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                        >
+                          {loading && (
+                            // <span className="spinner-border spinner-border-sm mr-1"></span>
+                            <svg
+                              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
                             >
-                              {loading && (
-                                // <span className="spinner-border spinner-border-sm mr-1"></span>
-                                <svg
-                                  class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    class="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    stroke-width="4"
-                                  ></circle>
-                                  <path
-                                    class="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  ></path>
-                                </svg>
-                              )}
-                              Add Agent
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </form>
-                    {/* /body */}
-                  </div>
-                </div>
+                              <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                              ></circle>
+                              <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                          )}
+                          Add Agent
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </form>
               </div>
-              <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-            </>
-          ) : null}
+            </div>
+          </Modal>
+         
         </div>
       </div>
       {/* Cards */}

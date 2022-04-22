@@ -18,7 +18,7 @@ export const createDelivery = (delivery_type, delivery_address, frequency, assig
 
     dispatch({
       type: CREATE_DELIVERY,
-      payload: res.data,
+      // payload: res.data,
     });
 
     return Promise.resolve(res.data);
