@@ -6,7 +6,7 @@
 import { normalHeader } from "../http-common";
 
 const getAll = () => {
-  return normalHeader.get("/business/deliveries");
+  return normalHeader.get("/business/delivery");
 };
 
 const create = (data) => {
@@ -21,12 +21,12 @@ const filtersByStatus = () => {
 
 const DeliveryService = {
   getAll,
-  get,
+  // get,
   create,
-  update,
-  remove,
-  removeAll,
-  findByTitle,
+  // update,
+  // remove,
+  // removeAll,
+  // findByTitle,
 };
 
 export default DeliveryService;

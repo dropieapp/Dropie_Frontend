@@ -30,11 +30,11 @@ const CreateInvoice = (props) => {
   };
 
   const [name1, setName1] = useState();
-  const [email1, setEmail1] = useState();
+  const [address1, setAddress1] = useState();
   const [phone1, setPhone1] = useState();
   const [website1, setWebsite1] = useState();
   const [name2, setName2] = useState();
-  const [email2, setEmail2] = useState();
+  const [website2, setWebsite2] = useState();
   const [phone2, setPhone2] = useState();
   const [address2, setAddress2] = useState();
   const [invoiceNumber, setInvoiceNumber] = useState();
@@ -46,8 +46,8 @@ const CreateInvoice = (props) => {
   const handleName1Change = (e) => {
     setName1(e.target.value);
   };
-  const handleEmail1Change = (e) => {
-    setEmail1(e.target.value);
+  const handleAddress1Change = (e) => {
+    setAddress1(e.target.value);
   };
   const handlePhone1Change = (e) => {
     setPhone1(e.target.value);
@@ -58,8 +58,8 @@ const CreateInvoice = (props) => {
   const handleName2Change = (e) => {
     setName2(e.target.value);
   };
-  const handleEmail2Change = (e) => {
-    setEmail2(e.target.value);
+  const handleWebsite2Change = (e) => {
+    setWebsite2(e.target.value);
   };
   const handlePhone2Change = (e) => {
     setPhone2(e.target.value);
@@ -126,13 +126,13 @@ const CreateInvoice = (props) => {
     dispatch(clearMessage());
     const from = {
       name: name1,
-      email: email1,
+      address: address1,
       phone: phone1,
       website: website1,
     };
     const to = {
       name: name2,
-      email: email2,
+      website: website2,
       phone: phone2,
       address: address2,
     };
@@ -294,11 +294,11 @@ const CreateInvoice = (props) => {
                   />
                   <InputField
                     // label="Email"
-                    value={email1}
-                    onChange={handleEmail1Change}
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
+                    value={address1}
+                    onChange={handleAddress1Change}
+                    name="address"
+                    type="text"
+                    placeholder="Enter your Address"
                   />
                   <InputField
                     // label="Phone Number"
@@ -420,11 +420,11 @@ const CreateInvoice = (props) => {
                   />
 
                   <InputField
-                    name="email"
-                    type="email"
-                    placeholder="Enter your Email Address"
-                    value={email2}
-                    onChange={handleEmail2Change}
+                    name="website"
+                    type="text"
+                    placeholder="Enter your website"
+                    value={website2}
+                    onChange={handleWebsite2Change}
                   />
                 </div>
                 <div className="lg:col-span-2 col-span-4 p-5">

@@ -34,6 +34,25 @@ const register = (email, password, confirm_password) => {
     confirm_password,
   });
 };
+const forgotPassword = (email) => {
+  return axios.post(API_URL + "business/auth/forgot-password", {
+    email
+  });
+};
+
+const changePassword = (email, password, confirm_password) => {
+  return axios.post(API_URL + "business/auth/change-password", {
+    email, 
+    password,
+    confirm_password
+  });
+};
+const validateAccount = (email, code) => {
+  return axios.post(API_URL + "business/auth/validate-password", {
+    email, 
+    code
+  });
+};
 
 const login = (email, password) => {
   return axios
@@ -68,4 +87,7 @@ export default {
   register,
   login,
   logout,
+  forgotPassword,
+  changePassword,
+  validateAccount,
 };

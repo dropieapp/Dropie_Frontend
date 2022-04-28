@@ -17,7 +17,7 @@ const deliveryReducer = (deliveries = initialState, action) => {
 
   switch (type) {
     case CREATE_DELIVERY:
-      return [...deliveries, payload];
+      return { ...deliveries };
 
     case RETRIEVE_DELIVERIES:
       return payload;

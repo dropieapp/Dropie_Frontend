@@ -170,27 +170,7 @@ function SingleAgent() {
     }
   }, [isSubmiited, dispatch, allInputs]);
 
-  const [getAgents, setGetAgents] = useState([]);
 
-  useEffect(() => {
-    let get_agents = JSON.parse(localStorage.getItem("get_agents"));
-    setGetAgents(get_agents.data);
-  }, []);
-  const navigate = useNavigate();
-  const [successfulEdit, setSuccessfulEdit] = useState(false);
-  const [singleAgent, setSingleAgent] = useState([]);
-
-  const handleEdit = (item) => {
-    setSingleAgent(item);
-    setSuccessfulEdit(true);
-  };
-
-  useEffect(() => {
-    if (successfulEdit) {
-      setSuccessfulEdit(false);
-      navigate("/staff/edit");
-    }
-  }, [successfulEdit]);
 
   return (
     <Layout>

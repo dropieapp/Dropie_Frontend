@@ -87,6 +87,33 @@ const SignIn = (props) => {
               label="Password"
               placeholder="Password"
             />
+            {/* <div className="flex justify-end"> */}
+            {/* <p className="text-right py-0">
+              <small>
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-red-600 hover:text-red-500"
+                >
+                  Forgot Password?
+                </Link>
+              </small>
+            </p> */}
+            <div
+              className="flex justify-end space-y-5"
+              style={{
+                marginTop: "-0.75em",
+
+              }}
+            >
+              <Link
+                to="/reset-password"
+                className="text-red-600 hover:text-red-500"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            {/* </div> */}
 
             <div className="form-group">
               <button

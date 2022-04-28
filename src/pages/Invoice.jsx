@@ -51,6 +51,8 @@ const Invoice = (props) => {
     }
   }, []);
 
+  // console.log(states);
+
   console.log(data)
 
   // const data = JSON.parse(location.state);
@@ -133,28 +135,56 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal py-3">From</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.from).name).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                 Name: {states.from && JSON.stringify(JSON.parse(states.from).name) ?
+
+                    (
+
+                      JSON.stringify(JSON.parse(states.from).name).replace(
+                        /['"]+/g,
+                        ""
+                      )
+                    ) : (
+                      <p>No Name </p>
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.from).email).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                  Address: {states.from && JSON.stringify(JSON.parse(states.from).address)
+
+                    ? (
+
+
+                      JSON.stringify(JSON.parse(states.from).address).replace(
+                        /['"]+/g,
+                        ""
+                      )
+                    ) : (
+                      <p>No Email available yet </p>
+
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.from).phone).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                  Phone Number: {states.from && JSON.stringify(JSON.parse(states.from).phone_number) 
+                  ? (
+                    JSON.stringify(JSON.parse(states.from).phone_number).replace(
+                      /['"]+/g,
+                      ""
+                      
+                                        )) : (
+                                          <p> No phone number available yet </p>
+                                        
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.from).website).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                  Website: {states.from && JSON.stringify(JSON.parse(states.from).website)
+                    ? (
+                      JSON.stringify(JSON.parse(states.from).website)
+                      .replace(
+                        /['"]+/g,
+                        ""
+                      )) : (
+                      <p>No website added</p>
+                        
+                        )}
                 </p>
               </div>
               <div className="p-5 lg:col-span-2 col-span-4 lg:my-10 -my-10 mx-auto">
@@ -162,33 +192,35 @@ const Invoice = (props) => {
                   class="mx-auto h-16 w-full my-10"
                   src={Logo}
                   alt="Workflow"
-                />
+                  />
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal mb-4">To</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.to).name).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                  Name:
+                  {states.to && JSON.stringify(JSON.parse(states.to).name)
+                    ? (
+                      JSON.stringify(JSON.parse(states.to).name)
+                      .replace(
+                        /['"]+/g,
+                        ""
+                        )
+                    ) : (
+                      <p>No name was added</p>
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.to).email).replace(
+                 Address: {states.to && JSON.stringify(JSON.parse(states.to).address).replace(
                     /['"]+/g,
                     ""
-                  )}
+                    )}
                 </p>
+              
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.to).phone).replace(
+                  Phone Number: {states.to && JSON.stringify(JSON.parse(states.to).phone_number).replace(
                     /['"]+/g,
                     ""
-                  )}
-                </p>
-                <p className="text-md font-nunito py-3 text-gray-400">
-                  {data && JSON.stringify(JSON.parse(data.to).address).replace(
-                    /['"]+/g,
-                    ""
-                  )}
+                    )}
                 </p>
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
@@ -203,6 +235,7 @@ const Invoice = (props) => {
                     </p>
                   </div>
                 </div>
+              
                 <div class="text-gray-700 md:flex md:items-center mb-4">
                   <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
                     <span>Pickup Location: </span>
@@ -266,7 +299,8 @@ const Invoice = (props) => {
                       </tr>
                     </thead>
                     <tbody className="text-md t_ lh">
-                      {orders &&
+                      {orders && orders.length > 0 ? (
+                    
                         JSON.parse(orders).map((order, index) => (
                           <tr key={index}>
                             <td className="px-2 py-3 whitespace-nowrap">
@@ -287,53 +321,23 @@ const Invoice = (props) => {
                             <td className="px-2 py-3 whitespace-nowrap">
                               <div className="font-semibold text-left">
                                 <p className="text-gray-400">
-                                   ₦{" "}
-                                   {isNaN(order.price * order.qty)
-                                     ? 0
-                                     : order.price * order.qty}
-                                 </p>
+                                  ₦{" "}
+                                  {isNaN(order.price * order.qty)
+                                    ? 0
+                                    : order.price * order.qty}
+                                </p>
                               </div>
                             </td>
                           </tr>
                         ))
-                        // orders.map((order, i) => (
-                        //   <tr key={i}>
-                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
-                        //       <div className="text-left bg-gray-200 p-2 rounded-lg">
-                        //         <p className="px-5">Item Name</p>
-                        //         <p className=" text-gray-400">{order.name}</p>
-                        //       </div>
-                        //     </td>
-                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
-                        //       <div className="font-medium text-left bg-gray-200 p-2 rounded-lg">
-                        //         <p>Price</p>
-                        //         <p className="text-gray-400">{order.price}</p>
-                        //       </div>
-                        //     </td>
-                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
-                        //       <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
-                        //         <p>Qty</p>
-                        //         <p className="text-gray-400">{order.qty}</p>
-                        //       </div>
-                        //     </td>
-                        //     <td className="yl yd px-2 py-3 whitespace-nowrap">
-                        //       <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
-                        //         <p className="text-gray-400">
-                        //           ₦{" "}
-                        //           {isNaN(order.price * order.qty)
-                        //             ? 0
-                        //             : order.price * order.qty}
-                        //         </p>
-                        //       </div>
-                        //     </td>
-                        //   </tr>
-                        // ))
-                      }
+                        ): (
+                          <p>No Orders available</p>
+                      )}
                       {/* {data.orders} */}
                       {/* {this.renderRows()} */}
                     </tbody>
 
-                   
+
                   </table>
                 </div>
               </div>

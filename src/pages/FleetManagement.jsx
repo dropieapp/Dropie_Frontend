@@ -644,7 +644,7 @@ function FleetManagement() {
                               className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
                             >
                               <option value="">Select an Agent</option>
-                              {getAgents.map((agent) => (
+                              {getAgents && getAgents.map((agent) => (
                                 <option key={agent.key} value={agent.id}>
                                   {agent.first_name} {agent.last_name}
                                 </option>

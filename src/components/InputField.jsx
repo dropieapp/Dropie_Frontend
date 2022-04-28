@@ -2,6 +2,7 @@ import React from "react";
 
 const InputField = ({
   value,
+  readOnly,
   label,
   error,
   name,
@@ -22,6 +23,7 @@ const InputField = ({
     <input
       type={type}
       value={value}
+      readOnly={readOnly}
       name={name}
       className={
         "w-full px-8 py-2 text-primary input-text border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4 " +

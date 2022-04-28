@@ -3,15 +3,8 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import Transition from "../utils/Transition";
 import DashboardTitle from "../components/DashboardTitle";
-import FormField from "../components/FormField";
 import Layout from "../components/Layout";
-import ImageUpload from "../components/ImageUpload";
-// import CheckboxTable from "../components/CheckboxTable";
-import images from "../assets/images/user-36-01.jpg";
-
-import DashboardCard08 from "../partials/dashboard/DashboardCard08";
-import FormSelectField from "../components/FormSelectField";
-
+import InputField from "../components/InputField";
 // My Imports
 import { useDispatch, useSelector } from "react-redux";
 import { createDelivery } from "../actions/deliveries";
@@ -22,27 +15,8 @@ import {
 } from "../actions/deliveries";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { Modal, Button } from "antd";
-import { Upload, message } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(file) {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-}
+import { Modal } from "antd";
+import { toast } from "react-toastify";
 
 Chart.register(...registerables);
 
@@ -105,80 +79,125 @@ function Deliveries() {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
-  const [selectedValue, setSelectedValue] = useState("Nothing selected");
-  const handleSelectChange = useCallback(() => {
-    setSelectedValue(selectedValue);
-  });
+  const [vehiclesType, setVehiclesType] = useState([]);
 
-  // Daniel Setup for delivery with redux
-  const initialTutorialState = {
-    delivery_type: "",
-    delivery_address: "",
-    frequency: "",
-    assigned_to: "",
-    pickup_address: "",
-    package_category: "",
-    status: "",
-    vehicle_type: "",
-  };
-  const [tutorial, setTutorial] = useState(initialTutorialState);
+  useEffect(() => {
+    let vehicle_type = JSON.parse(localStorage.getItem("vehicle_type"));
+    setVehiclesType(vehicle_type.data);
+  }, []);
+
+  const getAgents = useSelector((state) => state.agentReducer.data);
+
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [successful, setSuccessful] = useState(false);
 
   const dispatch = useDispatch();
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setTutorial({ ...tutorial, [name]: value });
+  // data for the inputs
+  const [deliveryType, setDeliveryType] = useState("");
+  const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [frequency, setFrequency] = useState("");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [pickupAddress, setPickupAddress] = useState("");
+  const [packageCategory, setPackageCategory] = useState("");
+  const [status, setStatus] = useState("");
+  const [vehicleType, setVehicleType] = useState("");
+  const [deliveryContactName, setDeliveryContactName] = useState("");
+  const [deliveryContactNumber, setDeliveryContactNumber] = useState("");
+  const [description, setDescription] = useState("");
+
+  // handle data for inputs
+  const handleDeliveryType = (e) => {
+    setDeliveryType(e.target.value);
+  };
+  const handleDeliveryAddress = (e) => {
+    setDeliveryAddress(e.target.value);
+  };
+  const handleFrequency = (e) => {
+    setFrequency(e.target.value);
+  };
+  const handleAssignedTo = (e) => {
+    setAssignedTo(e.target.value);
+  };
+  const handlePickupAddress = (e) => {
+    setPickupAddress(e.target.value);
+  };
+  const handlePackageCategory = (e) => {
+    setPackageCategory(e.target.value);
+  };
+  const handleStatus = (e) => {
+    setStatus(e.target.value);
+  };
+  const handleVehicleType = (e) => {
+    setVehicleType(e.target.value);
+  };
+  const handleDeliveryContactName = (e) => {
+    setDeliveryContactName(e.target.value);
+  };
+  const handleDeliveryContactNumber = (e) => {
+    setDeliveryContactNumber(e.target.value);
+  };
+  const handleDescription = (e) => {
+    setDescription(e.target.value);
   };
 
-  const saveTutorial = () => {
-    const {
-      delivery_type,
-      delivery_address,
-      frequency,
-      assigned_to,
-      pickup_address,
-      package_category,
-      status,
-      vehicle_type,
-    } = tutorial;
+  const [delivery, setDelivery] = useState();
 
-    dispatch(
-      createDelivery(
-        delivery_type,
-        delivery_address,
-        frequency,
-        assigned_to,
-        pickup_address,
-        package_category,
-        status,
-        vehicle_type
-      )
-    )
-      .then((data) => {
-        setTutorial({
-          delivery_type: data.delivery_type,
-          delivery_address: data.delivery_address,
-          frequency: data.frequency,
-          assigned_to: data.assigned_to,
-          pickup_address: data.pickup_address,
-          package_category: data.package_category,
-          status: data.status,
-          vehicle_type: data.vehicle_type,
+  //handle submit form data;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setLoading(true);
+    setSuccessful(false);
+    const data = {
+      delivery_type: deliveryType,
+      delivery_address: deliveryAddress,
+      frequency: frequency,
+      assigned_to: assignedTo,
+      pickup_address: pickupAddress,
+      package_category: packageCategory,
+      status: status,
+      vehicle_type: vehicleType,
+      delivery_contact_name: deliveryContactName,
+      delivery_contact_number: deliveryContactNumber,
+      description: description,
+    };
+    setDelivery(data);
+  };
+
+  // handle form submission
+  useEffect(() => {
+    if (submitted) {
+      dispatch(createDelivery(delivery))
+        .then(() => {
+          setSubmitted(false);
+          setLoading(false);
+          setSuccessful(true);
+          toast("Delivery created successfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 3000,
+          });
+        })
+        .catch((err) => {
+          setSubmitted(false);
+          setLoading(false);
+          setSuccessful(false);
+          toast("Error creating delivery", {
+            type: "error",
+            position: "top-right",
+            autoClose: 3000,
+          });
         });
-        setSubmitted(true);
+    }
+  }, [submitted, delivery]);
 
-        console.log(data);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
+  // messages incase of errors or success
+  const { message } = useSelector((state) => state.message);
 
-  const newTutorial = () => {
-    setTutorial(initialTutorialState);
-    setSubmitted(false);
-  };
+  // retrive data from the database
+  const getDeliveries = useSelector((state) => state.deliveries.data);
 
   const [currentDelivery, setCurrentDelivery] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
@@ -304,336 +323,230 @@ function Deliveries() {
               width={1000}
             >
               <div class="py-4 px-8 bg-white rounded-lg my-3">
-                <div>
-                  <Row className="mt-1" gutter={10}>
-                    <Col span={12} className="gutter-row">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    {message && (
                       <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="delivery_type"
+                        <div
+                          className={
+                            successful
+                              ? "p-4 my-3 text-black font-semibold bg-green-200"
+                              : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                          }
+                          role="alert"
                         >
-                          delivery type
-                        </label>
-                        {/* <input
-                              type="text"
-                               className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          <ul className="mx-3 my-3">{message}</ul>
+                        </div>
+                      </div>
+                    )}
+                    {!successful && (
+                      <div>
+                        <Row className="mt-1" gutter={10}>
+                          <Col span={12} className="gutter-row">
+                            <label
+                              className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                              htmlFor="delivery_type"
+                            >
+                              Delivery type
+                            </label>
+                            <select
                               id="delivery_type"
-                              required
-                              value={tutorial.delivery_type}
-                              onChange={handleInputChange}
+                              value={deliveryType}
+                              onChange={handleDeliveryType}
                               name="delivery_type"
-                            /> */}
-                        <select
-                          id="delivery_type"
-                          value={tutorial.delivery_type}
-                          onChange={handleInputChange}
-                          name="delivery_type"
-                          className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                        >
-                          {" "}
-                          <option value="">{""}</option>
-                          <option value="grapefruit">Grapefruit</option>
-                          <option value="lime">Lime</option>
-                          <option value="coconut">Coconut</option>
-                          <option value="mango">Mango</option>
-                        </select>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="delivery_address"
-                        >
-                          delivery address
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="delivery_address"
-                          required
-                          value={tutorial.delivery_address}
-                          onChange={handleInputChange}
-                          name="delivery_address"
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="frequency"
-                        >
-                          Plan
-                        </label>
-                        {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="frequency"
-                                  required
-                                  value={tutorial.frequency}
-                                  onChange={handleInputChange}
-                                  name="frequency"
-                                /> */}
-                        <select
-                          id="frequency"
-                          value={tutorial.frequency}
-                          onChange={handleInputChange}
-                          name="frequency"
-                          className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                        >
-                          {" "}
-                          <option value="">{""}</option>
-                          <option value="ontime">On Time</option>
-                          <option value="lime">Lime</option>
-                          <option value="coconut">Coconut</option>
-                          <option value="mango">Mango</option>
-                        </select>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="assigned_to"
-                        >
-                          assigned to
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="assigned_to"
-                          required
-                          value={tutorial.assigned_to}
-                          onChange={handleInputChange}
-                          name="assigned_to"
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="pickup_address"
-                        >
-                          pickup address
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="pickup_address"
-                          required
-                          value={tutorial.pickup_address}
-                          onChange={handleInputChange}
-                          name="pickup_address"
-                        />
-                      </div>
-                    </Col>
+                              className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            >
+                              <option value="express">Express</option>
+                              <option value="standard">Standard</option>
+                            </select>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <div className="form-group">
+                              <InputField
+                                type="text"
+                                name="delivery_address"
+                                label="Delivery Address"
+                                value={deliveryAddress}
+                                onChange={handleDeliveryAddress}
+                                placeholder="Delivery Address"
+                              />
+                            </div>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <label
+                              className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                              htmlFor="frequency"
+                            >
+                              Plan
+                            </label>
+                            <select
+                              id="frequency"
+                              value={frequency}
+                              onChange={handleFrequency}
+                              name="frequency"
+                              className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            >
+                              <option value="once">On Time</option>
+                              <option value="recurring">Recurring</option>
+                            </select>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <label
+                              className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                              htmlFor="assigned_to"
+                            >
+                              Assigned Agent
+                            </label>
+                            <select
+                              id="assigned_to"
+                              value={assignedTo}
+                              onChange={handleAssignedTo}
+                              name="assigned_to"
+                              className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            >
+                              <option value="">Select an Agent</option>
+                              {getAgents &&
+                                getAgents.map((agent) => (
+                                  <option
+                                    key={agent.key}
+                                    value={`${agent.first_name} ${agent.last_name}`}
+                                  >
+                                    {agent.first_name} {agent.last_name}
+                                  </option>
+                                ))}
+                            </select>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              name="pickup_address"
+                              label="Pickup Address"
+                              value={pickupAddress}
+                              onChange={handlePickupAddress}
+                              placeholder="Pickup Address"
+                            />
+                          </Col>
 
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="pickup_address"
-                        >
-                          pickup contact name
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="pickup_address"
-                          required
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          package category
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="package_category"
-                          required
-                          value={tutorial.package_category}
-                          onChange={handleInputChange}
-                          name="package_category"
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="status"
-                        >
-                          status
-                        </label>
-                        <select
-                          id="status"
-                          value={tutorial.status}
-                          onChange={handleInputChange}
-                          name="status"
-                          className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                        >
-                          {" "}
-                          <option value="">{""}</option>
-                          <option value="pending">Pending</option>
-                          <option value="success">success</option>
-                        </select>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="vehicle_type"
-                        >
-                          vehicle type
-                        </label>
-                        {/* <input
-                                  type="text"
-                                  className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                                  id="vehicle_type"
-                                  required
-                                  value={tutorial.vehicle_type}
-                                  onChange={handleInputChange}
-                                  name="vehicle_type"
-                                /> */}
-                        <select
-                          id="vehicle_type"
-                          value={tutorial.vehicle_type}
-                          onChange={handleInputChange}
-                          name="vehicle_type"
-                          className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                        >
-                          {" "}
-                          <option value="">{""}</option>
-                          <option value="Car">Car</option>
-                          <option value="Truck">Truck</option>
-                        </select>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          package weight
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="package_weight"
-                          required
-                          name="package_weight"
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          insurance
-                        </label>
-                        <input
-                          type="text"
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="package_weight"
-                          required
-                          name="package_weight"
-                        />
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          number of items
-                        </label>
-                        <select
-                          id="number_of_item"
-                          name="vehicle_type"
-                          className={`w-full px-8 py-2 text-primary 
-                                  border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                        >
-                          {" "}
-                          <option value="">{""}</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                          <option value="6">6</option>
-                          <option value="Above 6">Above 6</option>
-                        </select>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          additional address
-                        </label>
-                        <textarea
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="w3review"
-                          name="w3review"
-                          rows="4"
-                          cols="50"
-                        ></textarea>
-                      </div>
-                    </Col>
-                    <Col span={12} className="gutter-row">
-                      <div className="form-group">
-                        <label
-                          className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
-                          htmlFor="package_category"
-                        >
-                          description
-                        </label>
-                        <textarea
-                          className={`w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                          id="w3review"
-                          name="w3review"
-                          rows="4"
-                          cols="50"
-                        ></textarea>
-                      </div>
-                    </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              name="package_category"
+                              label="Package Weight"
+                              value={packageCategory}
+                              onChange={handlePackageCategory}
+                              placeholder="Package Category"
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <label
+                              className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                              htmlFor="status"
+                            >
+                              Status
+                            </label>
+                            <select
+                              id="status"
+                              value={status}
+                              onChange={handleStatus}
+                              name="status"
+                              className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="accepted">Accepted</option>
+                              <option value="declined">Declined</option>
+                              <option value="picked_up">Picked up</option>
+                              <option value="delivering">Delivering</option>
+                              <option value="delivered">Delivered</option>
+                              <option value="confirmed">Confirmed</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <label
+                              className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                              htmlFor="vehicle_type"
+                            >
+                              Vehicle Type
+                            </label>
+                            <select
+                              id="vehicle_type"
+                              value={vehicleType}
+                              onChange={handleVehicleType}
+                              name="vehicle_type"
+                              className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                            >
+                              <option value="">Select a Vehicle Type</option>
 
-                    <Col span={8} className="gutter-row"></Col>
-                    <Col span={8} className="gutter-row">
-                      <button
-                        onClick={saveTutorial}
-                        className="btn btn-success w-full"
-                        style={{
-                          backgroundColor: "#B60008",
-                          color: "white",
-                          borderColor: "rgb(249, 123, 4, 0.2",
-                        }}
-                      >
-                        Create Order
-                      </button>
-                    </Col>
-                    <Col span={8} className="gutter-row"></Col>
-                  </Row>
-                </div>
+                              {vehiclesType.map((vehicle) => (
+                                <option key={vehicle.key} value={vehicle.type}>
+                                  {vehicle.type}
+                                </option>
+                              ))}
+                            </select>
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              name="delivery_contact_name"
+                              label="Delivery Contact Name"
+                              value={deliveryContactName}
+                              onChange={handleDeliveryContactName}
+                              placeholder="Delivery Contact Name"
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              name="delivery_contact_number"
+                              label="Delivery Contact Number"
+                              value={deliveryContactNumber}
+                              onChange={handleDeliveryContactNumber}
+                              placeholder="Delivery Contact Number"
+                            />
+                          </Col>
+                          <Col span={12} className="gutter-row">
+                            <InputField
+                              type="text"
+                              name="description"
+                              label="Description"
+                              value={description}
+                              onChange={handleDescription}
+                              placeholder="Description"
+                            />
+                          </Col>
+                        </Row>
+                        <button
+                          className={`relative w-full flex justify-center my-7 bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                        >
+                          {loading && (
+                            // <span className="spinner-border spinner-border-sm mr-1"></span>
+                            <svg
+                              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                              ></circle>
+                              <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                          )}
+                          Create an Order
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </form>
               </div>
             </Modal>
           </div>
@@ -703,10 +616,10 @@ function Deliveries() {
                   </th>
                 </tr>
               </thead>
-              {deliveries &&
+              {deliveries && deliveries.length > 0 ? (
                 deliveries.map((delivery, index) => (
                   <tbody className="text-sm t_ lh">
-                    <tr>
+                    <tr key={index}>
                       <td className="yl yd uv px-2 py-3 whitespace-nowrap">
                         <div className="flex text-left">
                           <label className="inline-flex">
@@ -906,7 +819,17 @@ function Deliveries() {
                       </td>
                     </tr>
                   </tbody>
-                ))}
+                ))
+              ) : (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center text-lg font-bold py-4"
+                  >
+                    No Delivery
+                  </td>
+                </tr>
+              )}
             </table>
           </div>
         </div>

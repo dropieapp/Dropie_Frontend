@@ -1,6 +1,12 @@
 import React, { useEffect, Fragment } from "react";
 // import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-import { Routes, Route, useLocation, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 // import { history } from "./_helpers";
 import { PrivateRoute } from "./_components";
@@ -38,66 +44,17 @@ function App() {
     document.querySelector("html").style.scrollBehavior = "auto";
     window.scroll({ top: 0 });
     document.querySelector("html").style.scrollBehavior = "";
+    dispatch(clearMessage());
   }, [location.pathname]); // triggered on route change
-// console.log(location);
 
-  useEffect(() => {
-    // history.listen((location, action) => {
-    //   // clear alert on location change
-    //   dispatch(clearMessage());
-    // });
-    location.pathname && dispatch(clearMessage());
-  }, [location.pathname]);
- 
+  // console.log("location", location);
+
   return (
     <div className="Dropie">
-      {/* <Router history={history}>
-        <Switch>
-        
-          <Route exact component={Login} path="/login" />
-          <Route exact component={SignUp} path="/register" />
-          <Route path="/reset-password" component={ResetPassword} />
-          <Route path="/invite" component={InviteMember} />
-          <Route path="/verify" component={VerifyNumber} />
-          <Route path="/change-password" component={ChangePassword} />
-          <PrivateRoute path="/company-info" component={UploadCompanyInfo} />
-          {/* <Route exact path={["/", "/home"]} component={Dashboard} /> 
-          <PrivateRoute exact component={Dashboard} path="/" />
-          <PrivateRoute
-            exact
-            component={PackageTracking}
-            path="/package-tracking"
-          />
-          <PrivateRoute
-            exact
-            component={FleetManagement}
-            path="/fleet-management"
-          />
-          <PrivateRoute
-            exact
-            component={VehicleInfo}
-            path="/fleet-management/vehicle-info"
-          />
-          <PrivateRoute exact component={Staff} path="/staffs" />
-          <PrivateRoute exact component={Finance} path="/finance" />
-          <PrivateRoute exact component={Deliveries} path="/deliveries" />
-          <PrivateRoute
-            exact
-            component={CreateInvoice}
-            path="/finance/create-invoice"
-          />
-          {/* <PrivateRoute
-            exact
-            component={SendInvoice}
-            path="/finance/send-invoice"
-          /> *
-          <PrivateRoute exact component={Invoice} path="/finance/invoice" />
-          <Route path="*" component={NotFound} />
-        </Switch>
-      </Router> */}
       <Routes>
         <Route exact element={<Login />} path="/login" />
         <Route exact element={<SignUp />} path="/register" />
+
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/invite" element={<InviteMember />} />
         <Route path="/verify" element={<VerifyNumber />} />

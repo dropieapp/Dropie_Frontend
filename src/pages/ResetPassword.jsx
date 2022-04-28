@@ -1,21 +1,109 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "../assets/icons/dropexpress-logo.svg";
 import FlatButton from "../components/FlatButton";
 import FormField from "../components/FormField";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/custom.css";
+import { forgotPassword, validateAccount } from "../actions/authentication";
+import { clearMessage } from "../actions/message";
+import InputField from "../components/InputField";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
+  const dispatch = useDispatch();
+  const [email, setEmail] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
+  const [successful, setSuccessful] = React.useState(false);
+  const { message } = useSelector((state) => state.message);
+  const [modalMessage, setModalMessage] = React.useState("");
 
-    let email = e.target.elements.email?.value;
-    let password = e.target.elements.password?.value;
-
-    console.log(email, password);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
   };
 
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setSuccessful(false);
+    dispatch(clearMessage());
+  };
+
+  useEffect(() => {
+    if (successful) {
+      dispatch(forgotPassword(email))
+        .then(() => {
+          setLoading(false);
+          setSuccessful(true);
+          setShowModal(true);
+          toast("Password reset link sent to your email", {
+            type: "success",
+            autoClose: 3000,
+            position: "top-right",
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        })
+        .catch(() => {
+          setLoading(false);
+          setSuccessful(false); 
+          toast(message, {
+            type: "error",
+            autoClose: 3000,
+            position: "top-right",
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        });
+    }
+  }, [successful]);
+
   const [showModal, setShowModal] = React.useState(false);
+  const [modalLoading, setModalLoading] = React.useState(false);
+  const [modalSuccessful, setModalSuccessful] = React.useState(false);
+  const [code, setCode] = React.useState("");
+
+  const handleCodeChange = (e) => {
+    setCode(e.target.value);
+  };
+
+  const navigate = useNavigate();
+
+  const handleVerifyEmail = (e) => {
+    e.preventDefault();
+    setModalLoading(true);
+    setModalSuccessful(true);
+    dispatch(clearMessage());
+  };
+
+  useEffect(() => {
+    if (modalSuccessful) {
+      dispatch(validateAccount(email, code))
+        .then(() => {
+          setModalLoading(false);
+          setShowModal(true);
+          navigate("/change-password", {
+            state: { email: email, code: code },
+          });
+        })
+        .catch(() => {
+          setModalLoading(false);
+          toast("There is an error", {
+            type: "error",
+            autoClose: 3000,
+            position: "top-right",
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+        });
+    }
+  }, [modalSuccessful]);
 
   return (
     <div className="bg-white h-screen py-5 px-5">
@@ -33,20 +121,56 @@ function ResetPassword() {
             </span>
           </p>
 
-          <form>
-            <FormField
+          <form className="space-y-6" onSubmit={handleResetPassword}>
+            {message && (
+                <div className="form-group">
+                  <div
+                    className={
+                      successful
+                        ? "p-4 my-3 text-black font-semibold bg-green-200"
+                        : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                    }
+                    role="alert"
+                  >
+                    <ul className="mx-3 my-3">{message}</ul>
+                  </div>
+                </div>
+              )}
+            <InputField
               type="email"
               label="Email"
-              id="email"
+              name="email"
+              value={email}
               placeholder="Enter your email address"
             />
 
             <div className="flex justify-center items-center mt-6">
               <button
                 className="bg-red-700 text-white active:bg-red-600 relative w-full  text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                type="button"
-                onClick={() => setShowModal(true)}
+                type="submit"
               >
+                {loading && (
+                  <svg
+                    class="animate-spin -ml-1 mr-3 h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      class="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="4"
+                    ></circle>
+                    <path
+                      class="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                )}
                 Reset Password
               </button>
             </div>
@@ -54,7 +178,7 @@ function ResetPassword() {
           <p class="mt-5 text-center text-sm">
             <div class="flex justify-center max-w-sm m-auto">
               <div class="form-check inline-block">
-                <Link to="/signin" className="text-sm primary-red-text">
+                <Link to="/login" className="text-sm primary-red-text">
                   {" "}
                   Return to login
                 </Link>
@@ -91,33 +215,68 @@ function ResetPassword() {
                         <p class="mt-2 text-center text-sm">
                           <span href="#" class="font-medium text-gray">
                             We have sent a verrification code to
-                            Dropie@gmail.com
+                            {email}
                           </span>
                         </p>
 
-                        <form onSubmit={handleFormSubmit} className="mt-6">
-                          <FormField
+                        <form onSubmit={handleVerifyEmail} className="mt-6">
+                          <InputField
                             type="text"
-                            label=""
+                            label="Code"
                             id="code"
                             placeholder="Enter Code"
                           />
 
                           <div className="flex justify-center items-center mt-2">
-                            <Link to="/invite" className="relative w-full">
-                              <FlatButton text="Verify" />
-                            </Link>
+                            <button
+                              className="bg-red-700 text-white active:bg-red-600 relative w-full  text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                              type="submit"
+                            >
+                              {loading && (
+                                <svg
+                                  class="animate-spin -ml-1 mr-3 h-5 w-5"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    class="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                  ></circle>
+                                  <path
+                                    class="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  ></path>
+                                </svg>
+                              )}
+                              Verify Code
+                            </button>
                           </div>
                         </form>
                         <p class="mt-5 text-center text-sm">
                           <span href="#" class="font-medium text-gray">
                             Didn’t receive an email ?{" "}
-                            <a
-                              href="#"
-                              class="font-medium text-red-600 hover:text-red-500"
-                            >
-                              Resend
-                            </a>
+                            <form onSubmit={handleResetPassword}>
+                              <InputField
+                                type="hidden"
+                                label="Email"
+                                name="email"
+                                readonly="readonly"
+                                value={email}
+                                placeholder="Enter your email address"
+                              />
+                              <button
+                                href="#"
+                                class="font-medium text-red-600 hover:text-red-500"
+                              >
+                                Resend
+                              </button>
+                            </form>
                           </span>
                         </p>
                       </div>
