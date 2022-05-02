@@ -17,6 +17,7 @@ import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
 import { Modal } from "antd";
 import { toast } from "react-toastify";
+import { clearMessage } from "../actions/message";
 
 Chart.register(...registerables);
 
@@ -147,6 +148,7 @@ function Deliveries() {
   //handle submit form data;
   const handleSubmit = (e) => {
     e.preventDefault();
+    dispatch(clearMessage()); // clear message when changing location
     setSubmitted(true);
     setLoading(true);
     setSuccessful(false);
@@ -197,18 +199,14 @@ function Deliveries() {
   const { message } = useSelector((state) => state.message);
 
   // retrive data from the database
-  const getDeliveries = useSelector((state) => state.deliveries.data);
+  // const getDeliveries = useSelector((state) => state.deliveries.data);
 
-  const [currentDelivery, setCurrentDelivery] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(-1);
-  const [searchTitle, setSearchTitle] = useState("");
+  // const [currentDelivery, setCurrentDelivery] = useState(null);
+  // const [currentIndex, setCurrentIndex] = useState(-1);
+  // const [searchTitle, setSearchTitle] = useState("");
 
-  const deliveries = useSelector((state) => state.deliveries);
-  console.log("tuooo", deliveries);
+  const deliveries = useSelector((state) => state.deliveries.data);
 
-  useEffect(() => {
-    dispatch(retrieveDeliveries());
-  }, []);
 
   const onChangeSearchTitle = (e) => {
     const searchTitle = e.target.value;
@@ -296,7 +294,11 @@ function Deliveries() {
                 color: "white",
                 borderColor: "rgb(249, 123, 4, 0.2",
               }}
-              onClick={() => setVisible(true)}
+              onClick={() => {
+                setVisible(true);
+                dispatch(clearMessage());
+                setSuccessful(false);
+              }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -356,6 +358,7 @@ function Deliveries() {
                               name="delivery_type"
                               className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
                             >
+                              <option value="">Select delivery type</option>
                               <option value="express">Express</option>
                               <option value="standard">Standard</option>
                             </select>
@@ -386,6 +389,7 @@ function Deliveries() {
                               name="frequency"
                               className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
                             >
+                              <option value="">Select plan</option>
                               <option value="once">On Time</option>
                               <option value="recurring">Recurring</option>
                             </select>
@@ -451,6 +455,7 @@ function Deliveries() {
                               name="status"
                               className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
                             >
+                              <option value>Status</option>
                               <option value="pending">Pending</option>
                               <option value="accepted">Accepted</option>
                               <option value="declined">Declined</option>

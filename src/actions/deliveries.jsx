@@ -8,6 +8,7 @@ import {
   UPDATE_DELIVERY,
   DELETE_DELIVERY,
   DELETE_ALL_DELIVERIES,
+  SET_MESSAGE
 } from "./types";
 
 import DeliveryDataService from "../services/DeliveryService";
@@ -25,9 +26,11 @@ export const createDelivery = (delivery) => async (dispatch) => {
       type: SET_MESSAGE,
       payload: response.data.message,
     });
+    console.log("delivery", response.data);
 
-    return Promise.resolve();
+    return Promise.resolve(response.data);
   } catch (error) {
+  
     const errors = error.response.data && error.response.data.errors;
     if (typeof errors === "object") {
       const result = Object.keys(errors).map((key) =>
@@ -38,7 +41,7 @@ export const createDelivery = (delivery) => async (dispatch) => {
         payload: result,
       });
       console.log(result);
-      return Promise.reject();
+      return Promise.reject(result);
     } else {
       const result = error.response.data && error.response.data.message;
       dispatch({
@@ -46,7 +49,7 @@ export const createDelivery = (delivery) => async (dispatch) => {
         payload: result,
       });
       console.log(result);
-      return Promise.reject();
+      return Promise.reject(result);
     }
   }
 };
