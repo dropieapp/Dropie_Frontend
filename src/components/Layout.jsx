@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { retrieveAgents } from "../actions/staffs";
 import { retrieveFleets, vehicleType } from "../actions/fleets";
-import { retrieveInvoices } from "../actions/finance";
+import { retrieveInvoices } from "../actions/invoice";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -7,29 +7,18 @@ import DashboardCard08 from "../partials/dashboard/DashboardCard08";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import dateFormat from "dateformat";
+import { Tabs } from "antd";
+
+const { TabPane } = Tabs;
+function callback(key) {
+  console.log(key);
+}
 
 function Finance() {
   const dispatch = useDispatch();
 
   const history = useNavigate();
-  const location = useLocation();
-  // const [getInvoice, setGetInvoice] = useState();
   const getInvoice = useSelector((state) => state.invoiceReducer.data);
-
-  // useEffect(() => {
-  //   const get_inovices = JSON.parse(localStorage.getItem("invoices"));
-  //   console.log(get_inovices);
-  //   setGetInvoice(get_inovices);
-  //   if (get_inovices && get_inovices.data.length > 0) {
-  //     toast("Invoice Data Fetched", {
-  //       type: "success",
-  //       position: "top-right",
-  //       autoClose: 2000,
-  //       hideProgressBar: false,
-  //       closeOnClick: true,
-  //     });
-  //   }
-  // }, []);
 
   const [singleInvoice, setSingleInvoice] = useState();
   const [successful, setSuccessful] = useState(false);

@@ -6,7 +6,7 @@ import FormInvoiceField from "../components/FormInvoiceField";
 import { Link } from "react-router-dom";
 import ImageUploading from "react-images-uploading";
 import { useDispatch, useSelector } from "react-redux";
-import { createInvoice, retrieveInvoices } from "../actions/finance";
+import { createInvoice, retrieveInvoices } from "../actions/invoice";
 import { clearMessage } from "../actions/message";
 import { toast } from "react-toastify";
 

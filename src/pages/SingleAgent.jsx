@@ -58,117 +58,13 @@ const data = {
 };
 
 function SingleAgent() {
-  const [show, setShow] = useState(null);
-  const dispatch = useDispatch();
-  const [showModal, setShowModal] = useState(false);
+  // const [show, setShow] = useState(null);
+  // const dispatch = useDispatch();
   const location = useLocation();
-  const { message } = useSelector((state) => state.message);
-  const [successful, setSuccessful] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [isSubmiited, setIsSubmitted] = useState(false);
-
-  const [selectedFile1, setSelectedFile1] = useState(null);
-  const [selectedFile2, setSelectedFile2] = useState(null);
+  // const { message } = useSelector((state) => state.message);
   const singleInfo = location.state.agent;
   console.log(singleInfo);
 
-  const [inputValue, setInputValue] = useState({
-    first_name: "",
-    last_name: "",
-    other_name: "",
-    lga: "",
-    address: "",
-    employment_date: "",
-    land_mark: "",
-    phone_number: "",
-    transaction_pin: "",
-    default_pick_location: "",
-    email: "",
-  });
-  const {
-    first_name,
-    last_name,
-    other_name,
-    lga,
-    address,
-    employment_date,
-    land_mark,
-    phone_number,
-    transaction_pin,
-    default_pick_location,
-    email,
-  } = inputValue;
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const uploadIdCard = (e) => {
-    setSelectedFile1(e.target.files[0]);
-  };
-  const uploadProfilePic = (e) => {
-    setSelectedFile2(e.target.files[0]);
-  };
-  const [allInputs, setAllInputs] = useState();
-
-  // onsubmit
-  const handleSubmit = (e) => {
-    e.preventDefault(); // stop form submission
-    const formData = new FormData();
-    Object.entries(inputValue).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    formData.append("profile_photo", selectedFile2);
-    formData.append("id_card", selectedFile1);
-
-    setAllInputs(formData);
-
-    setLoading(true);
-    setIsSubmitted(true);
-    setSuccessful(false);
-    dispatch(clearMessage()); // clear message when changing location
-  };
-
-  useEffect(() => {
-    if (isSubmiited) {
-      localStorage.removeItem("add_agents");
-      dispatch(createAgent(allInputs))
-        .then(() => {
-          setLoading(false);
-          setSuccessful(true);
-          setIsSubmitted(false);
-          setInputValue({
-            first_name: "",
-            last_name: "",
-            other_name: "",
-            lga: "",
-            address: "",
-            employment_date: "",
-            land_mark: "",
-            phone_number: "",
-            transaction_pin: "",
-            default_pick_location: "",
-            email: "",
-          });
-          setSelectedFile1(null);
-          setSelectedFile2(null);
-        })
-        .catch(() => {
-          setLoading(false);
-          setSuccessful(false);
-          setIsSubmitted(false);
-        });
-
-      localStorage.removeItem("get_agents");
-      dispatch(retrieveAgents());
-    } else {
-      setLoading(false);
-    }
-  }, [isSubmiited, dispatch, allInputs]);
 
 
 

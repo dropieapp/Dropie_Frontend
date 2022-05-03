@@ -10,11 +10,11 @@ import {
   // DELETE_PRICE
 } from "./types";
 
-import FinanceDataService from "../services/FinanceService";
+import InvoiceDataService from "../services/InvoiceService";
 
 export const createInvoice = (invoice) => async (dispatch) => {
   try {
-      const res = await FinanceDataService.createInvoice(invoice);
+      const res = await InvoiceDataService.createInvoice(invoice);
       console.log("res", res);
     dispatch({
       type: CREATE_INVOICE,
@@ -56,7 +56,7 @@ export const createInvoice = (invoice) => async (dispatch) => {
 };
 
 export const retrieveInvoices = () => (dispatch) => {
-  return FinanceDataService.getInvoices().then(
+  return InvoiceDataService.getInvoices().then(
     (res) => {
       dispatch({
         type: RETRIEVE_INVOICES,
@@ -72,7 +72,7 @@ export const retrieveInvoices = () => (dispatch) => {
 
 export const retrieveInvoice = (id) => async (dispatch) => {
   try {
-    const res = await FinanceDataService.getInvoice(id);
+    const res = await InvoiceDataService.getInvoice(id);
     dispatch({
       type: RETRIEVE_INVOICE,
       payload: res,
@@ -108,7 +108,7 @@ export const retrieveInvoice = (id) => async (dispatch) => {
 
 export const updateInvoice = (id, data) => async (dispatch) => {
   try {
-    const res = await FinanceDataService.updateInvoice(id, data);
+    const res = await InvoiceDataService.updateInvoice(id, data);
     dispatch({
       type: UPDATE_INVOICE,
       payload: res,
