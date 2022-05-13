@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { retrieveAgents } from "../actions/staffs";
 import { retrieveFleets, vehicleType } from "../actions/fleets";
 import { retrieveInvoices } from "../actions/invoice";
+import { getPrices } from "../actions/pricing";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -29,6 +30,7 @@ const Layout = ({ children }) => {
     dispatch(retrieveAgents());
     dispatch(retrieveFleets());
     dispatch(vehicleType());
+    dispatch(getPrices());
     dispatch(retrieveInvoices());
   }, []);
 

@@ -33,6 +33,8 @@ function FleetManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const [currentTableData, setCurrentTableData] = useState();
 
+  console.log(fleets);
+
   useEffect(() => {
     if (fleets) {
       const indexOfLastTableData = currentPage * PageSize;
@@ -145,6 +147,7 @@ function FleetManagement() {
     // write your logic
     // alert(JSON.stringify(item));
     setShowModal2(true);
+    setSuccessful(false);
     dispatch(clearMessage()); // clear message when changing location
     setFleetInputValue({
       type_id: item.type_id,
@@ -217,51 +220,63 @@ function FleetManagement() {
     }
   }, [isActive]);
 
-  useEffect(() => {
-    if (imageUpload) {
-      const formData = new FormData();
-      formData.append("banner", banner);
-      setFleetBannerUpdate(formData);
-      setIsFleetUpdated2(true);
-    }
-  }, [imageUpload]);
+  // useEffect(() => {
+  //   if (imageUpload) {
+  //     const formData = new FormData();
+  //     formData.append("banner", banner);
+  //     setFleetBannerUpdate(formData);
+  //     setIsFleetUpdated2(true);
+  //   }
+  // }, [imageUpload]);
 
-  useEffect(() => {
-    if (isFleetUpdated2) {
-      localStorage.removeItem("fleets_banner");
-      dispatch(updateBanner(fleetId, fleetBannerUpdate))
-        .then(() => {
-          setSuccessful(true);
-          setLoading(false);
-          setTimeout(() => {
-            dispatch(clearMessage());
-            setImageUpload(false);
-            setSuccessful(false);
-          }, 5000);
-        })
-        .catch(() => {
-          setSuccessful(false);
-          setLoading(false);
-        });
-      // localStorage.removeItem("get_fleets");
-      // dispatch(retrieveFleets());
-    }
-  }, [isFleetUpdated2]);
+  // useEffect(() => {
+  //   if (isFleetUpdated2) {
+  //     localStorage.removeItem("fleets_banner");
+  //     dispatch(updateBanner(fleetId, fleetBannerUpdate))
+  //       .then(() => {
+  //         setSuccessful(true);
+  //         setLoading(false);
+  //         setTimeout(() => {
+  //           dispatch(clearMessage());
+  //           setImageUpload(false);
+  //           setSuccessful(false);
+  //         }, 5000);
+  //       })
+  //       .catch(() => {
+  //         setSuccessful(false);
+  //         setLoading(false);
+  //       });
+  //     // localStorage.removeItem("get_fleets");
+  //     // dispatch(retrieveFleets());
+  //   }
+  // }, [isFleetUpdated2]);
 
   const updatefleet = (e) => {
     e.preventDefault(); // stop form submission
+    const formData = new FormData();
+    formData.append("type_id", type_id);
+    formData.append("name", name);
+    formData.append("location", location);  
+    formData.append("agent_id", agent_id);
+    formData.append("route", route);
+    formData.append("description", description);
+    formData.append("banner", banner);
+    formData.append("status", status);
+    formData.append("next_maintenance", nextMaintenance);
 
-    setFleetUpdateInput({
-      id: fleetId,
-      type_id: type_id,
-      name: name,
-      location: location,
-      agent_id: agent_id,
-      route: route,
-      description: description,
-      // status: status,
-      next_maintenance: nextMaintenance,
-    });
+    setFleetUpdateInput(formData);
+
+    // setFleetUpdateInput({
+    //   id: fleetId,
+    //   type_id: type_id,
+    //   name: name,
+    //   location: location,
+    //   agent_id: agent_id,
+    //   route: route,
+    //   description: description,
+    //   status: status,
+    //   next_maintenance: nextMaintenance,
+    // });
     setLoading(true);
     dispatch(clearMessage()); // clear message when changing location
     setIsFleetUpdated(true);
@@ -275,10 +290,23 @@ function FleetManagement() {
         .then(() => {
           setSuccessful(true);
           setLoading(false);
+          toast("Fleet Updated", {
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+
+          });
         })
         .catch(() => {
           setSuccessful(false);
           setLoading(false);
+          toast("Error updating fleet", {
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false
+          });
         });
       localStorage.removeItem("get_fleets");
       dispatch(retrieveFleets());
@@ -551,10 +579,7 @@ function FleetManagement() {
                           <input
                             type="file"
                             name="banner"
-                            onChange={(e) => {
-                              setImageUpload(true),
-                                setBanner(e.target.files[0]);
-                            }}
+                            onChange={(e) => setBanner(e.target.files[0])}                            
                             className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                           />
                           {imageUpload && (
@@ -675,7 +700,7 @@ function FleetManagement() {
                           </Col>
                         </Row>
                         <Row className="mt-5" gutter={16}>
-                          {/* <Col span={12} className="gutter-row">
+                          <Col span={12} className="gutter-row">
                                   <label
                                     className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
                                     htmlFor={status}
@@ -692,8 +717,9 @@ function FleetManagement() {
                                     <option value="">Select Status</option>
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
+                                    <option value="suspended">Suspended</option>
                                   </select>
-                                </Col> */}
+                                </Col>
                           <Col span={12}>
                             <InputField
                               type="text"

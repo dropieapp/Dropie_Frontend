@@ -81,6 +81,7 @@ const logout = () => {
   localStorage.removeItem("add_agent");
   localStorage.removeItem("fleet_status");
   localStorage.removeItem("invoices");
+  localStorage.removeItem("prices");
   localStorage.removeItem("update_fleets");
 };
 export default {

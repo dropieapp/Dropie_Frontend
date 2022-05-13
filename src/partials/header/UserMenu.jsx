@@ -75,7 +75,8 @@ function UserMenu() {
           >
             <img
               className="w-8 h-8 rounded-full"
-              src={UserAvatar}
+              src="https://apibeta.dropie.ng/storage/logo/2quVVN5utQDMQkvmnarOscpn6oq7Mi2D6nRodCPb.png"
+              // src={UserAvatar}
               width="32"
               height="32"
               alt="User"

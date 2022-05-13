@@ -7,6 +7,7 @@ import { company_reducer, companyOnboardReducer } from "./company_info";
 import agentReducer  from "./agents";
 import fleetReducer from "./fleets";
 import invoiceReducer from "./invoice";
+import priceReducer from "./pricing";
 
 export default combineReducers({
   deliveries,
@@ -19,6 +20,7 @@ export default combineReducers({
   agentReducer,
   fleetReducer,
   companyOnboardReducer,
+  priceReducer,
 
 
 });
