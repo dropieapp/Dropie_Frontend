@@ -2,9 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import DashboardTitle from "../components/DashboardTitle";
 import Layout from "../components/Layout";
 import { Col, Row } from "antd";
-import DashboardCard15 from "../partials/dashboard/DashboardCard15";
-import DashboardCard10 from "../partials/dashboard/DashboardCard10";
-import DashboardCard100 from "../partials/dashboard/DashboardCard100";
+import dateFormat from "dateformat";
 import { useSelector, useDispatch } from "react-redux";
 import InputField from "../components/InputField";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -63,10 +61,7 @@ function SingleAgent() {
   const location = useLocation();
   // const { message } = useSelector((state) => state.message);
   const singleInfo = location.state.agent;
-  console.log(singleInfo);
-
-
-
+  // console.log(singleInfo);
 
   return (
     <Layout>
@@ -208,102 +203,109 @@ function SingleAgent() {
             </TabPane>
             <TabPane tab="Delivery History" key="3">
               {/* <CheckboxTable /> */}
-                <div className="md:px-3 pt-4 md:pt-5 pb-5 overflow-x-auto">
-                  <table className="table-auto w-full">
-                    {/* Table header */}
-                    <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
-                      <tr>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Tracking ID</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Delivery Date</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Sender Phone Number</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Sender Address</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Reciever Address</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Delivery Type</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-left">Status</div>
-                        </th>
-                        <th className="p-2 whitespace-nowrap">
-                          <div className="text-center">...</div>
-                        </th>
-                      </tr>
-                    </thead>
-                    {/* Table body */}
-                    <tbody className="text-sm divide-y divide-gray-100">
-                      {singleInfo.delivery && singleInfo.delivery.length > 0 ? (
-                        singleInfo.delivery.map((item, index) => (
-                          <tr key={index}>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">
-                                  {item.first_name} {item.last_name}{" "}
-                                  {item.other_name}
-                                </div>
+              <div className="md:px-3 pt-4 md:pt-5 pb-5 overflow-x-auto">
+                <table className="table-auto w-full">
+                  {/* Table header */}
+                  <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+                    <tr>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Tracking ID</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Delivery Date</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Sender Phone Number</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Sender Address</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Reciever Address</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Delivery Type</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-left">Status</div>
+                      </th>
+                      <th className="p-2 whitespace-nowrap">
+                        <div className="text-center">...</div>
+                      </th>
+                    </tr>
+                  </thead>
+                  {/* Table body */}
+                  <tbody className="text-sm divide-y divide-gray-100">
+                    {singleInfo.delivery && singleInfo.delivery.length > 0 ? (
+                      singleInfo.delivery.map((item, index) => (
+                        <tr key={index}>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {item.tracking_number}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">
-                                  {item.default_pick_location}
-                                </div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {dateFormat(
+                                  item.created_at,
+                                  "dddd, mmmm dS, yyyy"
+                                )}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">
-                                  {item && item.fleet === null ? (
-                                    <p>Fleet Not Yet Assigned</p>
-                                  ) : (
-                                    <div>{item.fleet.name}</div>
-                                  )}{" "}
-                                </div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {item.pickup_contact_number}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">{item.rating}</div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {item.pickup_address}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">
-                                  {item.phone_number}
-                                </div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {item.delivery_address}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex">
-                                <div className="text-left">{item.status}</div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">
+                                {item.delivery_type}
                               </div>
-                            </td>
-                            <td className="p-2 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="text-center">....</div>
-                              </div>
-                            </td>
-                          </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td colSpan="6" className="text-center">
-                            No data found
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex">
+                              <div className="text-left">{item.status}</div>
+                            </div>
+                          </td>
+                          <td className="p-2 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="text-center">....</div>
+                            </div>
                           </td>
                         </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="6" className="text-center">
+                          No data found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </TabPane>
           </Tabs>
         </div>

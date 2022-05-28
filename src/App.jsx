@@ -54,6 +54,8 @@ function App() {
       <Routes>
         <Route exact element={<Login />} path="/login" />
         <Route exact element={<SignUp />} path="/register" />
+        {/* package Tracking */}
+        <Route path="/package-tracking/:id" element={<PackageTracking />} />
 
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/invite" element={<InviteMember />} />
@@ -65,10 +67,6 @@ function App() {
         {/* Dashboard */}
         <Route exact path="/" element={<PrivateRoute />}>
           <Route exact path="/" element={<Dashboard />} />
-        </Route>
-        {/* Package Tracking */}
-        <Route path="/package-tracking" element={<PrivateRoute />}>
-          <Route path="/package-tracking" element={<PackageTracking />} />
         </Route>
         {/* Fleet Management */}
         <Route path="/fleet-management" element={<PrivateRoute />}>

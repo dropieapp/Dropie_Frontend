@@ -9,6 +9,12 @@ export const authenticationHeader = axios.create({
     "Content-type": "application/json",
   },
 });
+export const adminHeader = axios.create({
+  baseURL: `${config}`,
+  headers: {
+    "Content-type": "application/json",
+  },
+});
 
 export const normalHeader = axios.create({
   baseURL: `${config}`,
@@ -21,7 +27,6 @@ export const normalHeader = axios.create({
 export const fileHeader = axios.create({
   baseURL: `${config}`,
   headers: {
-    "Content-type": "multipart/form-data",
     ...authHeader(),
   },
 });

@@ -1,33 +1,15 @@
 // import axios from "axios";
 // const API_URL = "https://apibeta.dropie.ng/api/";
-// import { authHeader } from "../_helpers";
+import { authHeader } from "../_helpers";
 
 // const onboard = (
-//   business_name,
-//   manager_name,
-//   email,
-//   website,
-//   phone_number,
-//   tin,
-//   logo,
-//   cac,
-//   nipost,
-//   address_proof
+// data
 // ) => {
 //   return axios
 //     .post(
 //       API_URL + "business/onboard",
 //       {
-//         business_name,
-//         manager_name,
-//         email,
-//         website,
-//         phone_number,
-//         tin,
-//         logo,
-//         cac,
-//         nipost,
-//         address_proof,
+//         data,
 //       },
 //       {
 //         headers: { ...authHeader },
@@ -40,21 +22,12 @@
 //     });
 // };
 
-// const verify_otp = (phone_number, otp) => {
-//   return axios
-//     .post(
-//       API_URL + "business/validate-otp",
-//       {
-//         phone_number,
-//         otp,
-//       },
-//       { headers: { ...authHeader } }
-//     )
-//     .then((response) => {
-//       console.log("response", response);
-//       localStorage.setItem("verify_otp", JSON.stringify(response));
-//       return response;
-//     });
+// const onboard = (data) => {
+//   return fileHeader.post("/business/onboard", data);
+// }
+
+// const verify_otp = (data) => {
+//   return normalHeader.post("/business/validate-otp", data);
 // };
 
 // const OnboardService = {
@@ -69,19 +42,26 @@
   out delivery routes and Requests
 */
 
+import axios from "axios";
 import { fileHeader, normalHeader } from "../http-common";
 
 const onboard = (data) => {
-  return fileHeader.post("/business/onboard", data);
+  return axios({
+    method: "post",
+    url: "https://apibeta.dropie.ng/api/business/onboard",
+    data,
+    headers: {
+      ...authHeader(),
+    },
+  });
 };
 const verify_otp = (data) => {
   return normalHeader.post("/business/validate-otp", data);
 };
 
-
 const OnboardService = {
   onboard,
-  verify_otp
+  verify_otp,
 };
 
 export default OnboardService;

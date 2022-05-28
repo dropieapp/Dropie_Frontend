@@ -60,3 +60,7 @@ export const CREATE_PRICE = "CREATE_PRICE";
 export const RETRIEVE_PRICES = "RETRIEVE_PRICES";
 export const UPDATE_PRICE = "UPDATE_PRICE";
 export const DELETE_PRICE = "DELETE_PRICE";
+
+
+// Package Tracking
+export const GET_PACKAGE_TRACKING = "GET_PACKAGE_TRACKING";
