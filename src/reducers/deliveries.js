@@ -5,9 +5,9 @@
 import {
   CREATE_DELIVERY,
   RETRIEVE_DELIVERIES,
-  UPDATE_DELIVERY,
-  DELETE_DELIVERY,
-  DELETE_ALL_DELIVERIES,
+  FILTERBYSTATUS,
+  FILTERBYDATE,
+  GET_RIDERS,
 } from "../actions/types";
 
 const initialState = [];
@@ -21,25 +21,13 @@ const deliveryReducer = (deliveries = initialState, action) => {
 
     case RETRIEVE_DELIVERIES:
       return payload;
-
-    case UPDATE_DELIVERY:
-      return deliveries.map((delivery) => {
-        if (delivery.id === payload.id) {
-          return {
-            ...delivery,
-            ...payload,
-          };
-        } else {
-          return delivery;
-        }
-      });
-
-    case DELETE_DELIVERY:
-      return deliveries.filter(({ id }) => id !== payload.id);
-
-    case DELETE_ALL_DELIVERIES:
-      return [];
-
+    
+    case FILTERBYSTATUS:
+      return payload;
+    
+    case FILTERBYDATE:
+      return payload;
+    
     default:
       return deliveries;
   }

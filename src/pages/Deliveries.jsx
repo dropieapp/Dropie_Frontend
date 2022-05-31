@@ -8,10 +8,12 @@ import InputField from "../components/InputField";
 // My Imports
 import { useDispatch, useSelector } from "react-redux";
 import { createDelivery } from "../actions/deliveries";
+import dateFormat from "dateformat";
 import {
   retrieveDeliveries,
-  findDeliveriesByTitle,
-  deleteAllDeliveries,
+  filterByStatus,
+  filterByDate,
+  getRiders,
 } from "../actions/deliveries";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
@@ -50,35 +52,8 @@ const data = {
 
 function Deliveries() {
   const [showModal, setShowModal] = useState(false);
+  const [show, setShow] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const trigger = useRef(null);
-  const dropdown = useRef(null);
-
-  // close on click outside
-  useEffect(() => {
-    const clickHandler = ({ target }) => {
-      if (
-        !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
-  });
-
-  // close if the esc key is pressed
-  useEffect(() => {
-    const keyHandler = ({ keyCode }) => {
-      if (!dropdownOpen || keyCode !== 27) return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
-  });
 
   const [vehiclesType, setVehiclesType] = useState([]);
 
@@ -207,6 +182,34 @@ function Deliveries() {
 
   const deliveries = useSelector((state) => state.deliveries.data);
 
+  const [viewDeilvery, setViewDeilvery] = useState({
+    id: "",
+    delivery_type: "",
+    delivery_address: "",
+    frequency: "",
+    assigned_to: "",
+    pickup_address: "",
+    package_category: "",
+    package_image: "",
+    status: "",
+    vehicle_type: "",
+    delivery_contact_name: "",
+    delivery_contact_number: "",
+    description: "",
+    valueItem: "",
+    package_weight: "",
+    noOfItems: "",
+    agentInfo: {
+      id: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone_number: "",
+      address: "",
+      work_status: "",
+      default_pick_location: "",
+    },
+  });
 
   const onChangeSearchTitle = (e) => {
     const searchTitle = e.target.value;
@@ -221,6 +224,39 @@ function Deliveries() {
   const setActiveDelivery = (delivery, index) => {
     setCurrentDelivery(delivery);
     setCurrentIndex(index);
+  };
+
+  const handleViewDelivery = (delivery) => {
+    // alert(delivery.id);
+    setShowModal(true);
+    setViewDeilvery({
+      id: delivery.id,
+      delivery_type: delivery.delivery_type,
+      delivery_address: delivery.delivery_address,
+      frequency: delivery.frequency,
+      assigned_to: delivery.assigned_to,
+      pickup_address: delivery.pickup_address,
+      package_category: delivery.package_category,
+      package_image: delivery.package_image,
+      status: delivery.status,
+      vehicle_type: delivery.vehicle_type,
+      delivery_contact_name: delivery.delivery_contact_name,
+      delivery_contact_number: delivery.delivery_contact_number,
+      description: delivery.description,
+      valueItem: delivery.value_of_item,
+      package_weight: delivery.package_weight,
+      noOfItems: delivery.number_of_item,
+      agentInfo: {
+        id: delivery.agent.id,
+        first_name: delivery.agent.first_name,
+        last_name: delivery.agent.last_name,
+        email: delivery.agent.email,
+        phone_number: delivery.agent.phone_number,
+        address: delivery.agent.address,
+        work_status: delivery.agent.work_status,
+        default_pick_location: delivery.agent.default_pick_location,
+      },
+    });
   };
 
   const removeAllDeliveries = () => {
@@ -596,24 +632,33 @@ function Deliveries() {
                   <th className="yl yd uv px-2 py-3 whitespace-nowrap">
                     <div className="font-semibold text-left">Tracking ID</div>
                   </th>
-                  <th className="yl yd px-2 py-3 whitespace-nowrap">
-                    <div className="font-semibold text-left">
-                      Reciever's Address
-                    </div>
-                  </th>
-                  <th className="yl yd px-2 py-3 whitespace-nowrap">
-                    <div className="font-semibold text-left">Delivery Type</div>
-                  </th>
-                  <th className="yl yd px-2 py-3 whitespace-nowrap">
-                    <div className="font-semibold text-left">Status</div>
-                  </th>
+
                   <th className="yl yd px-2 py-3 whitespace-nowrap">
                     <div className="font-semibold text-left">
                       Assigned Rider
                     </div>
                   </th>
+
                   <th className="yl yd px-2 py-3 whitespace-nowrap">
-                    <div className="font-semibold text-left">VEHICLE TYPE</div>
+                    <div className="font-semibold text-left">
+                      Sender Phone Number
+                    </div>
+                  </th>
+                  <th className="yl yd px-2 py-3 whitespace-nowrap">
+                    <div className="font-semibold text-left">
+                      Sender Address
+                    </div>
+                  </th>
+                  <th className="yl yd px-2 py-3 whitespace-nowrap">
+                    <div className="font-semibold text-left">
+                      Reciever Address
+                    </div>
+                  </th>
+                  <th className="yl yd px-2 py-3 whitespace-nowrap">
+                    <div className="font-semibold text-left">Status</div>
+                  </th>
+                  <th className="yl yd uv px-2 py-3 whitespace-nowrap">
+                    <div className="font-semibold text-left">Delivery Date</div>
                   </th>
 
                   <th className="yl yd px-2 py-3 whitespace-nowrap">
@@ -641,13 +686,24 @@ function Deliveries() {
                       <td className="yl yd px-2 py-3 whitespace-nowrap">
                         <div className="flex text-left">
                           <div className="font-medium text-gray-800">
-                            {delivery.delivery_address}
+                            {delivery.agent.first_name}{" "}
+                            {delivery.agent.last_name}
                           </div>
                         </div>
                       </td>
                       <td className="yl yd px-2 py-3 whitespace-nowrap">
                         <div className="text-left">
-                          {delivery.delivery_type}
+                          {delivery.delivery_contact_number}
+                        </div>
+                      </td>
+                      <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        <div className="text-left">
+                          {delivery.pickup_address}
+                        </div>
+                      </td>
+                      <td className="yl yd px-2 py-3 whitespace-nowrap">
+                        <div className="text-left">
+                          {delivery.delivery_address}
                         </div>
                       </td>
                       <td className="yl yd px-2 py-3 whitespace-nowrap">
@@ -655,172 +711,124 @@ function Deliveries() {
                           {delivery.status}
                         </div>
                       </td>
-                      <td className="yl yd px-2 py-3 whitespace-nowrap">
-                        <div className="text-left">{delivery.assigned_to}</div>
-                      </td>
+
                       <td className="yl yd px-2 py-3 whitespace-nowrap">
                         <div className="text-left ">
-                          {delivery.delivery_address}
+                          {dateFormat(
+                            delivery.created_at,
+                            "dddd, mmmm dS, yyyy"
+                          )}
                         </div>
                       </td>
                       <td className="yl yd uv px-2 py-3 whitespace-nowrap">
-                        <button
-                          ref={trigger}
-                          className="inline-flex justify-start items-start  text-slate-400 hover:text-slate-500 rounded-full"
-                          aria-haspopup="true"
-                          onClick={() => setDropdownOpen(!dropdownOpen)}
-                          aria-expanded={dropdownOpen}
-                        >
-                          <Transition
-                            className="origin-top-left mx-auto absolute top-auto min-w-44 bg-white border border-slate-200 py-1.5 rounded shadow-lg overflow-hidden mt-1"
-                            // className="bg-white border border-slate-200 origin-top-left absolute min-w-44 py-1.5"
-                            show={dropdownOpen}
-                            enter="transition ease-out duration-200 transform"
-                            enterStart="opacity-0 -translate-y-2"
-                            enterEnd="opacity-100 translate-y-0"
-                            leave="transition ease-out duration-200"
-                            leaveStart="opacity-100"
-                            leaveEnd="opacity-0"
-                          >
-                            <div
-                              ref={dropdown}
-                              onFocus={() => setDropdownOpen(true)}
-                              onBlur={() => setDropdownOpen(false)}
-                            >
-                              <ul className="pt-0.5 pb-2 px-3 mb-1">
-                                <li className="border-b py-1 border-slate-200">
-                                  <Link
-                                    className="font-medium text-sm  text-gray-400 hover:text-gray-600 flex items-center py-1 px-3"
-                                    to="/"
-                                    onClick={() =>
-                                      setDropdownOpen(!dropdownOpen)
-                                    }
+                        <div className="flex items-center">
+                          <div className="text-center">
+                            {show == index ? (
+                              <button
+                                onClick={() => setShow(null)}
+                                className="focus:outline-none pl-7"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width={20}
+                                  height={20}
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                >
+                                  <path
+                                    d="M4.16667 10.8334C4.62691 10.8334 5 10.4603 5 10.0001C5 9.53984 4.62691 9.16675 4.16667 9.16675C3.70643 9.16675 3.33334 9.53984 3.33334 10.0001C3.33334 10.4603 3.70643 10.8334 4.16667 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M10 10.8334C10.4602 10.8334 10.8333 10.4603 10.8333 10.0001C10.8333 9.53984 10.4602 9.16675 10 9.16675C9.53976 9.16675 9.16666 9.53984 9.16666 10.0001C9.16666 10.4603 9.53976 10.8334 10 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M15.8333 10.8334C16.2936 10.8334 16.6667 10.4603 16.6667 10.0001C16.6667 9.53984 16.2936 9.16675 15.8333 9.16675C15.3731 9.16675 15 9.53984 15 10.0001C15 10.4603 15.3731 10.8334 15.8333 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => setShow(index)}
+                                className="focus:outline-none pl-7"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width={20}
+                                  height={20}
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                >
+                                  <path
+                                    d="M4.16667 10.8334C4.62691 10.8334 5 10.4603 5 10.0001C5 9.53984 4.62691 9.16675 4.16667 9.16675C3.70643 9.16675 3.33334 9.53984 3.33334 10.0001C3.33334 10.4603 3.70643 10.8334 4.16667 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M10 10.8334C10.4602 10.8334 10.8333 10.4603 10.8333 10.0001C10.8333 9.53984 10.4602 9.16675 10 9.16675C9.53976 9.16675 9.16666 9.53984 9.16666 10.0001C9.16666 10.4603 9.53976 10.8334 10 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                  <path
+                                    d="M15.8333 10.8334C16.2936 10.8334 16.6667 10.4603 16.6667 10.0001C16.6667 9.53984 16.2936 9.16675 15.8333 9.16675C15.3731 9.16675 15 9.53984 15 10.0001C15 10.4603 15.3731 10.8334 15.8333 10.8334Z"
+                                    stroke="#A1A1AA"
+                                    strokeWidth="1.25"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </button>
+                            )}
+                            {show == index && (
+                              <div className="dropdown-content bg-white shadow w-52 absolute z-30 right-11 m ">
+                                <div className=" w-full hover:bg-orange-200 cursor-pointer hover:text-white">
+                                  <button
+                                    className="flex py-3 px-2"
+                                    onClick={() => {
+                                      handleViewDelivery(delivery);
+                                    }}
                                   >
                                     <svg
                                       width="20"
-                                      height="21"
-                                      viewBox="0 0 20 21"
+                                      height="20"
+                                      viewBox="0 0 20 20"
                                       fill="none"
                                       xmlns="http://www.w3.org/2000/svg"
                                     >
                                       <path
-                                        d="M16.3392 16.2188C16.3392 16.953 15.7425 17.5722 15.0084 17.5722H4.3592C3.62504 17.5722 3.02837 16.953 3.02837 16.2188V5.56967C3.02837 4.83551 3.62504 4.26051 4.3592 4.26051H10.5709V3.37384H4.3592C3.13587 3.37384 2.14087 4.34717 2.14087 5.57051V16.2188C2.14087 17.4422 3.13587 18.4588 4.3592 18.4588H15.0075C16.2309 18.4588 17.2259 17.4413 17.2259 16.2188V10.0288H16.3384V16.2188H16.3392Z"
-                                        fill="#333333"
-                                        fill-opacity="0.6"
-                                      />
-                                      <path
-                                        d="M17.3391 3.23884C16.6691 2.56801 15.4999 2.56801 14.8291 3.23884L8.87656 9.19134C8.8199 9.24801 8.77906 9.31968 8.7599 9.39718L8.13323 11.9063C8.09573 12.0572 8.1399 12.2172 8.2499 12.328C8.33406 12.4122 8.4474 12.458 8.56323 12.458C8.59906 12.458 8.6349 12.4538 8.67073 12.4447L11.1807 11.8172C11.2591 11.798 11.3299 11.7572 11.3866 11.7005L17.3391 5.74801C17.6741 5.41301 17.8591 4.96718 17.8591 4.49301C17.8591 4.01884 17.6749 3.57384 17.3391 3.23884ZM10.8466 10.9863L9.17323 11.4047L9.59156 9.73134L14.5157 4.80718L15.7707 6.06218L10.8466 10.9863ZM16.7116 5.12051L16.3982 5.43384L15.1432 4.17884L15.4566 3.86551C15.7916 3.53051 16.3766 3.53051 16.7116 3.86551C16.8791 4.03301 16.9716 4.25551 16.9716 4.49301C16.9716 4.73051 16.8791 4.95301 16.7116 5.12051Z"
-                                        fill="#333333"
-                                        fill-opacity="0.6"
-                                      />
-                                    </svg>
-                                    <span className="pl-3">Edit</span>
-                                  </Link>
-                                </li>
-                                <li className="border-b py-1 rounded-lg border-slate-200">
-                                  <Link
-                                    className="font-medium text-sm text-gray-400 bg-slate-100 hover:text-gray-600 flex items-center py-1 px-3"
-                                    to="/"
-                                    onClick={() =>
-                                      setDropdownOpen(!dropdownOpen)
-                                    }
-                                  >
-                                    <svg
-                                      width="19"
-                                      height="13"
-                                      viewBox="0 0 19 13"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        d="M9.5 9.65967C11.4675 9.65967 13.0625 8.06468 13.0625 6.09717C13.0625 4.12965 11.4675 2.53467 9.5 2.53467C7.53249 2.53467 5.9375 4.12965 5.9375 6.09717C5.9375 8.06468 7.53249 9.65967 9.5 9.65967Z"
+                                        d="M16.3392 15.6217C16.3392 16.3558 15.7425 16.975 15.0084 16.975H4.3592C3.62504 16.975 3.02837 16.3558 3.02837 15.6217V4.97251C3.02837 4.23834 3.62504 3.66334 4.3592 3.66334H10.5709V2.77667H4.3592C3.13587 2.77667 2.14087 3.75001 2.14087 4.97334V15.6217C2.14087 16.845 3.13587 17.8617 4.3592 17.8617H15.0075C16.2309 17.8617 17.2259 16.8442 17.2259 15.6217V9.43167H16.3384V15.6217H16.3392Z"
                                         fill="#333333"
                                       />
                                       <path
-                                        d="M9.5 0.159668C3.5625 0.159668 0 6.06036 0 6.06036C0 6.06036 3.5625 12.0347 9.5 12.0347C15.4375 12.0347 19 6.09717 19 6.09717C19 6.09717 15.4375 0.159668 9.5 0.159668ZM9.5 10.8472C4.30469 10.8472 1.48438 6.09717 1.48438 6.09717C1.48438 6.09717 4.30469 1.34717 9.5 1.34717C14.6953 1.34717 17.5156 6.09717 17.5156 6.09717C17.5156 6.09717 14.6953 10.8472 9.5 10.8472Z"
+                                        d="M17.3391 2.64166C16.6691 1.97083 15.4999 1.97083 14.8291 2.64166L8.87656 8.59416C8.8199 8.65083 8.77906 8.72249 8.7599 8.79999L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15083C17.6741 4.81583 17.8591 4.36999 17.8591 3.89583C17.8591 3.42166 17.6749 2.97666 17.3391 2.64166ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13416L14.5157 4.20999L15.7707 5.46499L10.8466 10.3892ZM16.7116 4.52333L16.3982 4.83666L15.1432 3.58166L15.4566 3.26833C15.7916 2.93333 16.3766 2.93333 16.7116 3.26833C16.8791 3.43583 16.9716 3.65833 16.9716 3.89583C16.9716 4.13333 16.8791 4.35583 16.7116 4.52333Z"
                                         fill="#333333"
                                       />
                                     </svg>
-                                    <span className="pl-3">View Delivery</span>
-                                  </Link>
-                                </li>
-                                <li>
-                                  <Link
-                                    className="font-medium text-sm text-gray-400 hover:text-gray-600 flex items-center py-1 px-3"
-                                    to="/"
-                                    onClick={() =>
-                                      setDropdownOpen(!dropdownOpen)
-                                    }
-                                  >
-                                    <svg
-                                      width="18"
-                                      height="19"
-                                      viewBox="0 0 18 19"
-                                      fill="none"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <g clip-path="url(#clip0_743_572)">
-                                        <path
-                                          d="M13.5 18.0347H4.5C4.05245 18.0347 3.62322 17.8569 3.30676 17.5404C2.99029 17.2239 2.8125 16.7947 2.8125 16.3472V5.65967C2.8125 5.51048 2.87176 5.36741 2.97725 5.26192C3.08274 5.15643 3.22582 5.09717 3.375 5.09717C3.52418 5.09717 3.66726 5.15643 3.77275 5.26192C3.87824 5.36741 3.9375 5.51048 3.9375 5.65967V16.3472C3.9375 16.4964 3.99676 16.6394 4.10225 16.7449C4.20774 16.8504 4.35082 16.9097 4.5 16.9097H13.5C13.6492 16.9097 13.7923 16.8504 13.8977 16.7449C14.0032 16.6394 14.0625 16.4964 14.0625 16.3472V5.65967C14.0625 5.51048 14.1218 5.36741 14.2273 5.26192C14.3327 5.15643 14.4758 5.09717 14.625 5.09717C14.7742 5.09717 14.9173 5.15643 15.0227 5.26192C15.1282 5.36741 15.1875 5.51048 15.1875 5.65967V16.3472C15.1875 16.7947 15.0097 17.2239 14.6932 17.5404C14.3768 17.8569 13.9476 18.0347 13.5 18.0347Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                        <path
-                                          d="M15.75 4.53467H2.25C2.10082 4.53467 1.95774 4.4754 1.85225 4.36992C1.74676 4.26443 1.6875 4.12135 1.6875 3.97217C1.6875 3.82298 1.74676 3.67991 1.85225 3.57442C1.95774 3.46893 2.10082 3.40967 2.25 3.40967H15.75C15.8992 3.40967 16.0423 3.46893 16.1477 3.57442C16.2532 3.67991 16.3125 3.82298 16.3125 3.97217C16.3125 4.12135 16.2532 4.26443 16.1477 4.36992C16.0423 4.4754 15.8992 4.53467 15.75 4.53467Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                        <path
-                                          d="M11.25 4.53467C11.1008 4.53467 10.9577 4.4754 10.8523 4.36992C10.7468 4.26443 10.6875 4.12135 10.6875 3.97217V2.28467H7.3125V3.97217C7.3125 4.12135 7.25324 4.26443 7.14775 4.36992C7.04226 4.4754 6.89918 4.53467 6.75 4.53467C6.60082 4.53467 6.45774 4.4754 6.35225 4.36992C6.24676 4.26443 6.1875 4.12135 6.1875 3.97217V1.72217C6.1875 1.57298 6.24676 1.42991 6.35225 1.32442C6.45774 1.21893 6.60082 1.15967 6.75 1.15967H11.25C11.3992 1.15967 11.5423 1.21893 11.6477 1.32442C11.7532 1.42991 11.8125 1.57298 11.8125 1.72217V3.97217C11.8125 4.12135 11.7532 4.26443 11.6477 4.36992C11.5423 4.4754 11.3992 4.53467 11.25 4.53467Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                        <path
-                                          d="M9 15.2222C8.85082 15.2222 8.70774 15.1629 8.60225 15.0574C8.49676 14.9519 8.4375 14.8089 8.4375 14.6597V6.78467C8.4375 6.63548 8.49676 6.49241 8.60225 6.38692C8.70774 6.28143 8.85082 6.22217 9 6.22217C9.14918 6.22217 9.29226 6.28143 9.39775 6.38692C9.50324 6.49241 9.5625 6.63548 9.5625 6.78467V14.6597C9.5625 14.8089 9.50324 14.9519 9.39775 15.0574C9.29226 15.1629 9.14918 15.2222 9 15.2222Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                        <path
-                                          d="M11.8125 14.0972C11.6633 14.0972 11.5202 14.0379 11.4148 13.9324C11.3093 13.8269 11.25 13.6839 11.25 13.5347V7.90967C11.25 7.76048 11.3093 7.61741 11.4148 7.51192C11.5202 7.40643 11.6633 7.34717 11.8125 7.34717C11.9617 7.34717 12.1048 7.40643 12.2102 7.51192C12.3157 7.61741 12.375 7.76048 12.375 7.90967V13.5347C12.375 13.6839 12.3157 13.8269 12.2102 13.9324C12.1048 14.0379 11.9617 14.0972 11.8125 14.0972Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                        <path
-                                          d="M6.1875 14.0972C6.03832 14.0972 5.89524 14.0379 5.78975 13.9324C5.68426 13.8269 5.625 13.6839 5.625 13.5347V7.90967C5.625 7.76048 5.68426 7.61741 5.78975 7.51192C5.89524 7.40643 6.03832 7.34717 6.1875 7.34717C6.33668 7.34717 6.47976 7.40643 6.58525 7.51192C6.69074 7.61741 6.75 7.76048 6.75 7.90967V13.5347C6.75 13.6839 6.69074 13.8269 6.58525 13.9324C6.47976 14.0379 6.33668 14.0972 6.1875 14.0972Z"
-                                          fill="#333333"
-                                          fill-opacity="0.6"
-                                        />
-                                      </g>
-                                      <defs>
-                                        <clipPath id="clip0_743_572">
-                                          <rect
-                                            width="18"
-                                            height="18"
-                                            fill="white"
-                                            transform="translate(0 0.597168)"
-                                          />
-                                        </clipPath>
-                                      </defs>
-                                    </svg>
-                                    <span className="pl-3">
-                                      Remove Delivery
+
+                                    <span className=" ml-2 mr-2 font-thin">
+                                      View Delivery
                                     </span>
-                                  </Link>
-                                </li>
-                              </ul>
-                            </div>
-                          </Transition>
-                          {/* </div> */}
-                          <span className="ng">Menu</span>
-                          <svg
-                            className="w-8 h-8 fill-current"
-                            viewBox="0 0 32 32"
-                          >
-                            <circle cx="16" cy="16" r="2"></circle>
-                            <circle cx="10" cy="16" r="2"></circle>
-                            <circle cx="22" cy="16" r="2"></circle>
-                          </svg>
-                        </button>
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -839,6 +847,104 @@ function Deliveries() {
           </div>
         </div>
       </div>
+      <Modal
+        title="View Delivery"
+        centered
+        visible={showModal}
+        onOk={() => setVisible(false)}
+        onCancel={() => setShowModal(false)}
+        width={1000}
+      >
+        <div class="px-8 bg-white rounded-lg">
+          <div>
+            <div className="flex justify-between mb-10">
+              <img
+                src={
+                  "https://apibeta.dropie.ng/storage/" +
+                  viewDeilvery.package_image
+                }
+                alt="Pacakeg Image"
+              />
+            </div>
+            <div className="mb-20">
+              <Row className="mt-2">
+                <Col span={12} className="text-md">
+                  Price Item:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.valueItem}
+                  </span>
+                </Col>
+                <Col span={12} className="text-md">
+                  Name of Sender:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.delivery_contact_name}
+                  </span>
+                </Col>
+                <Col span={12} className="text-md mt-2">
+                  Frequency:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.frequency}
+                  </span>
+                </Col>
+                <Col span={12} className="text-md mt-2">
+                  Sender Phone Number:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.delivery_contact_number}
+                  </span>
+                </Col>
+              </Row>
+            </div>
+            <div className="mb-20">
+              <Row className="mt-2">
+                <Col span={12} className="text-md">
+                  Delivery Type:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.delivery_type}
+                  </span>
+                </Col>
+                <Col span={12} className="text-md">
+                  Name of Reciever:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.agentInfo.first_name}{" "}
+                    {viewDeilvery.agentInfo.last_name}
+                  </span>
+                </Col>
+                <Col span={12} className="text-md mt-2">
+                  Package Weight:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.package_weight} KG
+                  </span>
+                </Col>
+                <Col span={12} className="text-md mt-2">
+                  Reciever Phone Number:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.agentInfo.phone_number}
+                  </span>
+                </Col>
+              </Row>
+            </div>
+            <div className="mb-10">
+              <Row className="mt-2">
+                <Col span={12} className="text-md">
+                  Number of Items:{" "}
+                  <span className="text-md font-bold">
+                    {viewDeilvery.noOfItems}
+                  </span>
+                </Col>
+              </Row>
+            </div>
+            <div className="mb-10 w-full py-10 px-4">
+              {/* package description */}
+              <span className="text-md font-bold">Package Description:</span>
+              <div className="mt-2">
+                <span className=" text-md  bg-yellow-200 text-gray-700 w-full">
+                  {viewDeilvery.description}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </Layout>
   );
 }

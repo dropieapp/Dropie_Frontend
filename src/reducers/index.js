@@ -6,6 +6,7 @@ import message from "./message";
 import { company_reducer, companyOnboardReducer } from "./company_info";
 import agentReducer  from "./agents";
 import fleetReducer from "./fleets";
+import vehicleReducer from "./vehicleType";
 import invoiceReducer from "./invoice";
 import priceReducer from "./pricing";
 import packageTracking from "./package_tracking";
@@ -22,7 +23,8 @@ export default combineReducers({
   fleetReducer,
   companyOnboardReducer,
   priceReducer,
-  packageTracking
+  packageTracking,
+  vehicleReducer,
 
 
 });

@@ -84,6 +84,25 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
           setSuccessful(false);
           setIsSubmitted(false);
         });
+      // using fetch method
+      // fetch("https://apibeta.dropie.ng/api/business/onboard", {
+      //   method: "POST",
+      //   headers: {
+      //     Authorization: `Bearer ${authHeader()}`,
+      //   },
+      //   body: info,
+      // })
+      //   .then((response) => {
+      //     if (response.ok) {
+      //       return response.json();
+      //     }
+      //     throw new Error("Network response was not ok.");
+      //   })
+      //   .then((response) => {
+      //     console.log(response);
+      //     setSuccessful(true);
+      //     setIsSubmitted(false);
+      //   });
     }
   }, [isSubmitted]);
 
@@ -108,20 +127,7 @@ function CompanyUpload({ pageTitle, submitButtonText, previousButton }) {
             >
               <ul className="mx-3 my-3">{message}</ul>
             </div>
-            {successful ? (
-              <Link
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.location.reload();
-                }}
-              >
-                <button
-                  className={`relative w-full flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
-                >
-                  Verify Otp
-                </button>
-              </Link>
-            ) : null}
+          
           </div>
         )}
         {!successful && (

@@ -20,6 +20,8 @@ const getAll = () => {
       return response.data;
     });
 };
+
+
 const get = (id) => {
   return axios
     .get(API_URL + "business/staff/agent/" + id, {
@@ -32,8 +34,19 @@ const get = (id) => {
     });
 };
 
+// const create = (data) => {
+//   return fileHeader.post("/business/staff/agent", data);
+// };
+
 const create = (data) => {
-  return fileHeader.post("/business/staff/agent", data);
+  return axios({
+    method: "post",
+    url: "https://apibeta.dropie.ng/api/business/staff/agent",
+    data,
+    headers: {
+      ...authHeader(),
+    },
+  });
 };
 
 

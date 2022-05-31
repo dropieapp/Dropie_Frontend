@@ -5,10 +5,10 @@
 import {
   CREATE_DELIVERY,
   RETRIEVE_DELIVERIES,
-  UPDATE_DELIVERY,
-  DELETE_DELIVERY,
-  DELETE_ALL_DELIVERIES,
-  SET_MESSAGE
+  FILTERBYSTATUS,
+  FILTERBYDATE,
+  SET_MESSAGE,
+  GET_RIDERS
 } from "./types";
 
 import DeliveryDataService from "../services/DeliveryService";
@@ -68,58 +68,40 @@ export const retrieveDeliveries = () => async (dispatch) => {
   }
 };
 
-export const updateDelivery = (id, data) => async (dispatch) => {
+export const filterByStatus = (status) => async (dispatch) => {
   try {
-    const res = await DeliveryDataService.update(id, data);
-
+    const res = await DeliveryDataService.filtersByStatus(status);
     dispatch({
-      type: UPDATE_DELIVERY,
-      payload: data,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-};
-
-export const deleteDelivery = (id) => async (dispatch) => {
-  try {
-    await DeliveryDataService.remove(id);
-
-    dispatch({
-      type: DELETE_DELIVERY,
-      payload: { id },
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const deleteAllDeliveries = () => async (dispatch) => {
-  try {
-    const res = await DeliveryDataService.removeAll();
-
-    dispatch({
-      type: DELETE_ALL_DELIVERIES,
-      payload: res.data,
-    });
-
-    return Promise.resolve(res.data);
-  } catch (err) {
-    return Promise.reject(err);
-  }
-};
-
-export const findDeliveriesByTitle = (title) => async (dispatch) => {
-  try {
-    const res = await DeliveryDataService.findByTitle(title);
-
-    dispatch({
-      type: RETRIEVE_DELIVERIES,
+      type: FILTERBYSTATUS,
       payload: res.data,
     });
   } catch (err) {
     console.log(err);
   }
-};
+}
+ 
+export const filterByDate = (date) => async (dispatch) => {
+  try {
+    const res = await DeliveryDataService.filtersByDate(date);
+    dispatch({
+      type: FILTERBYDATE,
+      payload: res.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const getRiders = (data) => async (dispatch) => {
+  try {
+    const res = await DeliveryDataService.getRiders(data);
+    dispatch({
+      type: GET_RIDERS,
+      payload: res.data,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+

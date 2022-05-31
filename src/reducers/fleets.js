@@ -8,7 +8,7 @@ import {
   UPDATE_BANNER,
   UPDATE_STATUS,
   UPDATE_FLEET,
-  VEHILCLE_TYPE,
+  // VEHILCLE_TYPE,
 } from "../actions/types";
 
 const initialState = [];
@@ -26,8 +26,8 @@ const fleetReducer = (fleets = initialState, action) => {
       // console.log("payload", payload);
       return payload;
 
-    case VEHILCLE_TYPE:
-      return payload;
+    // case VEHILCLE_TYPE:
+    //   return payload;
 
     case UPDATE_FLEET:
       return fleets.map((fleet) => {

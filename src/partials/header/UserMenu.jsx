@@ -50,6 +50,9 @@ function UserMenu() {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
+  // remove the word public the logo and set it
+  const logoUrl = user.business.logo.replace("public/", "");
+  // console.log(logoUrl);
   return (
     <div>
       {user.business_id === null ? (
@@ -73,9 +76,11 @@ function UserMenu() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
             aria-expanded={dropdownOpen}
           >
+            {/* select the last word from the text in logo  */}
+
             <img
               className="w-8 h-8 rounded-full"
-              src="https://apibeta.dropie.ng/storage/logo/2quVVN5utQDMQkvmnarOscpn6oq7Mi2D6nRodCPb.png"
+              src={"https://apibeta.dropie.ng/storage/" + logoUrl}
               // src={UserAvatar}
               width="32"
               height="32"

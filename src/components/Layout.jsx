@@ -7,6 +7,7 @@ import { retrieveAgents } from "../actions/staffs";
 import { retrieveFleets, vehicleType } from "../actions/fleets";
 import { retrieveInvoices } from "../actions/invoice";
 import { getPrices } from "../actions/pricing";
+import { retrieveDeliveries } from "../actions/deliveries";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,6 +32,7 @@ const Layout = ({ children }) => {
     dispatch(retrieveFleets());
     dispatch(vehicleType());
     dispatch(getPrices());
+    dispatch(retrieveDeliveries());
     dispatch(retrieveInvoices());
   }, []);
 

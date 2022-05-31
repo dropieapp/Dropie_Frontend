@@ -64,6 +64,7 @@ const login = (email, password) => {
       console.log("response", response);
       if (response.data.token) {
         localStorage.setItem("user", JSON.stringify(response.data));
+        localStorage.setItem("token", response.data.token);
       }
       return response.data;
     });
@@ -71,7 +72,8 @@ const login = (email, password) => {
 const logout = () => {
   localStorage.removeItem("user");
   localStorage.removeItem("onboard");
-  localStorage.removeItem("vehicle_type");
+  localStorage.removeItem("partners");
+  localStorage.removeItem("vehicleTypes");
   localStorage.removeItem("add_fleets");
   localStorage.removeItem("get_agents");
   localStorage.removeItem("get_fleets");
@@ -83,6 +85,7 @@ const logout = () => {
   localStorage.removeItem("invoices");
   localStorage.removeItem("prices");
   localStorage.removeItem("update_fleets");
+  localStorage.removeItem("token")
 };
 export default {
   register,

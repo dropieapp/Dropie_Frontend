@@ -127,7 +127,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               <ul className="mt-3">
                 <li
                   className={`px-3 py-2 rounded-sm mb-5 last:mb-0 ${
-                    pathname === "/package-tracking" && "bg-orange-200"
+                    pathname === "/company-info" && "bg-orange-200"
                   }`}
                 >
                   <NavLink
@@ -148,44 +148,6 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               </ul>
             ) : (
               <ul className="mt-3">
-                {/* Package Tracking */}
-
-                <li
-                  className={`px-3 py-2 rounded-sm mb-5 last:mb-0 ${
-                    pathname === "/package-tracking" && "bg-orange-200"
-                  }`}
-                >
-                  <NavLink
-                    exact
-                    to="/package-tracking"
-                    className={`block text-gray-500 hover:text-orange-600 truncate transition duration-150 ${
-                      pathname === "/package-tracking" && "hover:text-gray-200"
-                    }`}
-                  >
-                    <div className="flex items-center">
-                      <svg className="shrink-0 h-6 w-6" viewBox="0 0 612 612">
-                        <path
-                          className="fill-current text-gray-500"
-                          d="M482.188,83.333L184.622,223.225v89.832l-51.91-23.082v-89.832L430.278,60.252l-99.946-44.439
-                            c-13.383-5.95-35.281-5.95-48.664,0L35.557,125.243C15.95,133.961-0.05,158.649,0,180.107l0.606,256.534
-                            c0.051,21.686,16.408,46.401,36.348,54.926L282.42,596.499c12.945,5.534,34.129,5.534,47.075,0.003l245.55-104.936
-                            c19.939-8.521,36.297-33.234,36.348-54.919L612,180.107c0.051-21.458-15.949-46.146-35.557-54.864L482.188,83.333z
-                            M556.398,288.675l-14.403,6.683l-0.292,101.353c-0.013,4.429-3.925,9.701-8.727,11.773l-21.563,9.309
-                            c-4.727,2.041-8.551,0.149-8.554-4.223l-0.073-100.021l-13.951,6.472c-6.562,3.044-10.669-1.729-7.411-8.601l33.348-70.356
-                            c3.366-7.102,11.806-11.199,15.184-7.347l34.221,39.012C567.593,276.623,563.257,285.494,556.398,288.675z M415.596,451.443
-                            c0.037,4.243-3.55,9.24-8.001,11.162l-19.996,8.632c-4.385,1.893-7.972,0.029-8.022-4.16l-1.171-95.826l-12.938,6.002
-                            c-6.085,2.823-9.968-1.808-7.006-8.344l30.31-66.881c3.057-6.747,10.873-10.541,14.062-6.805l32.301,37.836
-                            c3.226,3.777-0.712,12.202-7.062,15.147l-13.338,6.188L415.596,451.443z M580.201,423.619c-0.015,2.226-2.016,4.865-4.468,5.896
-                            l-228.395,95.95c-2.131,0.896-3.884-0.043-3.915-2.096l-0.175-11.162c-0.032-2.058,1.67-4.463,3.805-5.372l228.802-97.467
-                            c2.455-1.046,4.438-0.086,4.423,2.146L580.201,423.619z"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium ml-3 lg:opacity-0 lg:sidebar-expanded:opacity-100 2xl:opacity-100 duration-200">
-                        Package Tracking
-                      </span>
-                    </div>
-                  </NavLink>
-                </li>
                 {/* Customers */}
                 <li
                   className={`px-3 py-2 rounded-sm mb-5 last:mb-0 ${

@@ -22,7 +22,7 @@ export const onboarding = (formInfo) => async (dispatch) => {
     });
     console.log("response", res);
     localStorage.setItem("onboard", JSON.stringify(res.data));
-
+    window.location.reload();
     return Promise.resolve(res.data);
   } catch (err) {
     const errors = err.response.data && err.response.data.errors;

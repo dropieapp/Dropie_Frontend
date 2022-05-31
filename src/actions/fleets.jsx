@@ -15,6 +15,7 @@ import {
 } from "./types";
 
 import FleetDataService from "../services/FleetService";
+import VehicleTypes from "../services/vehicleTypes";
 
 export const createFleets = (formFleets) => async (dispatch) => {
   try {
@@ -191,7 +192,7 @@ export const updateStatus = (id, data) => async (dispatch) => {
 };
 
 export const vehicleType = () => async (dispatch) => {
-  return FleetDataService.vehicleType().then(
+  return VehicleTypes.vehicleType().then(
     (res) => {
       dispatch({
         type: VEHILCLE_TYPE,

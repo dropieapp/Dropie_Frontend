@@ -25,9 +25,20 @@ const getAll = () => {
 //     localStorage.setItem("add_fleets", JSON.stringify(response.data));
 //     return response.data;
 //   });
+// const create = (data) => {
+//   return fileHeader.post("/business/fleet", data);
+// };
 const create = (data) => {
-  return fileHeader.post("/business/fleet", data);
+  return axios({
+    method: "post",
+    url: "https://apibeta.dropie.ng/api/business/fleet",
+    data,
+    headers: {
+      ...authHeader(),
+    },
+  });
 };
+
 
 // return axios.post(API_URL + "business/fleet", data, {
 //   headers: { "Content-Type": "multipart/form-data", ...authHeader() },
@@ -89,17 +100,6 @@ const update = (id, data) => {
   return normalHeader.post(`/business/fleet/update/${id}`, data);
 };
 
-const vehicleType = () => {
-  return axios
-    .get(API_URL + "admin/vehicle", {
-      headers: { ...authHeader() },
-    })
-    .then((response) => {
-      console.log("response", response);
-      localStorage.setItem("vehicle_type", JSON.stringify(response.data));
-      return response.data;
-    });
-};
 
 const FleetService = {
   getAll,
@@ -107,7 +107,7 @@ const FleetService = {
   fleetStatus,
   update,
   fleetBanner,
-  vehicleType,
+  // vehicleType,
 };
 
 export default FleetService;
