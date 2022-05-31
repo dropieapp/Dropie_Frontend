@@ -9,7 +9,13 @@ export const userActions = {
   register,
   upload_companyinfo,
   getAll,
+  verify_otp,
+  add_fleet,
   getAllFleet,
+  add_vehicle_type,
+  getVehicleType,
+  add_agent,
+  get_agents,
   delete: _delete,
 };
 
@@ -98,6 +104,32 @@ function getAll() {
   }
 }
 
+//add fleet
+function add_fleet(info) {
+  return (dispatch) => {
+    dispatch(request(info));
+
+    userService.add_fleet(info).then(
+      (user) => dispatch(success(user)),
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.ADD_FLEET_REQUEST };
+  }
+  function success(add_fleet) {
+    return { type: userConstants.ADD_FLEET_SUCCESS, add_fleet };
+  }
+  function failure(error) {
+    return { type: userConstants.ADD_FLEET_FAILURE, error };
+  }
+}
+
+// get all fleet
 function getAllFleet() {
   return (dispatch) => {
     dispatch(request());
@@ -160,5 +192,125 @@ function upload_companyinfo(info) {
   }
   function failure(error) {
     return { type: userConstants.COMPANY_FAILURE, error };
+  }
+}
+// Validate OTP
+function verify_otp(info) {
+  return (dispatch) => {
+    dispatch(request(info));
+
+    userService.verify_otp(info).then(
+      (user) => dispatch(success(user)),
+      (error) => dispatch(failure(error.toString()))
+    );
+  };
+
+  function request() {
+    return { type: userConstants.COMPANY_REQUEST };
+  }
+  function success(verify_otp) {
+    return { type: userConstants.COMPANY_SUCCESS, verify_otp };
+  }
+  function failure(error) {
+    return { type: userConstants.COMPANY_FAILURE, error };
+  }
+}
+
+// Add agents
+function add_agent(info) {
+  return (dispatch) => {
+    dispatch(request(info));
+
+    userService.add_agent(info).then(
+      (user) => dispatch(success(user)),
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(failure_update(error.toString()));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.ADD_AGENT_REQUEST };
+  }
+  function success(add_agent) {
+    return { type: userConstants.ADD_AGENT_SUCCESS, add_agent };
+  }
+  function failure(error) {
+    return { type: userConstants.ADD_AGENT_FAILURE, error };
+  }
+  function failure_update(error) {
+    return { type: userConstants.ADD_AGENT_FAILURE_UPDATE, error };
+  }
+}
+// Get agents
+function get_agents() {
+  return (dispatch) => {
+    dispatch(request());
+
+    userService.get_agents().then(
+      (user) => dispatch(success(user)),
+      (error) => dispatch(failure(error.toString()))
+    );
+  };
+
+  function request() {
+    return { type: userConstants.GETALLAGENTS_REQUEST };
+  }
+  function success(get_agents) {
+    return { type: userConstants.GETALLAGENTS_SUCCESS, get_agents };
+  }
+  function failure(error) {
+    return { type: userConstants.GETALLAGENTS_FAILURE, error };
+  }
+}
+
+// Add vehicle type
+function add_vehicle_type(info) {
+  return (dispatch) => {
+    dispatch(request(info));
+
+    userService.add_vehicle_type(info).then(
+      (user) => dispatch(success(user)),
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.ADD_VEHICLE_TYPE_REQUEST };
+  }
+  function success(add_vehicle_type) {
+    return { type: userConstants.ADD_VEHICLE_TYPE_SUCCESS, add_vehicle_type };
+  }
+  function failure(error) {
+    return { type: userConstants.ADD_VEHICLE_TYPE_FAILURE, error };
+  }
+}
+// get vehicle type
+function getVehicleType() {
+  return (dispatch) => {
+    dispatch(request());
+
+    userService.getVehicleType().then(
+      (user) => dispatch(success(user)),
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertActions.error(error));
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.GET_VEHICLE_TYPE_REQUEST };
+  }
+  function success(get_vehicle_type) {
+    return { type: userConstants.GET_VEHICLE_TYPE_SUCCESS, get_vehicle_type };
+  }
+  function failure(error) {
+    return { type: userConstants.GET_VEHICLE_TYPE_FAILURE, error };
   }
 }

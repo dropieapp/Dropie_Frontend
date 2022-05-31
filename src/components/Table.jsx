@@ -1,211 +1,188 @@
-import React from "react";
+import React, { useState } from "react";
 
-class Table extends React.Component {
-  constructor(props) {
-    super(props);
+const Table = () => {
+  const [rows, setRows] = useState([{}]);
 
-    this.state = {
-      message: "",
-      items: [],
-    };
-  }
+  const addRow = () => {
+    setRows([...rows, {}]);
+  };
 
-  updateMessage(event) {
-    this.setState({
-      message: event.target.value,
-    });
-  }
+  const handleChange = (i, event) => {
+    const newRows = [...rows];
+    newRows[i][event.target.name] = event.target.value;
+    setRows(newRows);
+  };
 
-  handleClick() {
-    var items = this.state.items;
+  const handleDelete = (i) => {
+    const newRows = [...rows];
+    newRows.splice(i, 1);
+    setRows(newRows);
+  };
 
-    console.log(items);
-    items.push(this.state.message);
+  // console.log(rows);
 
-    this.setState({
-      items: items,
-      message: "",
-    });
-  }
+  return (
+    <div>
+      <div className="container">
+        <div className="col-md-12 column">
+          <table className="table table-bordered table-hover" id="tab_logic">
+            <thead>
+              <tr>
+                <th className="text-center"> # </th>
+                <th className="text-center"> Name </th>
+                <th className="text-center"> Mobile </th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr key={i}>
+                  <td>{i + 1}</td>
+                  <td>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Name"
+                      value={row.name}
+                      onChange={(e) => handleChange(i, e)}
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      name="mobile"
+                      placeholder="Mobile"
+                      value={row.mobile}
+                      onChange={(e) => handleChange(i, e)}
+                    />
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(i)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
 
-  handleItemChanged(i, event) {
-    var items = this.state.items;
-    items[i] = event.target.value;
+            <tfoot>
+              <tr>
+                <td colSpan="4">
+                  <button className="btn btn-primary" onClick={addRow}>
+                    Add Row
+                  </button>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-    this.setState({
-      items: items,
-    });
-  }
-
-  handleItemDeleted(i) {
-    var items = this.state.items;
-
-    items.splice(i, 1);
-
-    this.setState({
-      items: items,
-    });
-  }
-
-  renderRows() {
-    var context = this;
-
-    return this.state.items.map(function (o, i) {
-      return (
-        <tr key={"item-" + i}>
-          <td className="yl yd px-2 py-3 whitespace-nowrap">
-            <div className="text-left bg-gray-200 p-2 rounded-lg">
-              <p>Item Name</p>
-              <p className="text-gray-400">
-                <input
-                  className="border-transparent focus:border-transparent focus:ring-0"
-                  type="text"
-                  value={o}
-                  onChange={context.handleItemChanged.bind(context, i)}
-                  placeholder="Enter Name of the Product"
-                />
-              </p>
-            </div>
-          </td>
-          <td className="yl yd px-2 py-3 whitespace-nowrap">
-            <div className="font-medium text-center  bg-gray-200 p-2  rounded-lg">
-              <p>Price</p>
-              <p className="text-gray-400"></p>
-              <input
-                className="w-40 border-transparent focus:border-transparent focus:ring-0"
-                type="text"
-                value={o}
-                placeholder="₦20,000"
-                onChange={context.handleItemChanged.bind(context, i)}
-              />
-            </div>
-          </td>
-          <td className="yl yd px-1 py-3 whitespace-nowrap">
-            <div className="font-medium text-center  bg-gray-200 p-2  rounded-lg">
-              <p>Qty</p>
-              <p className="text-gray-400"></p>
-              <input
-                className="w-40 border-transparent bg-gray-300 px-3 focus:border-transparent focus:ring-0"
-                type="text"
-                value={o}
-                placeholder="1"
-                onChange={context.handleItemChanged.bind(context, i)}
-              />
-            </div>
-          </td>
-          <td className="yl yd px-2 py-3 whitespace-nowrap">
-            <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
-              <p className="text-gray-400">₦20,000</p>
-            </div>
-          </td>
-          <td>
-            <button
-              className="btn bg-red-500 text-white p-2"
-              onClick={context.handleItemDeleted.bind(context, i)}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  }
-
-  render() {
-    return (
-      <table className="table-auto w-full rounded-lg">
-        <thead className="vj font-semibold uppercase table_header text-white border-t-2 border-b-2 border-gray-100">
-          <tr>
-            <th className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-semibold text-left">Item Description</div>
-            </th>
-            <th className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-semibold text-center">Price</div>
-            </th>
-            <th className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-semibold text-center">Qty</div>
-            </th>
-            <th className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-semibold text-left">Amount</div>
-            </th>
-          </tr>
-        </thead>
-        <tbody className="text-md t_ lh">
-          <tr>
-            <td className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="text-left bg-gray-200 p-2 rounded-lg">
-                <p>Item Name</p>
-                <p className="text-gray-400">Enter Name of the Product</p>
-              </div>
-            </td>
-            <td className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-medium text-center bg-gray-200 p-2  rounded-lg">
-                <p>Price</p>
-                <p className="text-gray-400">₦20,000</p>
-              </div>
-            </td>
-            <td className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-medium bg-gray-200 p-2 rounded-lg text-center ">
-                <p>Qty</p>
-                <p className="text-gray-400">1</p>
-              </div>
-            </td>
-            <td className="yl yd px-2 py-3 whitespace-nowrap">
-              <div className="font-medium bg-gray-200 px-2 py-4 rounded-lg text-center ">
-                <p className="text-gray-400">₦20,000</p>
-              </div>
-            </td>
-          </tr>
-          {this.renderRows()}
-        </tbody>
-
-        <button
-          className="btn my-6 text-white bg-blue-500"
-          onClick={this.handleClick.bind(this)}
-        >
-          Add Line
-        </button>
-
-        <tfoot>
-          <tr class="flex text-right items-end justify-end text-black font-semibold">
-            <td colspan="5" className="yl yd px-8 py-3 whitespace-nowrap">
-              Sub Total
-            </td>
-            <td className=" px-8 py-3">₦20,000</td>
-          </tr>
-          <tr class="flex text-right items-end justify-end text-black font-semibold">
-            <td className="yl yd px-8 py-3 whitespace-nowrap">
-              Sales Tax (10%)
-            </td>
-            <td className=" px-8 py-3">₦20,000</td>
-          </tr>
-          <hr />
-          <tr class="flex text-right items-end justify-end text-black font-semibold">
-            <td className="yl yd px-8 py-3 whitespace-nowrap">Amount Due</td>
-            <td className=" px-8 py-3">₦20,000</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      // <div>
-      //   <table className="">
-      //     <thead>
-      //       <tr>
-      //         <th>Item</th>
-      //         <th>Actions</th>
-      //       </tr>
-      //     </thead>
-      //     <tbody>{this.renderRows()}</tbody>
-      //   </table>
-      // <hr />
-      // <input
-      //   type="text"
-      //   value={this.state.message}
-      //   onChange={this.updateMessage.bind(this)}
-      // />
-      // <button onClick={this.handleClick.bind(this)}>Add Item</button>
-      // </div>
-    );
-  }
-}
+// class Table extends React.Component {
+//   state = {
+//     rows: [{}],
+//   };
+//   handleChange = (idx) => (e) => {
+//     const { name, value } = e.target;
+//     const rows = [...this.state.rows];
+//     rows[idx] = {
+//       [name]: value,
+//     };
+//     this.setState({
+//       rows,
+//     });
+//   };
+//   handleAddRow = () => {
+//     const item = {
+//       name: "",
+//       mobile: "",
+//     };
+//     this.setState({
+//       rows: [...this.state.rows, item],
+//     });
+//   };
+//   handleRemoveRow = () => {
+//     this.setState({
+//       rows: this.state.rows.slice(0, -1),
+//     });
+//   };
+//   handleRemoveSpecificRow = (idx) => () => {
+//     const rows = [...this.state.rows];
+//     rows.splice(idx, 1);
+//     this.setState({ rows });
+//   };
+//   render() {
+//     return (
+//       <div>
+//         <div className="container">
+//           <div className="row clearfix">
+//             <div className="col-md-12 column">
+//               <table
+//                 className="table table-bordered table-hover"
+//                 id="tab_logic"
+//               >
+//                 <thead>
+//                   <tr>
+//                     <th className="text-center"> # </th>
+//                     <th className="text-center"> Name </th>
+//                     <th className="text-center"> Mobile </th>
+//                     <th />
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {this.state.rows.map((item, idx) => (
+//                     <tr id="addr0" key={idx}>
+//                       <td>{idx}</td>
+//                       <td>
+//                         <input
+//                           type="text"
+//                           name="name"
+//                           value={this.state.rows[idx].name}
+//                           onChange={this.handleChange(idx)}
+//                           className="form-control"
+//                         />
+//                       </td>
+//                       <td>
+//                         <input
+//                           type="text"
+//                           name="mobile"
+//                           value={this.state.rows[idx].mobile}
+//                           onChange={this.handleChange(idx)}
+//                           className="form-control"
+//                         />
+//                       </td>
+//                       <td>
+//                         <button
+//                           className="btn btn-outline-danger btn-sm"
+//                           onClick={this.handleRemoveSpecificRow(idx)}
+//                         >
+//                           Remove
+//                         </button>
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//               <button onClick={this.handleAddRow} className="btn btn-primary">
+//                 Add Row
+//               </button>
+//               <button
+//                 onClick={this.handleRemoveRow}
+//                 className="btn btn-danger float-right"
+//               >
+//                 Delete Last Row
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+// }
 export default Table;

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import { message } from "antd";
 import DashboardTitle from "../components/DashboardTitle";
 import FormField from "../components/FormField";
@@ -7,25 +7,7 @@ import Logo from "../assets/icons/dropexpress-logo.svg";
 import FormInvoiceSelectField from "../components/FormInvoiceSelectField";
 import FormInvoiceField from "../components/FormInvoiceField";
 import Table from "../components/Table";
-
-function getBase64(img, callback) {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
-
-function beforeUpload(fgvile) {
-  gnv;
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  return isJpgOrPng && isLt2M;
-}
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Invoice = (props) => {
   const arrayOfData = [
@@ -55,17 +37,41 @@ const Invoice = (props) => {
       span: 50,
     },
   };
-  const handleChange = useCallback((info) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
 
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, (imageUrl) => {});
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [data, setData] = useState();
+  const [orders, setOrders] = useState();
+
+  const states = JSON.parse(location.state);
+  useEffect(() => {
+    if (typeof states !== "undefined" && typeof states === "object") {
+      setData(states);
+      setOrders(states.orders);
     }
-  });
+  }, []);
+
+  // console.log(states);
+
+  console.log(data)
+
+  // const data = JSON.parse(location.state);
+  // console.log(data.orders);
+  // // console.log(JSON.parse(data.orders));
+  // const orders = JSON.parse(data.orders);
+  // console.log(orders);
+
+  // const history = useNavigate();
+  // console.log("history", history);
+  // useEffect(() => {
+  //   if (history.location.state && history.location.state.transaction) {
+  //     let state = { ...history.location.state };
+  //     delete state.transaction;
+  //     history.replace({ ...history.location, state });
+  //   }
+  //   // reload and pass empty object to clear state
+  //   // we can also use replace option: ..., {replace: true}
+  // }, []);
   // const { loading, imageUrl } = this.state;
 
   return (
@@ -73,26 +79,28 @@ const Invoice = (props) => {
       <div className="sm:flex sm:justify-between sm:items-center flex justify-between items-center mb-6">
         <DashboardTitle title="Invoice" />
         <div className="grid grid-flow-col sm:auto-cols-max justify-start sm:justify-end gap-2">
-          <button
-            className="btn hover:text-yellow-500 text-gray-600 border h-8 px-4 text-sm"
-            style={{ borderColor: "rgb(249, 123, 4, 0.2" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <Link to="/finance">
+            <button
+              className="btn hover:text-yellow-500 text-gray-600 border h-8 px-4 text-sm"
+              style={{ borderColor: "rgb(249, 123, 4, 0.2" }}
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 17l-5-5m0 0l5-5m-5 5h12"
-              />
-            </svg>
-            <span className="hidden xs:block ml-2 mr-2">Back</span>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 17l-5-5m0 0l5-5m-5 5h12"
+                />
+              </svg>
+              <span className="hidden xs:block ml-2 mr-2">Back</span>
+            </button>
+          </Link>
         </div>
       </div>
 
@@ -127,16 +135,56 @@ const Invoice = (props) => {
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal py-3">From</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Amakiri Emeka
+                 Name: {states.from && JSON.stringify(JSON.parse(states.from).name) ?
+
+                    (
+
+                      JSON.stringify(JSON.parse(states.from).name).replace(
+                        /['"]+/g,
+                        ""
+                      )
+                    ) : (
+                      <p>No Name </p>
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Ikeja Flat 33
+                  Address: {states.from && JSON.stringify(JSON.parse(states.from).address)
+
+                    ? (
+
+
+                      JSON.stringify(JSON.parse(states.from).address).replace(
+                        /['"]+/g,
+                        ""
+                      )
+                    ) : (
+                      <p>No Email available yet </p>
+
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  09032411710
+                  Phone Number: {states.from && JSON.stringify(JSON.parse(states.from).phone_number) 
+                  ? (
+                    JSON.stringify(JSON.parse(states.from).phone_number).replace(
+                      /['"]+/g,
+                      ""
+                      
+                                        )) : (
+                                          <p> No phone number available yet </p>
+                                        
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  www.Dropie.com
+                  Website: {states.from && JSON.stringify(JSON.parse(states.from).website)
+                    ? (
+                      JSON.stringify(JSON.parse(states.from).website)
+                      .replace(
+                        /['"]+/g,
+                        ""
+                      )) : (
+                      <p>No website added</p>
+                        
+                        )}
                 </p>
               </div>
               <div className="p-5 lg:col-span-2 col-span-4 lg:my-10 -my-10 mx-auto">
@@ -144,65 +192,80 @@ const Invoice = (props) => {
                   class="mx-auto h-16 w-full my-10"
                   src={Logo}
                   alt="Workflow"
-                />
+                  />
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
                 <p className="text-xl font-nunito font-normal mb-4">To</p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  John Maxwell
+                  Name:
+                  {states.to && JSON.stringify(JSON.parse(states.to).name)
+                    ? (
+                      JSON.stringify(JSON.parse(states.to).name)
+                      .replace(
+                        /['"]+/g,
+                        ""
+                        )
+                    ) : (
+                      <p>No name was added</p>
+                    )}
                 </p>
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  Yaba Estate 24
+                 Address: {states.to && JSON.stringify(JSON.parse(states.to).address).replace(
+                    /['"]+/g,
+                    ""
+                    )}
                 </p>
+              
                 <p className="text-md font-nunito py-3 text-gray-400">
-                  09032411710
-                </p>
-                <p className="text-md font-nunito py-3 text-gray-400">
-                  john99@gmail.com
+                  Phone Number: {states.to && JSON.stringify(JSON.parse(states.to).phone_number).replace(
+                    /['"]+/g,
+                    ""
+                    )}
                 </p>
               </div>
               <div className="lg:col-span-2 col-span-4 p-5">
                 <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Invoice Number</span>
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Invoice Number: </span>
                   </div>
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      INV 10
+                      {data && data.invoice_number}
+                    </p>
+                  </div>
+                </div>
+              
+                <div class="text-gray-700 md:flex md:items-center mb-4">
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Pickup Location: </span>
+                  </div>
+
+                  <div class="md:w-2/3 md:flex-grow">
+                    <p className="text-md font-nunito py-3 text-gray-400">
+                      {data && data.pickup_location}
+                    </p>
+                  </div>
+                </div>
+                <div class="text-gray-700 md:flex md:items-center mb-4">
+                  <div class="mb-1 md:mb-0 mr-2 md:w-1/3">
+                    <span>Dropup Location: </span>
+                  </div>
+
+                  <div class="md:w-2/3 md:flex-grow">
+                    <p className="text-md font-nunito py-3 text-gray-400">
+                      {data && data.dropoff_location}
                     </p>
                   </div>
                 </div>
                 <div class="text-gray-700 md:flex md:items-center mb-4">
                   <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Pickup Location</span>
+                    <span>Payment Method: </span>
                   </div>
 
                   <div class="md:w-2/3 md:flex-grow">
                     <p className="text-md font-nunito py-3 text-gray-400">
-                      Yaba Estate 10
-                    </p>
-                  </div>
-                </div>
-                <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Dropup Location</span>
-                  </div>
-
-                  <div class="md:w-2/3 md:flex-grow">
-                    <p className="text-md font-nunito py-3 text-gray-400">
-                      Ikeja Head office
-                    </p>
-                  </div>
-                </div>
-                <div class="text-gray-700 md:flex md:items-center mb-4">
-                  <div class="mb-1 md:mb-0 md:w-1/3">
-                    <span>Payment Method</span>
-                  </div>
-
-                  <div class="md:w-2/3 md:flex-grow">
-                    <p className="text-md font-nunito py-3 text-gray-400">
-                      Cash
+                      {data && data.payment_method}
                     </p>
                   </div>
                 </div>
@@ -215,7 +278,68 @@ const Invoice = (props) => {
           >
             <div className="grid grid-cols-4 gap-6">
               <div className="lg:col-span-4 col-span-4 p-5">
-                <Table />
+                <div className="md:px-10 pt-4 md:pt-7 pb-5 overflow-x-auto">
+                  <table className="table-auto w-full rounded-lg">
+                    <thead className="vj font-semibold uppercase table_header text-white border-t-2 border-b-2 border-gray-100">
+                      <tr>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">
+                            Item Description
+                          </div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-center">Price</div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-center">Qty</div>
+                        </th>
+                        <th className="yl yd px-2 py-3 whitespace-nowrap">
+                          <div className="font-semibold text-left">Amount</div>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-md t_ lh">
+                      {orders && orders.length > 0 ? (
+                    
+                        JSON.parse(orders).map((order, index) => (
+                          <tr key={index}>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-left">
+                                {order.name}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-center">
+                                {order.price}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-center">
+                                {order.qty}
+                              </div>
+                            </td>
+                            <td className="px-2 py-3 whitespace-nowrap">
+                              <div className="font-semibold text-left">
+                                <p className="text-gray-400">
+                                  ₦{" "}
+                                  {isNaN(order.price * order.qty)
+                                    ? 0
+                                    : order.price * order.qty}
+                                </p>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                        ): (
+                          <p>No Orders available</p>
+                      )}
+                      {/* {data.orders} */}
+                      {/* {this.renderRows()} */}
+                    </tbody>
+
+
+                  </table>
+                </div>
               </div>
             </div>
           </div>

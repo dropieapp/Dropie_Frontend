@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import Header from "../partials/Header";
-import Banner from "../partials/Banner";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { retrieveAgents } from "../actions/staffs";
+import { retrieveFleets, vehicleType } from "../actions/fleets";
+import { retrieveInvoices } from "../actions/invoice";
+import { getPrices } from "../actions/pricing";
+import { retrieveDeliveries } from "../actions/deliveries";
 
 const Layout = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -12,13 +17,23 @@ const Layout = ({ children }) => {
 
   useEffect(() => {
     let user = JSON.parse(localStorage.getItem("user"));
-    let onboard = JSON.parse(localStorage.getItem("onboard"));
+    // let onboard = JSON.parse(localStorage.getItem("onboard"));
     setUserCode(user.data);
-    if (!localStorage.getItem("onboard")) {
-      return;
-    } else {
-      setUserVerify(onboard.next);
-    }
+    // if (!localStorage.getItem("onboard")) {
+    //   return;
+    // } else {
+    //   setUserVerify(onboard.next);
+    // }
+  }, []);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(retrieveAgents());
+    dispatch(retrieveFleets());
+    dispatch(vehicleType());
+    dispatch(getPrices());
+    dispatch(retrieveDeliveries());
+    dispatch(retrieveInvoices());
   }, []);
 
   return (
@@ -39,8 +54,10 @@ const Layout = ({ children }) => {
               </p>
             ) : null}
             <div
-              className={
-                "px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto" +
+              className=
+              {
+              "px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto" 
+                +
                 (userCode.business_id === null ? "bg-gray-200 opacity-10" : "")
               }
             >

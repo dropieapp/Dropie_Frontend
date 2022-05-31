@@ -5,12 +5,35 @@ import DashboardCard08 from "../partials/dashboard/DashboardCard08";
 import Layout from "../components/Layout";
 import DashboardTitle from "../components/DashboardTitle";
 import DeliveryRequestTable from "../components/DeliveryRequestTable";
-// import { useSelector, useDispatch } from "react-redux";
 // import { userSelector, clearState } from "../features/User/UserSlice";
 // import Loader from "../assets/gif/loading.gif";
 // import { useHistory } from "react-router-dom";
 
 function Dashboard() {
+  // recent deliveries
+  const [deliveries, setDeliveries] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => { 
+    const fetchDeliveries = async () => {
+      const response = await fetch(
+        "https://apibeta.dropie.ng/api/business/delivery/filter/date/today",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const json = await response.json();
+      setDeliveries(json);
+      setIsLoading(false);
+    };
+    fetchDeliveries();
+  }, []);
+  // console.log(deliveries);
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -93,7 +116,16 @@ function Dashboard() {
           {/* Pie Chart Shipment & Delivery */}
           <DashboardCard06 />
           {/* Card (top 5) */}
-          <DeliveryRequestTable />
+          {deliveries && (
+            <DeliveryRequestTable
+            title="Recent Deliveries"
+              deliveries={deliveries}
+              isLoading={isLoading}
+            />
+          )
+
+          }
+
         </div>
       </div>
     </Layout>

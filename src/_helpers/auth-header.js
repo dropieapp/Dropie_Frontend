@@ -1,10 +1,11 @@
-export function authHeader() {
-    // return authorization header with jwt token
-    let user = JSON.parse(localStorage.getItem('user'));
+export const authHeader = () => {
+ const token = localStorage.getItem("token"); // Replace token with the right key
+ if (!token) {
+   // handle no token case
+   return;
+ }
+  return {
+    Authorization: `Bearer ${token}`,
 
-    if (user && user.token) {
-        return { 'Authorization': 'Bearer ' + user.token };
-    } else {
-        return {};
-    }
-}
+  };  // return the headers to the get request
+};

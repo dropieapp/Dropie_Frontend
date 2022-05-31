@@ -1,7 +1,7 @@
 // export default CompanyInfo;
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { formStage, formInfo } from "../_reducers/compnay_info.reducer";
+import { formStage, formInfo } from "../reducers/company_info";
 
 function CompanyInfo({ pageTitle, submitButtonText, previousButton }) {
   // redux
@@ -104,7 +104,6 @@ function CompanyInfo({ pageTitle, submitButtonText, previousButton }) {
       );
     }
   }, [formData, isSubmitted, dispatch, errors]);
-  // console.log(errors, formData)
 
   return (
     <>

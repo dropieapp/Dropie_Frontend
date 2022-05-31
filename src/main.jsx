@@ -2,15 +2,29 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
 import { Provider } from "react-redux";
-import toast, { Toaster } from "react-hot-toast";
-import { store } from "./_helpers";
+import { BrowserRouter as Router } from "react-router-dom";
+// import { store } from "./_helpers";
+import store from "./store";
+
+import reportWebVitals from "./reportWebVitals";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
     <Provider store={store}>
-      <App />
-      <Toaster />
+      <Router>
+        <App />
+        {/* <Toaster /> */}
+        <ToastContainer />
+      </Router>
     </Provider>
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById("root")
 );
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();

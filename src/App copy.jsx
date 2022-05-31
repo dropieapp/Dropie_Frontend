@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-} from 'react-router-dom';
+import React, { useEffect, Fragment } from "react";
+// import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { history } from "./_helpers";
+import { PrivateRoute } from "./_components";
+
 import Login from "./pages/SignIn";
-import Signup from "./pages/Signup";
+import SignUp from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 
 import "./css/style.scss";
@@ -26,20 +27,34 @@ import Deliveries from "./pages/Deliveries";
 import CreateInvoice from "./pages/CreateInvoice";
 import Invoice from "./pages/Invoice";
 import SendInvoice from "./pages/SendInvoice";
-import SignUp from './pages/Signup';
+import { clearMessage } from "./actions/message";
 
 function App() {
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   history.listen((location, action) => {
+  //     // clear alert on location change
+  //     dispatch(alertActions.clear());
+  //   });
+  // }, []);
+  useEffect(() => {
+    history.listen((location) => {
+      dispatch(clearMessage()); // clear message when changing location
+    });
+  }, [dispatch]);
   return (
-    <div className="App">
-      <Router>
+      {/* <Router history={history}>
         <Switch>
+        
           <Route exact component={Login} path="/login" />
-          <Route exact component={Signup} path="/register" />
+          <Route exact component={SignUp} path="/register" />
           <Route path="/reset-password" component={ResetPassword} />
           <Route path="/invite" component={InviteMember} />
           <Route path="/verify" component={VerifyNumber} />
           <Route path="/change-password" component={ChangePassword} />
-          <Route path="/company-info" component={UploadCompanyInfo} />
+          <PrivateRoute path="/company-info" component={UploadCompanyInfo} />
+          {/* <Route exact path={["/", "/home"]} component={Dashboard} /> 
           <PrivateRoute exact component={Dashboard} path="/" />
           <PrivateRoute
             exact
@@ -64,51 +79,75 @@ function App() {
             component={CreateInvoice}
             path="/finance/create-invoice"
           />
-          <PrivateRoute
+          {/* <PrivateRoute
             exact
             component={SendInvoice}
             path="/finance/send-invoice"
-          />
+          /> *
           <PrivateRoute exact component={Invoice} path="/finance/invoice" />
           <Route path="*" component={NotFound} />
         </Switch>
-      </Router>
-    </div>
-  );
-}
-
-export default App;
-
-
-
-class App extends Component {
-  render() {
-    return (
-      <BrowserRouter>
+      </Router> */}
+      <Fragment>
         <Routes>
-          <Route path='/' exact element={<Login />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<SignUp />} />
+          <Route exact element={<Login />} path="/login" />
+          <Route exact element={<SignUp />} path="/register" />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/invite" element={<InviteMember />} />
+          <Route path="/verify" element={<VerifyNumber />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <PrivateRoute path="/company-info" element={<UploadCompanyInfo />} />
+          {/* Dashboard */}
+          <Route exact path="/" element={<PrivateRoute />}>
+            <Route exact path="/" element={<Dashboard />} />
+          </Route>
+          {/* Package Tracking */}
+          <Route path="/package-tracking" element={<PrivateRoute />}>
+            <Route path="/package-tracking" element={<PackageTracking />} />
+          </Route>
+          {/* Fleet Management */}
+          <Route path="/fleet-management" element={<PrivateRoute />}>
+            <Route path="/fleet-management" element={<FleetManagement />} />
+          </Route>
+          {/* Vehicle Info */}
           <Route
-          	path='/dashboard'
-          	element={
-          		<PrivateRoute>
-          			<DashboardPage />
-          		</PrivateRoute>
-          	}
-          />
-          <Route
-          	path='/dashboard'
-          	element={
-          		<PrivateRoute>
-          			<DashboardPage />
-          		</PrivateRoute>
-          	}
-          />
+            path="/fleet-management/vehicle-info"
+            element={<PrivateRoute />}
+          >
+            <Route
+              path="/fleet-management/vehicle-info"
+              element={<VehicleInfo />}
+            />
+          </Route>
+
+          {/* Staff */}
+          <Route path="/staffs" element={<PrivateRoute />}>
+            <Route path="/staffs" element={<Staff />} />
+          </Route>
+          {/* Finance */}
+          <Route path="/finance" element={<PrivateRoute />}>
+            <Route path="/finance" element={<Finance />} />
+          </Route>
+          {/* Deliveries */}
+          <Route path="/deliveries" element={<PrivateRoute />}>
+            <Route path="/deliveries" element={<Deliveries />} />
+          </Route>
+          {/* Create Invoice */}
+          <Route path="/finance/create-invoice" element={<PrivateRoute />}>
+            <Route path="/finance/create-invoice" element={<CreateInvoice />} />
+          </Route>
+          {/* Send Invoice */}
+          <Route path="/finance/send-invoice" element={<PrivateRoute />}>
+            <Route path="/finance/send-invoice" element={<SendInvoice />} />
+          </Route>
+          {/* Invoice */}
+          <Route path="/finance/invoice" element={<PrivateRoute />}>
+            <Route path="/finance/invoice" element={<Invoice />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    );
-  }
+      </Fragment>
+  );
 }
 
 export default App;

@@ -10,20 +10,20 @@ function UserMenu() {
   const location = useLocation();
   const { pathname } = location;
 
-  const [userCode, setUserCode] = useState("");
+  // const [userCode, setUserCode] = useState("");
 
-  useEffect(() => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    setUserCode(user.data);
-  }, []);
+  // useEffect(() => {
+  //   let user = JSON.parse(localStorage.getItem("user"));
+  //   setUserCode(user.data);
+  // }, []);
 
-  const users = useSelector((state) => state.users);
+  // const users = useSelector((state) => state.users);
   const user = useSelector((state) => state.authentication.user.data);
-  const dispatch = useDispatch();
-  console.log(user);
+  // const dispatch = useDispatch();
 
   const trigger = useRef(null);
   const dropdown = useRef(null);
+  // console.log(userCode);
 
   // close on click outside
   useEffect(() => {
@@ -50,9 +50,12 @@ function UserMenu() {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
+  // remove the word public the logo and set it
+  const logoUrl = user.business.logo.replace("public/", "");
+  // console.log(logoUrl);
   return (
     <div>
-      {userCode.business_id === null ? (
+      {user.business_id === null ? (
         <div className="relative inline-flex">
           <NavLink
             exact
@@ -73,9 +76,12 @@ function UserMenu() {
             onClick={() => setDropdownOpen(!dropdownOpen)}
             aria-expanded={dropdownOpen}
           >
+            {/* select the last word from the text in logo  */}
+
             <img
               className="w-8 h-8 rounded-full"
-              src={UserAvatar}
+              src={"https://apibeta.dropie.ng/storage/" + logoUrl}
+              // src={UserAvatar}
               width="32"
               height="32"
               alt="User"
@@ -85,7 +91,7 @@ function UserMenu() {
               <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">
                 {user.manager_name}.
                 <div className="text-xs text-slate-500 italic">
-                  {user.business.business_name}
+                  {user.business && user.business.business_name}
                 </div>
               </span>
               <svg
@@ -113,10 +119,10 @@ function UserMenu() {
             >
               <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
                 <div className="font-medium text-slate-800">
-                  {user.manager_name}
+                  {user.manager_name}.
                 </div>
                 <div className="text-xs text-slate-500 italic">
-                  {user.business.business_name}
+                  {user.business && user.business.business_name}
                 </div>
               </div>
               <ul>
@@ -132,7 +138,7 @@ function UserMenu() {
                 <li>
                   <Link
                     className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                    to="/"
+                    to="/login"
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                   >
                     Sign Out
