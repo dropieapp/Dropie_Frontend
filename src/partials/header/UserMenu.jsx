@@ -51,7 +51,7 @@ function UserMenu() {
   });
 
   // remove the word public the logo and set it
-  const logoUrl = user.business.logo.replace("public/", "");
+  const logoUrl = user .business && user.business.logo.replace("public/", "");
   // console.log(logoUrl);
   return (
     <div>

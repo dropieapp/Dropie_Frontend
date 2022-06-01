@@ -34,6 +34,7 @@ export const createPrice = (price) => async (dispatch) => {
             type: SET_MESSAGE,
             payload: res.data.message,
         });
+      window.location.reload();
         return Promise.resolve(res.data);
     }
     catch (error) { 
@@ -68,12 +69,13 @@ export const updatePrices = (id, price) => async (dispatch) => {
         const res = await PricingDataService.updatePrices(id, price);
         dispatch({
             type: UPDATE_PRICE,
-            payload: res.data,
+            // payload: res.data,
         });
         dispatch({
             type: SET_MESSAGE,
             payload: res.data.message,
         });
+        window.location.reload();
         return Promise.resolve(res.data);
     }
     catch (error) { 
@@ -103,17 +105,18 @@ export const updatePrices = (id, price) => async (dispatch) => {
     }
 }
 
-export const deletePrice = (id) => async (dispatch) => { 
+export const deletePrices = (id) => async (dispatch) => { 
     try {
         const res = await PricingDataService.deletePrices(id);
         dispatch({
             type: DELETE_PRICE,
-            payload: res.data,
+            // payload: res.data,
         });
         dispatch({
             type: SET_MESSAGE,
             payload: res.data.message,
         });
+        window.location.reload();
         return Promise.resolve(res.data);
     }
     catch (error) { 

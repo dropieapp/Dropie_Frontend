@@ -10,7 +10,8 @@ import dateFormat from "dateformat";
 import { Col, Modal, Row, Space, Tabs } from "antd";
 import { clearMessage } from "../actions/message";
 import InputField from "../components/InputField";
-import { createPrice } from "../actions/pricing";
+import { createPrice, updatePrices,  deletePrices } from "../actions/pricing";
+// import {  } from "../actions/pricing";
 
 const { TabPane } = Tabs;
 function callback(key) {
@@ -26,6 +27,7 @@ function Finance() {
   const { message } = useSelector((state) => state.message);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [showModal2, setShowModal2] = useState(false);
   const [vehicleTypes, setVehicleTypes] = useState([]);
 
   useEffect(() => {
@@ -34,6 +36,7 @@ function Finance() {
       setVehicleTypes(fetchVehicle.data);
     }
   }, []);
+  const [show, setShow] = useState(false);
 
   const [singleInvoice, setSingleInvoice] = useState();
   const [successful, setSuccessful] = useState(false);
@@ -65,7 +68,7 @@ function Finance() {
       type_id: typeId,
       base_fare: baseFare,
       price_km: priceKm,
-      weight: weight,
+      weight_distance: weight,
     };
     dispatch(clearMessage());
     setInfo(data);
@@ -119,6 +122,87 @@ function Finance() {
       });
     }
   }, [successful, singleInvoice]);
+
+  // edit price
+
+  const [isUpdated, setIsUpdated] = useState(false);
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false);
+  const [isUpdatedSuccessfully, setIsUpdatedSuccessfully] = useState(false);
+  const [priceId, setPriceId] = useState();
+
+  const handleEdit = (item) => {
+    setPriceId(item.id);
+    setTypeId(item.type_id);
+    setBaseFare(item.base_fare);
+    setPriceKm(item.price_km);
+    setWeight(item.weight_distance);
+    setShowModal2(true);
+  };
+
+  // handle update price
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    setIsUpdated(true);
+
+    dispatch(clearMessage());
+
+    setIsUpdateLoading(true);
+  };
+
+  useEffect(() => {
+    if (isUpdated) {
+      const data = {
+        type_id: typeId,
+        base_fare: baseFare,
+        price_km: priceKm,
+        weight_distance: weight,
+      };
+      dispatch(updatePrices(priceId, data))
+        .then((res) => {
+          setIsUpdateLoading(false);
+          setIsUpdated(false);
+          setIsUpdatedSuccessfully(true);
+          setBaseFare("");
+          setPriceKm("");
+          setWeight("");
+          setTypeId("");
+          toast("Price updated successfully", {
+            type: "success",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
+        })
+        .catch(() => {
+          setIsUpdateLoading(false);
+          setIsUpdated(false);
+          toast("Something went wrong", {
+            type: "error",
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
+          setIsUpdatedSuccessfully(false);
+        });
+    }
+  }, [isUpdated]);
+
+  // handle delete price
+  const deletePrice = (item) => {
+   // show a confirm modal
+    Modal.confirm({
+      title: "Are you sure delete this price?",
+      okText: "Yes",
+      okType: "danger",
+      cancelText: "No",
+      onOk() {
+        dispatch(deletePrices(item.id));
+      }
+    });
+  };
+
 
   return (
     <Layout>
@@ -274,174 +358,324 @@ function Finance() {
               </svg>
             </button>
           </Link>
-          {showModal ? (
-            <>
-              <Modal
-                title="Set Price"
-                centered
-                visible={showModal}
-                onOk={() => setShowModal(false)}
-                onCancel={() => setShowModal(false)}
-                width={1000}
-              >
-                <div class="px-8 bg-white rounded-lg">
-                  <div>
-                    <form
-                      name="form-signup"
-                      id="form-signup"
-                      onSubmit={(e) => handleSubmit(e)}
-                    >
-                      {message && (
-                        <div className="form-group">
-                          <div
-                            className={
-                              successful
-                                ? "p-4 my-3 text-black font-semibold bg-green-200"
-                                : "p-4 my-3 text-red-500 font-semibold bg-red-200"
-                            }
-                            role="alert"
+
+          <Modal
+            title="Update Price"
+            centered
+            visible={showModal2}
+            onOk={() => setShowModal2(false)}
+            onCancel={() => setShowModal2(false)}
+            width={1000}
+          >
+            <div class="px-8 bg-white rounded-lg">
+              <div>
+                <form
+                  name="form-signup"
+                  id="form-signup"
+                  onSubmit={(e) => handleUpdate(e)}
+                >
+                  {message && (
+                    <div className="form-group">
+                      <div
+                        className={
+                          isUpdatedSuccessfully
+                            ? "p-4 my-3 text-black font-semibold bg-green-200"
+                            : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                        }
+                        role="alert"
+                      >
+                        <ul className="mx-3 my-3">{message}</ul>
+                      </div>
+                    </div>
+                  )}
+                  {!isUpdatedSuccessfully && (
+                    <div>
+                      <div class="py-4 px-8 mx-auto bg-white rounded-lg my-10">
+                        <Space
+                          direction="horizontal"
+                          style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
                           >
-                            <ul className="mx-3 my-3">{message}</ul>
-                          </div>
-                        </div>
-                      )}
-                      {!successful && (
-                        <div>
-                          <div class="py-4 px-8 mx-auto bg-white rounded-lg my-10">
-                            <Space
-                              direction="horizontal"
-                              style={{
-                                width: "100%",
-                                justifyContent: "center",
-                                flexDirection: "column",
-                              }}
-                            >
-                              <Row
-                                type="flex"
-                                align="middle"
-                                className="mt-5"
-                                gutter={20}
+                            <Col span={32}>
+                              <label
+                                className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                                htmlFor={name}
                               >
-                                <Col span={32}>
-                                  <label
-                                    className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
-                                    htmlFor={name}
-                                  >
-                                    Vehicle type
-                                  </label>
-                                  <select
-                                    id="type_id"
-                                    value={typeId}
-                                    onChange={handleTypeIdChange}
-                                    name="type_id"
-                                    className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
-                                  >
-                                    <option value="">
-                                      Select a Vehicle Type
-                                    </option>
+                                Vehicle type
+                              </label>
+                              <select
+                                id="type_id"
+                                value={typeId}
+                                onChange={handleTypeIdChange}
+                                name="type_id"
+                                className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
+                              >
+                                <option value="">Select a Vehicle Type</option>
 
-                                    {vehicleTypes.map((vehicle) => (
-                                      <option
-                                        key={vehicle.key}
-                                        value={vehicle.id}
-                                      >
-                                        {vehicle.type}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </Col>
-                              </Row>
-                              <Row
-                                type="flex"
-                                align="middle"
-                                className="mt-5"
-                                gutter={20}
-                              >
-                                <Col span={30}>
-                                  <InputField
-                                    label="Base Fare"
-                                    name="base_fare"
-                                    value={baseFare}
-                                    onChange={handleBaseFareChange}
-                                    type="number"
-                                    placeholder="Base Fare"
-                                  />
-                                </Col>
-                              </Row>
+                                {vehicleTypes.map((vehicle) => (
+                                  <option key={vehicle.key} value={vehicle.id}>
+                                    {vehicle.type}
+                                  </option>
+                                ))}
+                              </select>
+                            </Col>
+                          </Row>
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30}>
+                              <InputField
+                                label="Base Fare"
+                                name="base_fare"
+                                value={baseFare}
+                                onChange={handleBaseFareChange}
+                                type="number"
+                                placeholder="Base Fare"
+                              />
+                            </Col>
+                          </Row>
 
-                              <Row
-                                type="flex"
-                                align="middle"
-                                className="mt-5"
-                                gutter={20}
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30} className="gutter-row">
+                              <InputField
+                                label="Price Per Km"
+                                name="price_km"
+                                value={priceKm}
+                                onChange={handlePriceKmChange}
+                                type="number"
+                                placeholder="Price Per Km"
+                              />
+                            </Col>
+                          </Row>
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30} className="gutter-row">
+                              <InputField
+                                label="Weight"
+                                name="weight"
+                                value={weight}
+                                onChange={handleWeightChange}
+                                type="text"
+                                placeholder="10kg"
+                              />
+                            </Col>
+                          </Row>
+                          <button
+                            className={`relative w-52  flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                          >
+                            {isUpdateLoading && (
+                              // <span className="spinner-border spinner-border-sm mr-1"></span>
+                              <svg
+                                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
                               >
-                                <Col span={30} className="gutter-row">
-                                  <InputField
-                                    label="Price Per Km"
-                                    name="price_km"
-                                    value={priceKm}
-                                    onChange={handlePriceKmChange}
-                                    type="number"
-                                    placeholder="Price Per Km"
-                                  />
-                                </Col>
-                              </Row>
-                              <Row
-                                type="flex"
-                                align="middle"
-                                className="mt-5"
-                                gutter={20}
+                                <circle
+                                  class="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  stroke-width="4"
+                                ></circle>
+                                <path
+                                  class="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                            )}
+                            Update Prices
+                          </button>
+                        </Space>
+                      </div>
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+          </Modal>
+
+          <Modal
+            title="Set Price"
+            centered
+            visible={showModal}
+            onOk={() => setShowModal(false)}
+            onCancel={() => setShowModal(false)}
+            width={1000}
+          >
+            <div class="px-8 bg-white rounded-lg">
+              <div>
+                <form
+                  name="form-signup"
+                  id="form-signup"
+                  onSubmit={(e) => handleSubmit(e)}
+                >
+                  {message && (
+                    <div className="form-group">
+                      <div
+                        className={
+                          successful
+                            ? "p-4 my-3 text-black font-semibold bg-green-200"
+                            : "p-4 my-3 text-red-500 font-semibold bg-red-200"
+                        }
+                        role="alert"
+                      >
+                        <ul className="mx-3 my-3">{message}</ul>
+                      </div>
+                    </div>
+                  )}
+                  {!successful && (
+                    <div>
+                      <div class="py-4 px-8 mx-auto bg-white rounded-lg my-10">
+                        <Space
+                          direction="horizontal"
+                          style={{
+                            width: "100%",
+                            justifyContent: "center",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={32}>
+                              <label
+                                className="block label-text tracking-wide text-grey-darker text-xs font-bold mb-2"
+                                htmlFor={name}
                               >
-                                <Col span={30} className="gutter-row">
-                                  <InputField
-                                    label="Weight"
-                                    name="weight"
-                                    value={weight}
-                                    onChange={handleWeightChange}
-                                    type="text"
-                                    placeholder="10kg"
-                                  />
-                                </Col>
-                              </Row>
-                              <button
-                                className={`relative w-52  flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                                Vehicle type
+                              </label>
+                              <select
+                                id="type_id"
+                                value={typeId}
+                                onChange={handleTypeIdChange}
+                                name="type_id"
+                                className="w-full px-8 py-2 text-primary border-gray-200 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4"
                               >
-                                {loading && (
-                                  // <span className="spinner-border spinner-border-sm mr-1"></span>
-                                  <svg
-                                    class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <circle
-                                      class="opacity-25"
-                                      cx="12"
-                                      cy="12"
-                                      r="10"
-                                      stroke="currentColor"
-                                      stroke-width="4"
-                                    ></circle>
-                                    <path
-                                      class="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                    ></path>
-                                  </svg>
-                                )}
-                                Set Prices
-                              </button>
-                            </Space>
-                          </div>
-                        </div>
-                      )}
-                    </form>
-                  </div>
-                </div>
-              </Modal>
-              <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-            </>
-          ) : null}
+                                <option value="">Select a Vehicle Type</option>
+
+                                {vehicleTypes.map((vehicle) => (
+                                  <option key={vehicle.key} value={vehicle.id}>
+                                    {vehicle.type}
+                                  </option>
+                                ))}
+                              </select>
+                            </Col>
+                          </Row>
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30}>
+                              <InputField
+                                label="Base Fare"
+                                name="base_fare"
+                                value={baseFare}
+                                onChange={handleBaseFareChange}
+                                type="number"
+                                placeholder="Base Fare"
+                              />
+                            </Col>
+                          </Row>
+
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30} className="gutter-row">
+                              <InputField
+                                label="Price Per Km"
+                                name="price_km"
+                                value={priceKm}
+                                onChange={handlePriceKmChange}
+                                type="number"
+                                placeholder="Price Per Km"
+                              />
+                            </Col>
+                          </Row>
+                          <Row
+                            type="flex"
+                            align="middle"
+                            className="mt-5"
+                            gutter={20}
+                          >
+                            <Col span={30} className="gutter-row">
+                              <InputField
+                                label="Weight"
+                                name="weight"
+                                value={weight}
+                                onChange={handleWeightChange}
+                                type="text"
+                                placeholder="10kg"
+                              />
+                            </Col>
+                          </Row>
+                          <button
+                            className={`relative w-52  flex justify-center bg-red-600 hover:bg-red-700 py-2 px-4 text-sm text-white rounded-md border border-green focus:outline-none focus:border-green-dark`}
+                          >
+                            {loading && (
+                              // <span className="spinner-border spinner-border-sm mr-1"></span>
+                              <svg
+                                class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  class="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  stroke-width="4"
+                                ></circle>
+                                <path
+                                  class="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                            )}
+                            Set Prices
+                          </button>
+                        </Space>
+                      </div>
+                    </div>
+                  )}
+                </form>
+              </div>
+            </div>
+          </Modal>
         </div>
       </div>
       <DashboardCard08 title="Revenue Analytics" />
@@ -617,9 +851,6 @@ function Finance() {
                       getPrice.map((prices, index) => (
                         <tr key={index}>
                           <td className="p-2 whitespace-nowrap">
-                            <div className="text-left">...</div>
-                          </td>
-                          <td className="p-2 whitespace-nowrap">
                             <div className="text-left capital">
                               {prices.type_id}
                             </div>
@@ -644,9 +875,164 @@ function Finance() {
                             <div className="text-left">{prices.created_at}</div>
                           </td>
                           <td className="p-2 whitespace-nowrap">
-                            {/* <div className="text-left"> */}
-                        
-                            {/* </div> */}
+                            <div className="text-left">
+                              {show == index ? (
+                                <button
+                                  onClick={() => setShow(null)}
+                                  className="focus:outline-none pl-7"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={20}
+                                    height={20}
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M4.16667 10.8334C4.62691 10.8334 5 10.4603 5 10.0001C5 9.53984 4.62691 9.16675 4.16667 9.16675C3.70643 9.16675 3.33334 9.53984 3.33334 10.0001C3.33334 10.4603 3.70643 10.8334 4.16667 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M10 10.8334C10.4602 10.8334 10.8333 10.4603 10.8333 10.0001C10.8333 9.53984 10.4602 9.16675 10 9.16675C9.53976 9.16675 9.16666 9.53984 9.16666 10.0001C9.16666 10.4603 9.53976 10.8334 10 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M15.8333 10.8334C16.2936 10.8334 16.6667 10.4603 16.6667 10.0001C16.6667 9.53984 16.2936 9.16675 15.8333 9.16675C15.3731 9.16675 15 9.53984 15 10.0001C15 10.4603 15.3731 10.8334 15.8333 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => setShow(index)}
+                                  className="focus:outline-none pl-7"
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width={20}
+                                    height={20}
+                                    viewBox="0 0 20 20"
+                                    fill="none"
+                                  >
+                                    <path
+                                      d="M4.16667 10.8334C4.62691 10.8334 5 10.4603 5 10.0001C5 9.53984 4.62691 9.16675 4.16667 9.16675C3.70643 9.16675 3.33334 9.53984 3.33334 10.0001C3.33334 10.4603 3.70643 10.8334 4.16667 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M10 10.8334C10.4602 10.8334 10.8333 10.4603 10.8333 10.0001C10.8333 9.53984 10.4602 9.16675 10 9.16675C9.53976 9.16675 9.16666 9.53984 9.16666 10.0001C9.16666 10.4603 9.53976 10.8334 10 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                    <path
+                                      d="M15.8333 10.8334C16.2936 10.8334 16.6667 10.4603 16.6667 10.0001C16.6667 9.53984 16.2936 9.16675 15.8333 9.16675C15.3731 9.16675 15 9.53984 15 10.0001C15 10.4603 15.3731 10.8334 15.8333 10.8334Z"
+                                      stroke="#A1A1AA"
+                                      strokeWidth="1.25"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                    />
+                                  </svg>
+                                </button>
+                              )}
+                              {show == index && (
+                                <div className="dropdown-content bg-white shadow w-52 right-12 absolute z-30 mr-6 ">
+                                  <div className=" w-full hover:bg-orange-200 cursor-pointer hover:text-white">
+                                    <button
+                                      className="flex py-3 px-2"
+                                      onClick={() => {
+                                        handleEdit(prices);
+                                        dispatch(clearMessage());
+                                      }}
+                                    >
+                                      <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          d="M16.3392 15.6217C16.3392 16.3558 15.7425 16.975 15.0084 16.975H4.3592C3.62504 16.975 3.02837 16.3558 3.02837 15.6217V4.97251C3.02837 4.23834 3.62504 3.66334 4.3592 3.66334H10.5709V2.77667H4.3592C3.13587 2.77667 2.14087 3.75001 2.14087 4.97334V15.6217C2.14087 16.845 3.13587 17.8617 4.3592 17.8617H15.0075C16.2309 17.8617 17.2259 16.8442 17.2259 15.6217V9.43167H16.3384V15.6217H16.3392Z"
+                                          fill="#333333"
+                                        />
+                                        <path
+                                          d="M17.3391 2.64166C16.6691 1.97083 15.4999 1.97083 14.8291 2.64166L8.87656 8.59416C8.8199 8.65083 8.77906 8.72249 8.7599 8.79999L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15083C17.6741 4.81583 17.8591 4.36999 17.8591 3.89583C17.8591 3.42166 17.6749 2.97666 17.3391 2.64166ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13416L14.5157 4.20999L15.7707 5.46499L10.8466 10.3892ZM16.7116 4.52333L16.3982 4.83666L15.1432 3.58166L15.4566 3.26833C15.7916 2.93333 16.3766 2.93333 16.7116 3.26833C16.8791 3.43583 16.9716 3.65833 16.9716 3.89583C16.9716 4.13333 16.8791 4.35583 16.7116 4.52333Z"
+                                          fill="#333333"
+                                        />
+                                      </svg>
+
+                                      <span className="hidden xs:block ml-2 mr-2 font-thin">
+                                        Update Price
+                                      </span>
+                                    </button>
+                                  </div>
+                                  <div className=" w-full hover:bg-orange-200 cursor-pointer hover:text-white">
+                                    <button
+                                      className="flex py-3 px-2"
+                                      onClick={() => deletePrice(prices)}
+                                    >
+                                      {loading && loading ? (
+                                        // <span className="spinner-border spinner-border-sm mr-1"></span>
+                                        <svg
+                                          class="animate-spin -ml-1 mr-3 h-5 w-5"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <circle
+                                            class="opacity-25"
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="currentColor"
+                                            stroke-width="4"
+                                          ></circle>
+                                          <path
+                                            class="opacity-75"
+                                            fill="currentColor"
+                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                          ></path>
+                                        </svg>
+                                      ) : (
+                                        <svg
+                                          width="20"
+                                          height="20"
+                                          viewBox="0 0 20 20"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M16.3392 15.6217C16.3392 16.3558 15.7425 16.975 15.0084 16.975H4.3592C3.62504 16.975 3.02837 16.3558 3.02837 15.6217V4.97251C3.02837 4.23834 3.62504 3.66334 4.3592 3.66334H10.5709V2.77667H4.3592C3.13587 2.77667 2.14087 3.75001 2.14087 4.97334V15.6217C2.14087 16.845 3.13587 17.8617 4.3592 17.8617H15.0075C16.2309 17.8617 17.2259 16.8442 17.2259 15.6217V9.43167H16.3384V15.6217H16.3392Z"
+                                            fill="#333333"
+                                          />
+                                          <path
+                                            d="M17.3391 2.64166C16.6691 1.97083 15.4999 1.97083 14.8291 2.64166L8.87656 8.59416C8.8199 8.65083 8.77906 8.72249 8.7599 8.79999L8.13323 11.3092C8.09573 11.46 8.1399 11.62 8.2499 11.7308C8.33406 11.815 8.4474 11.8608 8.56323 11.8608C8.59906 11.8608 8.6349 11.8567 8.67073 11.8475L11.1807 11.22C11.2591 11.2008 11.3299 11.16 11.3866 11.1033L17.3391 5.15083C17.6741 4.81583 17.8591 4.36999 17.8591 3.89583C17.8591 3.42166 17.6749 2.97666 17.3391 2.64166ZM10.8466 10.3892L9.17323 10.8075L9.59156 9.13416L14.5157 4.20999L15.7707 5.46499L10.8466 10.3892ZM16.7116 4.52333L16.3982 4.83666L15.1432 3.58166L15.4566 3.26833C15.7916 2.93333 16.3766 2.93333 16.7116 3.26833C16.8791 3.43583 16.9716 3.65833 16.9716 3.89583C16.9716 4.13333 16.8791 4.35583 16.7116 4.52333Z"
+                                            fill="#333333"
+                                          />
+                                        </svg>
+                                      )}
+
+                                      <span className="hidden xs:block ml-2 mr-2 font-thin">
+                                        Delete Price
+                                      </span>
+                                    </button>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))

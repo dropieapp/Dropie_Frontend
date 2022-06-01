@@ -30,6 +30,7 @@ export const createFleets = (formFleets) => async (dispatch) => {
     });
     console.log("res", res);
     localStorage.setItem("add_fleets", JSON.stringify(res.data));
+    window.location.reload();
 
     return Promise.resolve(res.data);
   } catch (error) {
